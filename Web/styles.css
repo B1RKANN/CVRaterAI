@@ -1,0 +1,419 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #187CFF;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 700;
+    color: #F5F7FA;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #F5F7FA;
+    font-size: 18px;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: #1D5399;
+}
+
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #F5F7FA;
+}
+
+.separator {
+    width: 1px;
+    height: 24px;
+    background-color: #F5F7FA;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-buttons .download-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #F5F7FA;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-buttons .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-buttons .download-btn span {
+    color: #187CFF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.nav-buttons .download-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.sign-in-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #187CFF;
+    background-color: #F5F7FA;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sign-in-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section h1 {
+    font-size: 56px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 18px;
+    color: #FFFFFF;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.hero-buttons button {
+    font-size: 18px;
+    font-weight: 500;
+    color: #187CFF;
+    background-color: #FFFFFF;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-buttons button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Steps Section */
+.steps-section {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 8rem 2rem 6rem;
+    position: relative;
+    z-index: 2;
+    background-color: #FFFFFF;
+}
+
+.step-card {
+    background-color: #187CFF;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 280px;
+    text-align: center;
+}
+
+.step-number {
+    font-size: 24px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+}
+
+.step-content h3 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-top: 1rem;
+}
+
+.step-content img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+}
+
+/* Fast and Simple Section */
+.fast-simple {
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 3;
+    background: #187CFF;
+    overflow: hidden;
+    margin-bottom: -3rem;
+}
+
+.fast-simple h2 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #FFFFFF;
+    position: relative;
+    z-index: 3;
+    margin: 0;
+}
+
+.fast-simple::before,
+.fast-simple::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.fast-simple::before {
+    left: -150px;
+    top: -150px;
+}
+
+.fast-simple::after {
+    right: -150px;
+    bottom: -150px;
+}
+
+/* Additional bubble elements */
+.fast-simple .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 2;
+}
+
+.fast-simple .bubble-1 {
+    width: 100px;
+    height: 100px;
+    left: 20%;
+    top: -20px;
+}
+
+.fast-simple .bubble-2 {
+    width: 80px;
+    height: 80px;
+    right: 25%;
+    top: 10px;
+}
+
+.fast-simple .bubble-3 {
+    width: 120px;
+    height: 120px;
+    left: 30%;
+    bottom: -30px;
+}
+
+/* Background Elements */
+.background-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.6;
+}
+
+.circle-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 5%;
+    animation-delay: 0.1s, 0.1s;
+}
+
+.circle-2 {
+    width: 150px;
+    height: 150px;
+    top: 20%;
+    right: 10%;
+    animation-delay: 0.2s, 0.2s;
+}
+
+.circle-3 {
+    width: 180px;
+    height: 180px;
+    bottom: 15%;
+    left: 15%;
+    animation-delay: 0.3s, 0.3s;
+}
+
+.circle-4 {
+    width: 120px;
+    height: 120px;
+    bottom: 25%;
+    right: 20%;
+    animation-delay: 0.4s, 0.4s;
+}
+
+.circle-5 {
+    width: 160px;
+    height: 160px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.5s, 0.5s;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.6;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .steps-section {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 1rem 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-section h1 {
+        font-size: 36px;
+    }
+
+    .hero-section p {
+        font-size: 18px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .step-card {
+        width: 100%;
+        max-width: 320px;
+    }
+} 
