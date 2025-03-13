@@ -18,8 +18,20 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 4rem;
-    position: relative;
-    z-index: 2;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+nav.scrolled {
+    background: #187CFF;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 24px 24px;
+    backdrop-filter: blur(8px);
 }
 
 .logo {
@@ -77,39 +89,48 @@ nav {
 .nav-buttons .download-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background-color: #F5F7FA;
-    padding: 0.5rem 1.5rem;
+    gap: 0.8rem;
+    background-color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
     border-radius: 8px;
+    border: none;
+    outline: none;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
+    box-shadow: none;
 }
 
 .nav-buttons .download-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-buttons .download-btn:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
 }
 
 .nav-buttons .download-btn span {
     color: #187CFF;
     font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
 }
 
 .nav-buttons .download-btn img {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .sign-in-btn {
     font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     color: #187CFF;
     background-color: #F5F7FA;
     border: none;
-    padding: 0.5rem 1.5rem;
+    padding: 0.7rem 1.2rem;
     border-radius: 8px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -123,7 +144,69 @@ nav {
 /* Hero Section */
 .hero-section {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    z-index: 2;
+    background: #187CFF;
+    margin-top: 0;
+    overflow: visible;
+}
+
+/* Balloon Styles */
+.balloon {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(3px);
+}
+
+.balloon-1 {
+    width: 300px;
+    height: 300px;
+    left: -5%;
+    top: -10%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 15s ease-in-out infinite;
+}
+
+.balloon-2 {
+    width: 250px;
+    height: 250px;
+    right: -5%;
+    top: 15%;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 18s ease-in-out infinite 2s;
+}
+
+.balloon-3 {
+    width: 400px;
+    height: 400px;
+    left: 20%;
+    bottom: -20%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 20s ease-in-out infinite 1s;
+}
+
+@keyframes floatBalloon {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.2;
+    }
+    50% {
+        transform: translate(20px, -30px) scale(1.1);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.2;
+    }
+}
+
+.hero-section h1,
+.hero-section p,
+.hero-section .hero-buttons {
     position: relative;
     z-index: 2;
 }
@@ -150,13 +233,13 @@ nav {
 }
 
 .hero-buttons button {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
-    color: #187CFF;
-    background-color: #FFFFFF;
+    color: #FFFFFF;
+    background-color: #1D5399;
     border: none;
     padding: 0.8rem 2rem;
-    border-radius: 8px;
+    border-radius: 20px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -171,10 +254,12 @@ nav {
     display: flex;
     justify-content: center;
     gap: 2rem;
-    padding: 8rem 2rem 6rem;
+    padding: 4rem 2rem 6rem;
     position: relative;
     z-index: 2;
     background-color: #FFFFFF;
+    margin-top: 80px;
+    margin-bottom: 0;
 }
 
 .step-card {
@@ -183,6 +268,27 @@ nav {
     border-radius: 16px;
     width: 280px;
     text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: #1D5399;
+}
+
+.step-content {
+    transition: all 0.3s ease;
+}
+
+.step-card:hover .step-content {
+    transform: scale(1.05);
+}
+
+.step-card:hover img {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
 }
 
 .step-number {
@@ -211,128 +317,59 @@ nav {
     padding: 2rem;
     position: relative;
     z-index: 3;
-    background: #187CFF;
-    overflow: hidden;
-    margin-bottom: -3rem;
+    margin-top: 2rem;
+    width: 100%;
+    background-color: #FFFFFF;
+    margin-bottom: -8rem;
 }
 
 .fast-simple h2 {
     font-size: 42px;
     font-weight: 700;
-    color: #FFFFFF;
+    color: #187CFF;
     position: relative;
     z-index: 3;
     margin: 0;
-}
-
-.fast-simple::before,
-.fast-simple::after {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    z-index: 1;
-}
-
-.fast-simple::before {
-    left: -150px;
-    top: -150px;
-}
-
-.fast-simple::after {
-    right: -150px;
-    bottom: -150px;
-}
-
-/* Additional bubble elements */
-.fast-simple .bubble {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    z-index: 2;
-}
-
-.fast-simple .bubble-1 {
-    width: 100px;
-    height: 100px;
-    left: 20%;
-    top: -20px;
-}
-
-.fast-simple .bubble-2 {
-    width: 80px;
-    height: 80px;
-    right: 25%;
-    top: 10px;
-}
-
-.fast-simple .bubble-3 {
-    width: 120px;
-    height: 120px;
-    left: 30%;
-    bottom: -30px;
+    padding: 1rem 0;
 }
 
 /* Background Elements */
 .background-elements {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
+    display: none;
 }
 
 .circle {
+    display: none;
+}
+
+.circle-1, .circle-2, .circle-3, .circle-4, .circle-5 {
+    display: none;
+}
+
+/* Bubbles Animation */
+.bubble {
     position: absolute;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.1);
+    animation: float 8s ease-in-out infinite;
+    z-index: 1;
+    backdrop-filter: blur(2px);
 }
 
-.circle-1 {
-    width: 200px;
-    height: 200px;
-    top: 10%;
-    left: 5%;
-    animation-delay: 0.1s, 0.1s;
-}
+.bubble:nth-child(1) { width: 60px; height: 60px; left: 10%; top: 40%; animation-delay: 0s; }
+.bubble:nth-child(2) { width: 40px; height: 40px; left: 20%; top: 60%; animation-delay: 2s; }
+.bubble:nth-child(3) { width: 80px; height: 80px; left: 30%; top: 30%; animation-delay: 4s; }
+.bubble:nth-child(4) { width: 50px; height: 50px; right: 30%; top: 40%; animation-delay: 1s; }
+.bubble:nth-child(5) { width: 70px; height: 70px; right: 20%; top: 60%; animation-delay: 3s; }
+.bubble:nth-child(6) { width: 45px; height: 45px; right: 10%; top: 30%; animation-delay: 5s; }
 
-.circle-2 {
-    width: 150px;
-    height: 150px;
-    top: 20%;
-    right: 10%;
-    animation-delay: 0.2s, 0.2s;
-}
-
-.circle-3 {
-    width: 180px;
-    height: 180px;
-    bottom: 15%;
-    left: 15%;
-    animation-delay: 0.3s, 0.3s;
-}
-
-.circle-4 {
-    width: 120px;
-    height: 120px;
-    bottom: 25%;
-    right: 20%;
-    animation-delay: 0.4s, 0.4s;
-}
-
-.circle-5 {
-    width: 160px;
-    height: 160px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation-delay: 0.5s, 0.5s;
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.1);
+    }
 }
 
 /* Animations */
@@ -367,15 +404,18 @@ nav {
     }
 }
 
-@keyframes float {
+@keyframes floatSlow {
     0% {
-        transform: translateY(0);
+        transform: translate(0, 0) scale(1) rotate(0deg);
     }
-    50% {
-        transform: translateY(-20px);
+    33% {
+        transform: translate(15px, -15px) scale(1.05) rotate(5deg);
+    }
+    66% {
+        transform: translate(-15px, -25px) scale(1.1) rotate(-5deg);
     }
     100% {
-        transform: translateY(0);
+        transform: translate(0, 0) scale(1) rotate(0deg);
     }
 }
 
