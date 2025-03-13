@@ -67,6 +67,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Preload animations
     document.body.style.opacity = '1';
+
+    const nav = document.querySelector('nav');
+    
+    // Initial check for page load
+    if (window.scrollY > 0) {
+        nav.classList.add('scrolled');
+    }
+
+    // Check on scroll
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
 });
 
 // Animate circles
