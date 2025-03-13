@@ -2,7 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary_blue">#215190</color>
+    <color name="primary_bluee">#215190</color>
     <color name="box_blue">#187CFF</color>
     <color name="accent_blue">#4093FF</color>
+    <color name="primary_blue">#187CFF</color>
+    <color name="primary_blue_disabled">#80187CFF</color>
+    <color name="background_light">#F5F7FA</color>
+    <color name="text_primary">#343434</color>
+    <color name="text_secondary">#666666</color>
+    <color name="dark_blue">#013F91</color>
+
 </resources>
