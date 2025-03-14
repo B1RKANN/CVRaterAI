@@ -11,5 +11,5 @@ public class DtoUser extends DtoBase{
 	
 	private String password;
 	
-	
+	private DtoCredit credit;
 }

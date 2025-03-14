@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,9 @@ public class User extends BaseEntity implements UserDetails{
 	public String getUsername() {
 		return email;
 	}
+	
+	@OneToOne
+	private Credit credit;
 	
 	
 	
