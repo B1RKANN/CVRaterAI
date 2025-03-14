@@ -5,8 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.card.MaterialCardView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -15,10 +14,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FirstPageFragment.newInstance] factory method to
+ * Use the [HomePageFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FirstPageFragment : Fragment() {
+class HomePageFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -35,17 +34,20 @@ class FirstPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_first_page, container, false)
-        
-        // Get Started butonunu bul ve tıklama olayını ayarla
-        view.findViewById<View>(R.id.btnGetStarted)?.setOnClickListener {
-            // ViewPager2'yi bul ve bir sonraki sayfaya geç
-            val viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
-            // Animasyonlu geçiş için
-            viewPager?.setCurrentItem(1, true) // Step1Fragment'a geç (index 1)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home_page, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.findViewById<MaterialCardView>(R.id.cardProfile).setOnClickListener {
+            // TODO: Implement CV upload functionality
         }
-        
-        return view
+
+        view.findViewById<MaterialCardView>(R.id.cardProfile).setOnClickListener {
+            // TODO: Implement profile view functionality
+        }
     }
 
     companion object {
@@ -55,12 +57,12 @@ class FirstPageFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment FirstPageFragment.
+         * @return A new instance of fragment HomePageFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            FirstPageFragment().apply {
+            HomePageFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
