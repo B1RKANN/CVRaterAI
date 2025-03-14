@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVRaterAI</title>
+    <link rel="stylesheet" href="../../src/css/result.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">CVRaterAI</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Features</a></li>
+                </ul>
+            </nav>
+            <div class="header-buttons">
+                <a href="#" class="profile-btn">
+                    <img src="profile-icon.svg" alt="Profile">
+                    Profile
+                </a>
+                <a href="#" class="download-btn">
+                    <img src="download-icon.svg" alt="Download">
+                    Download
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <div class="skills-container">
+                <div class="skill-item">
+                    <span class="skill-name">java</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="java-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="java-percent">%0</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">html</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="html-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="html-percent">%0</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">css</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="css-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="css-percent">%0</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">python</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="python-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="python-percent">%0</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">C++</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="cpp-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="cpp-percent">%0</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">C#</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="csharp-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="csharp-percent">%0</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">PHP</span>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar" id="php-bar" data-percent="0"></div>
+                    </div>
+                    <span class="skill-percent" id="php-percent">%0</span>
+                </div>
+            </div>
+
+            <div class="user-info">
+                <h2>User information</h2>
+                <div class="info-item">
+                    <span class="info-label">Name :</span>
+                    <span class="info-value">Arda</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Surname :</span>
+                    <span class="info-value">Yeşilçayır</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email :</span>
+                    <span class="info-value">ardayesilcayir7@gmail.com</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone Number :</span>
+                    <span class="info-value">0538 436 43 89</span>
+                </div>
+                <div class="info-item skills-info">
+                    <span class="info-label">Skills :</span>
+                    <div class="info-value">
+                        <p>B1 level English,</p>
+                        <p>2 years senior developer,</p>
+                        <p>intermediate level Java programming language,</p>
+                        <p>advanced level frontend knowledge</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="compatibility">
+            <h2>Compatibility Status</h2>
+            <div class="compatibility-container">
+                <span class="compatibility-min">%0</span>
+                <div class="compatibility-bar-container">
+                    <div class="compatibility-bar" id="compatibility-bar" data-percent="0"></div>
+                    <div class="compatibility-marker" id="compatibility-marker"></div>
+                </div>
+                <span class="compatibility-max">%100</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../src/js/result.js"></script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #187CFF;
+    color: white;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+nav {
+    margin-left: 120px;
+    margin-right: auto;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    opacity: 1;
+}
+
+nav ul li a.active::after {
+    opacity: 1;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.profile-btn, .download-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.profile-btn {
+    background-color: white;
+    color: #187CFF;
+}
+
+.download-btn {
+    background-color: white;
+    color: #187CFF;
+}
+
+.profile-btn img, .download-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+/* SVG icons için base64 kodları */
+.profile-btn {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23187CFF'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 20px;
+    padding-left: 40px;
+}
+
+.download-btn {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23187CFF'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 20px;
+    padding-left: 40px;
+}
+
+/* Main Content */
+main {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+    gap: 20px;
+}
+
+/* Skills Section */
+.skills-container {
+    flex: 1;
+    background-color: #0366E8;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.skill-name {
+    width: 100px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.skill-bar-container {
+    flex: 1;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin: 0 15px;
+    overflow: hidden;
+}
+
+.skill-bar {
+    height: 100%;
+    width: 0%;
+    background-color: white;
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}
+
+.skill-percent {
+    width: 60px;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* User Info Section */
+.user-info {
+    flex: 1;
+    background-color: #0366E8;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-info h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info-item {
+    margin-bottom: 15px;
+    display: flex;
+}
+
+.info-label {
+    font-weight: bold;
+    min-width: 150px;
+}
+
+.info-value {
+    flex: 1;
+}
+
+.skills-info {
+    align-items: flex-start;
+}
+
+.skills-info .info-value p {
+    margin-bottom: 5px;
+}
+
+/* Compatibility Section */
+.compatibility {
+    margin: 40px 0;
+}
+
+.compatibility h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.compatibility-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    padding: 0 20px;
+}
+
+.compatibility-min, .compatibility-max {
+    font-weight: bold;
+    font-size: 20px;
+    min-width: 50px;
+    text-align: center;
+}
+
+.compatibility-bar-container {
+    flex: 1;
+    max-width: 800px;
+    height: 40px;
+    background-color: white;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.compatibility-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #004197;
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+
+.compatibility-percentage {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 2;
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+    text-align: right;
+}
+
+/* Marker'ı kaldır */
+.compatibility-marker {
+    display: none;
+}
+
+/* Background Circles */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.container::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    main {
+        flex-direction: column;
+    }
+    
+    .skill-name {
+        width: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+    }
+    
+    nav {
+        order: 3;
+        margin: 20px 0;
+        width: 100%;
+    }
+    
+    .header-buttons {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-buttons {
+        width: 100%;
+        justify-content: center;
+        margin-top: 20px;
+    }
+}
