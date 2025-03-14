@@ -1,0 +1,451 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Scroll çubuğu stilleri */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body {
+    background: #187CFF;
+    min-height: 100vh;
+    color: white;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(24, 124, 255, 0) 0%, rgba(24, 124, 255, 0.7) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.background-circles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.9;
+    box-shadow: 0 8px 32px rgba(24, 124, 255, 0.3);
+}
+
+.circle-1 {
+    width: 600px;
+    height: 600px;
+    top: -150px;
+    right: -150px;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.85;
+}
+
+.circle-2 {
+    width: 800px;
+    height: 800px;
+    bottom: -250px;
+    left: -250px;
+    background: linear-gradient(140deg, #4093FF 0%, #1C82FF 100%);
+    opacity: 0.9;
+}
+
+.circle-3 {
+    width: 400px;
+    height: 400px;
+    top: 35%;
+    right: 10%;
+    background: linear-gradient(140deg, #82BFFF 0%, #69AAFF 100%);
+    opacity: 0.85;
+}
+
+.navbar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background-color: transparent;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    position: relative;
+    transition: all 0.3s ease;
+    padding-bottom: 5px;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+}
+
+.nav-links a:hover {
+    transform: translateY(-2px);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.sign-button, .download-button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: white;
+    color: #187CFF;
+    transition: all 0.3s ease;
+}
+
+.sign-button:hover, .download-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.download-button {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.download-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    margin-top: 1px;
+}
+
+.pricing-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.cards-container {
+    background: linear-gradient(160deg, #004494 0%, #00367C 100%);
+    border-radius: 30px;
+    padding: 3.5rem 2.5rem;
+    margin: 0 auto;
+    max-width: 900px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.container-circles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #0055B8 0%, #004494 100%);
+    opacity: 0.3;
+}
+
+.container-circle-1 {
+    width: 400px;
+    height: 400px;
+    top: -150px;
+    right: -150px;
+}
+
+.container-circle-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    left: -100px;
+}
+
+.container-circle-3 {
+    width: 200px;
+    height: 200px;
+    top: 40%;
+    left: 15%;
+    background: linear-gradient(140deg, #0066CC 0%, #0055B8 100%);
+    opacity: 0.25;
+}
+
+.container-circle-4 {
+    width: 150px;
+    height: 150px;
+    top: 20%;
+    right: 25%;
+    background: linear-gradient(140deg, #0077E6 0%, #0066CC 100%);
+    opacity: 0.2;
+}
+
+.container-circle-5 {
+    width: 120px;
+    height: 120px;
+    bottom: 15%;
+    right: 10%;
+    background: linear-gradient(140deg, #0088FF 0%, #0077E6 100%);
+    opacity: 0.15;
+}
+
+.container-circle-6 {
+    width: 180px;
+    height: 180px;
+    top: 10%;
+    left: 10%;
+    background: linear-gradient(140deg, #0099FF 0%, #0088FF 100%);
+    opacity: 0.2;
+}
+
+.container-circle-7 {
+    width: 250px;
+    height: 250px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(140deg, #0055B8 0%, #004494 100%);
+    opacity: 0.15;
+}
+
+h1, .subtitle {
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 3.5rem;
+    opacity: 0.9;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pricing-cards {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    position: relative;
+    z-index: 2;
+}
+
+.pricing-card {
+    background: linear-gradient(140deg, #1C82FF 0%, #1666DB 100%);
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
+    min-width: 320px;
+    backdrop-filter: blur(10px);
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    background: linear-gradient(140deg, #1C82FF 0%, #1870EC 100%);
+}
+
+.pricing-card.pro {
+    background-color: #187CFF;
+    color: white;
+}
+
+.pricing-card.free {
+    background-color: #187CFF;
+}
+
+.pricing-card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+    text-align: center;
+    width: 100%;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.3rem;
+    color: white;
+    letter-spacing: -1px;
+}
+
+.price span {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.price-amount {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-right: 2px;
+}
+
+ul {
+    list-style: none;
+    margin: 1rem 0 2rem;
+}
+
+li {
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.4;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+li::before {
+    content: "•";
+    font-size: 1.8rem;
+    line-height: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.get-started, .buy-now {
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: auto;
+    background-color: white;
+    color: #187CFF;
+    transition: all 0.3s ease;
+}
+
+.get-started:hover, .buy-now:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.card-circles {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.3;
+    backdrop-filter: blur(5px);
+}
+
+.circle-sm {
+    width: 100px;
+    height: 100px;
+    top: 15%;
+    right: -30px;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+}
+
+.circle-md {
+    width: 140px;
+    height: 140px;
+    bottom: -40px;
+    left: -40px;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+}
+
+.pricing-card h2,
+.pricing-card ul,
+.pricing-card button {
+    position: relative;
+    z-index: 1;
+} 
