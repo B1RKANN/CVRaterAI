@@ -35,17 +35,8 @@ class FirstPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_first_page, container, false)
-        
-        // Get Started butonunu bul ve tıklama olayını ayarla
-        view.findViewById<View>(R.id.btnGetStarted)?.setOnClickListener {
-            // ViewPager2'yi bul ve bir sonraki sayfaya geç
-            val viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
-            // Animasyonlu geçiş için
-            viewPager?.setCurrentItem(1, true) // Step1Fragment'a geç (index 1)
-        }
-        
-        return view
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_first_page, container, false)
     }
 
     companion object {
