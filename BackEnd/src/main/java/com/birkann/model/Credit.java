@@ -10,9 +10,10 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Date;
 
 @Entity
-@Table(name = "credit")
+@Table(name = "credit", schema = "cvraterai")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +26,9 @@ public class Credit extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private PlanType planType;
 
+	@Column(name = "start_date")
+	private Date startDate;
+
+	@Column(name = "expired_date")
+	private Date expiredDate;
 }

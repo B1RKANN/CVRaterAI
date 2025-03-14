@@ -64,6 +64,10 @@ public class AuthenticationService implements IAuthenticationService{
 		Credit credit = new Credit();
 		credit.setPlanType(PlanType.FREE);
 		credit.setUserCredit(20);
+		Date startDate = new Date();
+		credit.setStartDate(startDate);
+		Date expiredDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000L));
+		credit.setExpiredDate(expiredDate);
 		return creditRepository.save(credit);
 	}
 	
