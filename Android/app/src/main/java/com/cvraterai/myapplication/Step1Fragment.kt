@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.graphics.Color
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +23,7 @@ class Step1Fragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var swipeAnimation: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +39,24 @@ class Step1Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_step1, container, false)
+    }
+    
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        // Fragment'ın arka planını şeffaf yap
+        view.setBackgroundResource(android.R.color.transparent)
+        
+        // Clipping'i devre dışı bırak
+        (view as? ViewGroup)?.clipChildren = false
+        (view as? ViewGroup)?.clipToPadding = false
+        
+        // Swipe animasyonu için ImageView'ı bul
+        swipeAnimation = view.findViewById(R.id.swipeAnimation)
+        
+        // Animasyonu yükle ve başlat
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.swipe_animation)
+        swipeAnimation.startAnimation(animation)
     }
 
     companion object {

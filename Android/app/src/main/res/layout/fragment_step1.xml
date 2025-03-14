@@ -2,9 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/step1_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_bluee"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
     tools:context=".Step1Fragment">
 
     <!-- Top-left large bubble -->
@@ -57,16 +62,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardUpload"
+        android:id="@+id/cardProfile"
         android:layout_width="268dp"
         android:layout_height="320dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="148dp"
         android:layout_marginBottom="62dp"
-        android:elevation="10dp"
+        android:elevation="8dp"
         app:cardBackgroundColor="@color/box_blue"
         app:cardCornerRadius="16dp"
-        app:cardElevation="10dp"
+        app:cardElevation="8dp"
         app:cardMaxElevation="12dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
@@ -86,7 +91,6 @@
                 android:layout_width="111dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
-                android:gravity="center"
                 android:text="1.Step"
                 android:textColor="@color/white"
                 android:textSize="34sp"
@@ -103,14 +107,43 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="162dp"
-                android:layout_height="133dp"
+                android:layout_width="160dp"
+                android:layout_height="135dp"
                 android:layout_marginBottom="15dp"
                 android:src="@drawable/download" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+    
+    <!-- Swipe Animasyonu ve Metin -->
+    <LinearLayout
+        android:id="@+id/swipeContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/cardProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Swipe left to continue"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+            
+        <ImageView
+            android:id="@+id/swipeAnimation"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/swipe_arrow" />
+            
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

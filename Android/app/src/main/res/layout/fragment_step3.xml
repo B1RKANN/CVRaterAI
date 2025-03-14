@@ -2,16 +2,46 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/step3_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_bluee"
-    tools:context=".Step1Fragment">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    tools:context=".Step3Fragment">
 
     <!-- Top-left large bubble -->
 
     <!-- Middle-right medium bubble -->
 
     <!-- Bottom-left large bubble -->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnGetStarted"
+        android:layout_width="192dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="64dp"
+        app:cardBackgroundColor="#042652"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="bottom|center"
+            android:paddingHorizontal="48dp"
+            android:paddingVertical="16dp"
+            android:text="Next"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </androidx.cardview.widget.CardView>
 
     <View
         android:layout_width="199dp"
@@ -57,7 +87,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardUpload"
+        android:id="@+id/cardProfile"
         android:layout_width="268dp"
         android:layout_height="320dp"
         android:layout_marginHorizontal="32dp"
@@ -124,19 +154,19 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_margin="6dp"
+            android:background="@drawable/dot_unselected" />
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/dot_unselected" />
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="6dp"
             android:background="@drawable/dot_selected" />
-
-        <View
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_margin="6dp"
-            android:background="@drawable/dot_unselected" />
-
-        <View
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_margin="6dp"
-            android:background="@drawable/dot_unselected" />
 
     </LinearLayout>
 
