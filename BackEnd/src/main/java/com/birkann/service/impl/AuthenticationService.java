@@ -13,15 +13,19 @@ import org.springframework.stereotype.Service;
 
 import com.birkann.dto.AuthRequest;
 import com.birkann.dto.AuthResponse;
+import com.birkann.dto.DtoCredit;
 import com.birkann.dto.DtoUser;
 import com.birkann.dto.RefreshTokenRequest;
 import com.birkann.dto.RegisterRequest;
+import com.birkann.enums.PlanType;
 import com.birkann.exception.BaseException;
 import com.birkann.exception.ErrorMessage;
 import com.birkann.exception.MessageType;
 import com.birkann.jwt.JWTService;
+import com.birkann.model.Credit;
 import com.birkann.model.RefreshToken;
 import com.birkann.model.User;
+import com.birkann.repository.CreditRepository;
 import com.birkann.repository.RefreshTokenRepository;
 import com.birkann.repository.UserRepository;
 import com.birkann.service.IAuthenticationService;
@@ -43,13 +47,24 @@ public class AuthenticationService implements IAuthenticationService{
 	
 	@Autowired
 	private RefreshTokenRepository refreshTokenRepository;
+
+	@Autowired
+	private CreditRepository creditRepository;
 	
 	private User createUser(RegisterRequest input) {
 		User user = new User();
 		user.setName(input.getName());
 		user.setEmail(input.getEmail());
 		user.setPassword(passwordEncoder.encode(input.getPassword()));
+		user.setCredit(saveCredit());
 		return user;
+	}
+
+	private Credit saveCredit() {
+		Credit credit = new Credit();
+		credit.setPlanType(PlanType.FREE);
+		credit.setUserCredit(20);
+		return creditRepository.save(credit);
 	}
 	
 	private RefreshToken createRefreshToken(User user) {
@@ -65,8 +80,11 @@ public class AuthenticationService implements IAuthenticationService{
 	@Override
 	public DtoUser register(RegisterRequest input) {
 		DtoUser dtoUser = new DtoUser();
+		DtoCredit dtoCredit = new DtoCredit();
 		User savedUser = userRepository.save(createUser(input));
 		BeanUtils.copyProperties(savedUser, dtoUser);
+		BeanUtils.copyProperties(savedUser.getCredit(), dtoCredit);
+		dtoUser.setCredit(dtoCredit);
 		return dtoUser;
 	}
 
