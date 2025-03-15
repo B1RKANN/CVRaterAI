@@ -12,6 +12,11 @@ public enum MessageType {
 	REFRESH_TOKEN_NOT_FOUND("1008","Refresh Token Bulunamadı"),
 	REFRESH_TOKEN_IS_EXPIRED("1009","Refresh Tokenın Süresi Bitmiştir"),
 	INSUFFICIENT_CREDIT("1010","Yetersiz Kredi"),
+	USER_NOT_FOUND("1011","Kullanıcı Bulunamadı"),
+	INVALID_FILE_TYPE("1012","Geçersiz Dosya Türü"),
+	FILE_PROCESSING_ERROR("1013","Dosya İşleme Hatası"),
+	EVALUATION_FAILED("1014","Değerlendirme Başarısız"),
+	EVALUATION_NOT_FOUND("1015","Değerlendirme Kaydı Bulunamadı"),
 	GENERAL_EXCEPTION("9999","Genel Bir Hata Oluştu");
 	
 	private String code;
