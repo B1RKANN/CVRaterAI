@@ -31,4 +31,12 @@ public class Credit extends BaseEntity {
 
 	@Column(name = "expired_date")
 	private Date expiredDate;
+	
+	/**
+	 * Kredi sayısını ayarlar
+	 * @param count Kredi sayısı
+	 */
+	public void setCreditCount(int count) {
+		this.userCredit = count;
+	}
 }

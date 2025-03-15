@@ -2,19 +2,19 @@ package com.birkann.jwt;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.birkann.exception.BaseException;
-import com.birkann.exception.ErrorMessage;
-import com.birkann.exception.MessageType;
+import com.birkann.service.IJWTService;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,53 +23,93 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	
+	private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticaterFilter.class);
+	
 	@Autowired
-	private JWTService jwtService;
+	private IJWTService jwtService;
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	/**
+	 * Bu metot filtre uygulanmaması gereken URL'leri belirler
+	 * Kayıt, giriş ve token yenileme işlemleri için filtre uygulanmamalıdır
+	 */
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		String path = request.getServletPath();
+		logger.debug("shouldNotFilter kontrol ediliyor, yol: {}", path);
+		
+		// Bu URL'ler filtre uygulanmadan geçebilir
+		return path.equals("/register") || 
+			   path.equals("/authenticate") || 
+			   path.equals("/refreshToken") ||
+			   path.startsWith("/auth/v2/register") || 
+			   path.startsWith("/auth/v2/authenticate") || 
+			   path.startsWith("/auth/v2/refreshToken");
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		String path = request.getRequestURI();
-
-		String header = request.getHeader("Authorization");
+		String requestURI = request.getRequestURI();
+		logger.debug("JWT Filter işleniyor. URI: {}, Metod: {}", requestURI, request.getMethod());
 		
-		if (header==null) {
+		String header = request.getHeader("Authorization");
+		if(header == null || !header.startsWith("Bearer ")) {
+			logger.debug("Authorization header bulunamadı veya geçersiz. URI: {}", requestURI);
 			filterChain.doFilter(request, response);
 			return;
 		}
 		
-		String token;
-		String username;
+		String token = header.substring(7);
+		String username = null;
 		
-		token = header.substring(7);
 		try {
-			username = jwtService.getUsernameByToken(token);
-			if (username!=null&&SecurityContextHolder.getContext().getAuthentication()==null) {
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-				if (userDetails!=null&&jwtService.isTokenValid(token)) {
-					UsernamePasswordAuthenticationToken authenticationToken = new
-					UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
-					
-					authenticationToken.setDetails(userDetails);
-					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-				}
-				
-				
+			username = jwtService.extractUsername(token);
+			logger.debug("JWT'den çıkarılan kullanıcı adı: {}, URI: {}", username, requestURI);
+		} catch (Exception e) {
+			logger.error("JWT işleme hatası: {}, URI: {}", e.getMessage(), requestURI);
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
+		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			logger.debug("SecurityContext boş, kullanıcı doğrulanıyor: {}, URI: {}", username, requestURI);
+			
+			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+			if(userDetails == null) {
+				logger.warn("Kullanıcı bulunamadı: {}, URI: {}", username, requestURI);
+				filterChain.doFilter(request, response);
+				return;
 			}
 			
-		} 
-		catch (ExpiredJwtException ex) {
-			throw new BaseException(new ErrorMessage(MessageType.TOKEN_IS_EXPIRED, ex.getMessage()));
+			logger.debug("Kullanıcı detayları yüklendi: {}, yetkileri: {}, URI: {}", 
+					username, userDetails.getAuthorities(), requestURI);
+			
+			if(jwtService.isTokenValid(token, userDetails)) {
+				logger.debug("JWT geçerli, kimlik doğrulama oluşturuluyor: {}, URI: {}", username, requestURI);
+				
+				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+						userDetails,
+						null,
+						userDetails.getAuthorities());
+				
+				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(authToken);
+				
+				logger.debug("Kimlik doğrulama başarılı, SecurityContext güncellendi: {}, yetkileri: {}, URI: {}", 
+						username, userDetails.getAuthorities(), requestURI);
+			} else {
+				logger.warn("JWT geçersiz: {}, URI: {}", username, requestURI);
+			}
+		} else if (username != null) {
+			logger.debug("SecurityContext zaten dolu. Mevcut kimlik: {}, URI: {}", 
+					SecurityContextHolder.getContext().getAuthentication().getName(), requestURI);
 		}
-		catch (Exception e) {
-			throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, e.getMessage()));
-		}
-		filterChain.doFilter(request, response);
 		
+		filterChain.doFilter(request, response);
 	}
-	
+
 }

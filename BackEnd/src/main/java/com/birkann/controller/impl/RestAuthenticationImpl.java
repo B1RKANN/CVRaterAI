@@ -1,6 +1,8 @@
 package com.birkann.controller.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +15,8 @@ import com.birkann.dto.AuthResponse;
 import com.birkann.dto.DtoUser;
 import com.birkann.dto.RefreshTokenRequest;
 import com.birkann.dto.RegisterRequest;
+import com.birkann.model.User;
+import com.birkann.service.IAuthService;
 import com.birkann.service.IAuthenticationService;
 
 import jakarta.validation.Valid;
@@ -23,6 +27,8 @@ public class RestAuthenticationImpl extends RestBaseController implements IRestA
 	@Autowired
 	private IAuthenticationService authenticationService;
 	
+	@Autowired
+    private IAuthService authService;
 	
 	@PostMapping("/register")
 	@Override
@@ -30,14 +36,12 @@ public class RestAuthenticationImpl extends RestBaseController implements IRestA
 		return ok(authenticationService.register(input));
 	}
 
-
 	@PostMapping("/authenticate")
 	@Override
 	public RootEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest input) {
 		// TODO Auto-generated method stub
 		return ok(authenticationService.authenticate(input));
 	}
-
 	
 	@PostMapping("/refreshToken")
 	@Override
@@ -45,4 +49,8 @@ public class RestAuthenticationImpl extends RestBaseController implements IRestA
 		return ok(authenticationService.refreshToken(input));
 	}
 	
+	@Override
+    public ResponseEntity<User> createAdminUser(@RequestBody RegisterRequest request) {
+        throw new UnsupportedOperationException("Bu endpoint artık kullanımda değil, lütfen /auth/v2/admin/create endpoint'ini kullanın");
+    }
 }

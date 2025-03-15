@@ -6,6 +6,7 @@ import com.birkann.enums.FileType;
 
 public class CVEvaluationResponse {
     private Long id;
+    private Long userId;
     private String fileName;
     private FileType fileType;
     private String githubUrl;
@@ -13,6 +14,7 @@ public class CVEvaluationResponse {
     private Integer evaluationScore;
     private String evaluationResult;
     private Date evaluationDate;
+    private String fullName;
     
     public Long getId() {
         return id;
@@ -20,6 +22,14 @@ public class CVEvaluationResponse {
     
     public void setId(Long id) {
         this.id = id;
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     
     public String getFileName() {
@@ -76,5 +86,13 @@ public class CVEvaluationResponse {
     
     public void setJobRequirements(String jobRequirements) {
         this.jobRequirements = jobRequirements;
+    }
+    
+    public String getFullName() {
+        return fullName;
+    }
+    
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 } 
