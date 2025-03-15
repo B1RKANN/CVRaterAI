@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins_regular"
-            android:text="Welcome!"
+            android:text="Welcome !"
             android:textColor="@color/box_blue"
             android:textSize="24sp" />
 
@@ -51,16 +51,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Emaill"
+                android:text="Email"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/emailInput"
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/input_background_selector"
+                android:background="@drawable/edit_text_selector"
                 android:fontFamily="@font/poppins_regular"
                 android:inputType="textEmailAddress"
                 android:paddingHorizontal="16dp"
@@ -78,11 +78,11 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/passwordInput"
+                android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/input_background_selector"
+                android:background="@drawable/edit_text_selector"
                 android:fontFamily="@font/poppins_regular"
                 android:inputType="textPassword"
                 android:paddingHorizontal="16dp"
@@ -91,11 +91,11 @@
                 android:textSize="16sp" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnSignIn"
+                android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                app:cardBackgroundColor="@color/primary_blue"
+                app:cardBackgroundColor="@color/box_blue"
                 app:cardCornerRadius="25dp"
                 app:cardElevation="0dp">
 
@@ -105,7 +105,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:paddingVertical="16dp"
-                    android:text="Sign In"
+                    android:text="Login"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -122,12 +122,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Don't have an account? "
+                    android:text=" Don't you have an account?"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/btnSignUp"
+                    android:id="@+id/tvRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"

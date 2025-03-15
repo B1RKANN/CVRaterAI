@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.card.MaterialCardView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
+import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,12 +43,16 @@ class HomePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<MaterialCardView>(R.id.cardProfile).setOnClickListener {
-            // TODO: Implement CV upload functionality
+        // Profil kartına tıklama olayını ayarla
+        view.findViewById<CardView>(R.id.cardProfile).setOnClickListener {
+            // ProfileFragment'e geçiş yap
+            findNavController().navigate(R.id.action_homePageFragment_to_profileFragment)
         }
 
-        view.findViewById<MaterialCardView>(R.id.cardProfile).setOnClickListener {
-            // TODO: Implement profile view functionality
+        // CV yükleme kartına tıklama olayını ayarla
+        view.findViewById<CardView>(R.id.cardUploadCV).setOnClickListener {
+            // UploadCvFragment'e geçiş yap
+            findNavController().navigate(R.id.action_homePageFragment_to_uploadCvFragment)
         }
     }
 

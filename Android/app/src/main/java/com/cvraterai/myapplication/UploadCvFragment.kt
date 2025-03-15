@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +38,16 @@ class UploadCvFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_upload_cv, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        // Next butonuna tıklama olayını ayarla
+        view.findViewById<CardView>(R.id.cardNext).setOnClickListener {
+            // CvRequiredFragment'e geçiş yap
+            findNavController().navigate(R.id.action_uploadCvFragment_to_cvRequiredFragment)
+        }
     }
 
     companion object {

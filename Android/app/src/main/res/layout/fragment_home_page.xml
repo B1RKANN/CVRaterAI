@@ -51,10 +51,11 @@
         app:cardMaxElevation="12dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardProfile">
+        app:layout_constraintTop_toBottomOf="@id/tvExplore"
+        app:layout_constraintVertical_bias="0.1">
 
         <LinearLayout
             android:layout_width="267dp"
@@ -84,12 +85,11 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardProfile"
+        android:id="@+id/cardUploadCV"
         android:layout_width="300dp"
         android:layout_height="216dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="132dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginTop="24dp"
         android:elevation="8dp"
         app:cardBackgroundColor="@color/btn_blue"
         app:cardCornerRadius="16dp"
@@ -97,10 +97,9 @@
         app:cardMaxElevation="12dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        app:layout_constraintTop_toBottomOf="@id/cardProfile">
 
         <LinearLayout
             android:layout_width="267dp"

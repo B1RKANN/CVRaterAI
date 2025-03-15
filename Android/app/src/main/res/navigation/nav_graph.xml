@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/firstPageFragment">
+
+    <fragment
+        android:id="@+id/firstPageFragment"
+        android:name="com.cvraterai.myapplication.FirstPageFragment"
+        android:label="fragment_first_page"
+        tools:layout="@layout/fragment_first_page">
+        <action
+            android:id="@+id/action_firstPageFragment_to_step1Fragment"
+            app:destination="@id/step1Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/step1Fragment"
+        android:name="com.cvraterai.myapplication.Step1Fragment"
+        android:label="fragment_step1"
+        tools:layout="@layout/fragment_step1">
+        <action
+            android:id="@+id/action_step1Fragment_to_step2Fragment"
+            app:destination="@id/step2Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/step2Fragment"
+        android:name="com.cvraterai.myapplication.Step2Fragment"
+        android:label="fragment_step2"
+        tools:layout="@layout/fragment_step2">
+        <action
+            android:id="@+id/action_step2Fragment_to_step3Fragment"
+            app:destination="@id/step3Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_step2Fragment_to_step1Fragment"
+            app:destination="@id/step1Fragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/step3Fragment"
+        android:name="com.cvraterai.myapplication.Step3Fragment"
+        android:label="fragment_step3"
+        tools:layout="@layout/fragment_step3">
+        <action
+            android:id="@+id/action_step3Fragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/firstPageFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_step3Fragment_to_step2Fragment"
+            app:destination="@id/step2Fragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="com.cvraterai.myapplication.AnalysisFragment"
+        android:label="fragment_analysis"
+        tools:layout="@layout/fragment_analysis" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.cvraterai.myapplication.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/homePageFragment"
+        android:name="com.cvraterai.myapplication.HomePageFragment"
+        android:label="fragment_home_page"
+        tools:layout="@layout/fragment_home_page">
+        <action
+            android:id="@+id/action_homePageFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homePageFragment_to_uploadCvFragment"
+            app:destination="@id/uploadCvFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.cvraterai.myapplication.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.cvraterai.myapplication.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uploadCvFragment"
+        android:name="com.cvraterai.myapplication.UploadCvFragment"
+        android:label="fragment_upload_cv"
+        tools:layout="@layout/fragment_upload_cv">
+        <action
+            android:id="@+id/action_uploadCvFragment_to_cvRequiredFragment"
+            app:destination="@id/cvRequiredFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cvRequiredFragment"
+        android:name="com.cvraterai.myapplication.CvRequiredFragment"
+        android:label="fragment_cv_required"
+        tools:layout="@layout/fragment_cv_required">
+        <action
+            android:id="@+id/action_cvRequiredFragment_to_informationFragment"
+            app:destination="@id/informationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/informationFragment"
+        android:name="com.cvraterai.myapplication.InformationFragment"
+        android:label="fragment_information"
+        tools:layout="@layout/fragment_information">
+        <action
+            android:id="@+id/action_informationFragment_to_analysisFragment"
+            app:destination="@id/analysisFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+</navigation> 
