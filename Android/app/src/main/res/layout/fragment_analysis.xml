@@ -588,6 +588,13 @@
                 android:layout_height="8dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/indicator_selected" />
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/indicator_unselected" />
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

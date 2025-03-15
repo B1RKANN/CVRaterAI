@@ -3,7 +3,8 @@
     <string name="app_name">CVRaterAI</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    
+    <string name="ai_note">AI Note</string>
+
     <!-- FirstPageFragment -->
     <string name="app_title">CVRaterAI</string>
     <string name="app_subtitle">AI-Powered CV Analysis\nPlatform</string>
@@ -11,7 +12,7 @@
     <string name="get_started">Get Started</string>
     <string name="continue_in_turkish">Türkçe devam et</string>
     <string name="continue_in_english">Continue in English</string>
-    
+
     <!-- Step Fragments -->
     <string name="step1_title">1.Step</string>
     <string name="step1_description">Upload Your CV</string>
@@ -21,7 +22,7 @@
     <string name="step3_description">Analysis Results</string>
     <string name="swipe_left">Swipe left to continue</string>
     <string name="next">Next</string>
-    
+
     <!-- LoginFragment -->
     <string name="login_title">Login</string>
     <string name="login_welcome">Welcome to CVRaterAI</string>
@@ -30,14 +31,14 @@
     <string name="login_button">Login</string>
     <string name="register_prompt">Don\'t have an account?</string>
     <string name="register_action">Register</string>
-    
+
     <!-- RegisterFragment -->
     <string name="register_hello">Hello, Friend!</string>
     <string name="surname">Surname</string>
     <string name="sign_up">Sign Up</string>
     <string name="have_account">Do you already have an account? Login</string>
     <string name="or">or</string>
-    
+
     <!-- InformationFragment -->
     <string name="user_information">User Information</string>
     <string name="name_colon">Name : </string>
@@ -45,7 +46,8 @@
     <string name="email_colon">Email : </string>
     <string name="phone_number_colon">Phone Number : </string>
     <string name="skills_colon">Skills : </string>
-    
+    <string name="back_to_homepage">Back to homepage</string>
+
     <!-- HomePageFragment -->
     <string name="welcome">Welcome!</string>
     <string name="home_description">Analyze CVs with CVRaterAI and find the most suitable candidates.</string>
@@ -55,28 +57,28 @@
     <string name="explore">Explore</string>
     <string name="profile_card_title">View Your Profile</string>
     <string name="upload_card_title">Upload a CV</string>
-    
+
     <!-- ProfileFragment -->
     <string name="user_details">User Details</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="credit">Credit</string>
     <string name="free">FREE</string>
-    
+
     <!-- UploadCvFragment -->
     <string name="upload_title">Upload CV</string>
     <string name="upload_description">Upload the CV you want to analyze</string>
     <string name="select_file">Select File</string>
     <string name="upload_description1">Analyze candidates\' resumes quickly with CVRaterAI and accelerate your recruitment process.</string>
     <string name="upload_description2">Fast and detailed analysis for your HR team.</string>
-    
+
     <!-- CvRequiredFragment -->
     <string name="required_features">Required Features</string>
     <string name="github_link">GitHub Link (Optional)</string>
     <string name="analyze_cv">Analyze CV</string>
     <string name="required_features_example">B1 level English, Java, Spring Boot, C++ and C# knowledge, ability to work well in a team</string>
     <string name="github_link_example">https://github.com/username</string>
-    
+
     <!-- AnalysisFragment -->
     <string name="analysis_title">CV Analysis</string>
     <string name="analysis_in_progress">Analysis in progress...</string>

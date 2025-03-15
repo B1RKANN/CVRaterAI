@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.Button
 import androidx.core.view.GestureDetectorCompat
 import androidx.navigation.fragment.findNavController
 
@@ -53,6 +54,12 @@ class InformationFragment : Fragment(), GestureDetector.OnGestureListener {
         view.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
             true
+        }
+        
+        // Anasayfaya dön butonuna tıklama olayını ayarla
+        view.findViewById<Button>(R.id.btnBackToHomepage).setOnClickListener {
+            // Anasayfaya geçiş yap
+            findNavController().navigate(R.id.action_informationFragment_to_homePageFragment)
         }
     }
 
