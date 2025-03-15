@@ -42,7 +42,7 @@
             android:shadowDx="0"
             android:shadowDy="4"
             android:shadowRadius="4"
-            android:text="CVRaterAI"
+            android:text="@string/app_name"
             android:textColor="@color/primary_blue"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
-                android:text="Analyze candidates' resumes quickly with CVRaterAI and accelerate your recruitment process."
+                android:text="@string/upload_description1"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -102,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
-                android:text="Fast and detailed analysis for your HR team."
+                android:text="@string/upload_description2"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -131,7 +131,7 @@
                     android:fontFamily="@font/poppins_bold"
                     android:gravity="center"
                     android:paddingVertical="14dp"
-                    android:text="Upload CV"
+                    android:text="@string/upload_cv"
                     android:textColor="@color/primary_blue"
                     android:textSize="20sp" />
             </FrameLayout>
@@ -196,7 +196,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center"
                 android:paddingVertical="16dp"
-                android:text="Next"
+                android:text="@string/next"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 

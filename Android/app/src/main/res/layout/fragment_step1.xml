@@ -88,27 +88,29 @@
             android:padding="24dp">
 
             <TextView
-                android:layout_width="111dp"
-                android:layout_height="wrap_content"
+                android:layout_width="172dp"
+                android:layout_height="69dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="1.Step"
+                android:gravity="center"
+                android:text="@string/step1_title"
                 android:textColor="@color/white"
                 android:textSize="34sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="224dp"
+                android:layout_height="70dp"
                 android:layout_marginBottom="3dp"
                 android:fontFamily="@font/poppins_light"
-                android:text="Upload Your CV"
+                android:gravity="center"
+                android:text="@string/step1_description"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="160dp"
-                android:layout_height="135dp"
+                android:layout_width="96dp"
+                android:layout_height="78dp"
                 android:layout_marginBottom="15dp"
                 android:src="@drawable/download" />
 
@@ -133,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/poppins_regular"
-            android:text="Swipe left to continue"
+            android:text="@string/swipe_left"
             android:textColor="@color/white"
             android:textSize="16sp" />
             

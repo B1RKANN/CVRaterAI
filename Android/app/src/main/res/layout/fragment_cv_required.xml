@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="CVRaterAI"
+            android:text="@string/app_name"
             android:textColor="@color/primary_blue"
             android:textSize="32sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="Required Features"
+                    android:text="@string/required_features"
                     android:textColor="@color/primary_blue"
                     android:textSize="20sp" />
 
@@ -92,7 +92,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="GitHub Linki (Opsiyonel)"
+                    android:text="@string/github_link"
                     android:textColor="@color/primary_blue"
                     android:textSize="20sp" />
 
@@ -131,7 +131,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center"
                 android:paddingVertical="14dp"
-                android:text="Analyze CV"
+                android:text="@string/analyze_cv"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </androidx.cardview.widget.CardView>

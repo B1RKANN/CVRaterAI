@@ -8,6 +8,54 @@
     tools:context=".FirstPageFragment">
 
     <!-- Background Bubbles -->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnContinueInEnglish"
+        android:layout_width="194dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="#1E3A8A"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTurkceDevamEt">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="@string/continue_in_english"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnTurkceDevamEt"
+        android:layout_width="194dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="120dp"
+        app:cardBackgroundColor="#1E3A8A"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGetStarted">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="@string/continue_in_turkish"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+    </androidx.cardview.widget.CardView>
+
     <View
         android:layout_width="236dp"
         android:layout_height="232dp"
@@ -28,6 +76,7 @@
         app:layout_constraintVertical_bias="0.4" />
 
     <View
+        android:id="@+id/view6"
         android:layout_width="320dp"
         android:layout_height="320dp"
         android:layout_marginStart="-100dp"
@@ -53,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_regular"
-            android:text="CVRaterAI"
+            android:text="@string/app_title"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold" />
@@ -64,7 +113,7 @@
             android:layout_marginTop="48dp"
             android:fontFamily="@font/poppins_black"
             android:gravity="center"
-            android:text="AI-Powered CV Analysis\nPlatform"
+            android:text="@string/app_subtitle"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -80,7 +129,7 @@
             android:layout_marginTop="24dp"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center"
-            android:text="Find the right candidate faster!\nAnalyze CVs with AI and optimize your\nhiring process."
+            android:text="@string/app_description"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -88,25 +137,26 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/btnGetStarted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_width="194dp"
+        android:layout_height="63dp"
+        android:layout_marginBottom="75dp"
         app:cardBackgroundColor="#1E3A8A"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
             android:paddingHorizontal="48dp"
             android:paddingVertical="16dp"
-            android:text="Get Started"
+            android:text="@string/get_started"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
     </androidx.cardview.widget.CardView>
 
