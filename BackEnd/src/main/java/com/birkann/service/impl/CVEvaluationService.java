@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +34,7 @@ import com.birkann.repository.CVEvaluationRepository;
 import com.birkann.repository.CreditRepository;
 import com.birkann.repository.UserRepository;
 import com.birkann.service.ICVEvaluationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class CVEvaluationService implements ICVEvaluationService {
@@ -94,6 +97,9 @@ public class CVEvaluationService implements ICVEvaluationService {
             String evaluationResult = (String) analysisResult.get("evaluationResult");
             Integer score = parseScore(analysisResult.get("score"));
             
+            // Eski formatı yeni formata dönüştür
+            evaluationResult = convertToNewFormat(evaluationResult);
+            
             // CV değerlendirme kaydını oluştur
             CVEvaluation evaluation = new CVEvaluation();
             evaluation.setFileName(fileName);
@@ -145,6 +151,40 @@ public class CVEvaluationService implements ICVEvaluationService {
         
         // DTO'ya çevir ve dön
         return mapToResponse(evaluation);
+    }
+    
+    @Override
+    public int convertAllToNewFormat() {
+        int count = 0;
+        
+        // Tüm değerlendirme kayıtlarını getir
+        List<CVEvaluation> allEvaluations = evaluationRepository.findAll();
+        logger.info("Toplam {} değerlendirme bulundu", allEvaluations.size());
+        
+        for (CVEvaluation evaluation : allEvaluations) {
+            try {
+                // Eski formatı kontrol et
+                String result = evaluation.getEvaluationResult();
+                
+                if (result != null && !result.trim().isEmpty()) {
+                    // Yeni formata dönüştür
+                    String newFormat = convertToNewFormat(result);
+                    
+                    // Eğer değişiklik olduysa, kaydı güncelle
+                    if (!result.equals(newFormat)) {
+                        evaluation.setEvaluationResult(newFormat);
+                        evaluationRepository.save(evaluation);
+                        count++;
+                        logger.info("Değerlendirme #{} yeni formata dönüştürüldü", evaluation.getId());
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Değerlendirme #{} dönüştürülürken hata: {}", evaluation.getId(), e.getMessage());
+            }
+        }
+        
+        logger.info("Toplam {} değerlendirme yeni formata dönüştürüldü", count);
+        return count;
     }
     
     /**
@@ -205,5 +245,169 @@ public class CVEvaluationService implements ICVEvaluationService {
         CVEvaluationResponse response = new CVEvaluationResponse();
         BeanUtils.copyProperties(evaluation, response);
         return response;
+    }
+
+    /**
+     * Eski JSON formatını yeni JSON formatına dönüştürür
+     */
+    public String convertToNewFormat(String oldFormatJson) {
+        try {
+            // Boş kontrol
+            if (oldFormatJson == null || oldFormatJson.trim().isEmpty()) {
+                return oldFormatJson;
+            }
+            
+            // JSON olup olmadığını kontrol et
+            if (!oldFormatJson.trim().startsWith("{") || !oldFormatJson.trim().endsWith("}")) {
+                return oldFormatJson;
+            }
+            
+            // JSON'ı parse et
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> oldFormat = objectMapper.readValue(oldFormatJson, Map.class);
+            
+            // Yeni format JSON oluştur
+            Map<String, Object> newFormat = new HashMap<>();
+            
+            // userInformation alanı
+            Map<String, Object> userInfo = new HashMap<>();
+            
+            // Eğer yeni format zaten varsa, doğrudan döndür
+            if (oldFormat.containsKey("userInformation")) {
+                return oldFormatJson;
+            }
+            
+            // Kişisel bilgileri al
+            if (oldFormat.containsKey("kisiselBilgiler")) {
+                Map<String, Object> kisiselBilgiler = (Map<String, Object>) oldFormat.get("kisiselBilgiler");
+                userInfo.put("name", kisiselBilgiler.getOrDefault("name", "Belirtilmemiş"));
+                userInfo.put("surname", kisiselBilgiler.getOrDefault("surname", "Belirtilmemiş"));
+                userInfo.put("email", kisiselBilgiler.getOrDefault("email", "Belirtilmemiş"));
+                userInfo.put("phone", kisiselBilgiler.getOrDefault("phoneNumber", "Belirtilmemiş"));
+                
+                // Skills alanını işle
+                Object skills = kisiselBilgiler.get("skills");
+                if (skills instanceof List) {
+                    // Liste ise birleştir
+                    List<String> skillsList = (List<String>) skills;
+                    userInfo.put("skills", String.join(", ", skillsList));
+                } else if (skills != null) {
+                    userInfo.put("skills", skills.toString());
+                } else {
+                    userInfo.put("skills", "");
+                }
+            } else {
+                userInfo.put("name", "Belirtilmemiş");
+                userInfo.put("surname", "Belirtilmemiş");
+                userInfo.put("email", "Belirtilmemiş");
+                userInfo.put("phone", "Belirtilmemiş");
+                userInfo.put("skills", "");
+            }
+            newFormat.put("userInformation", userInfo);
+            
+            // skillRatings alanı - teknikYetenekler'den ayrıştır
+            List<Map<String, Object>> skillRatings = new ArrayList<>();
+            if (oldFormat.containsKey("teknikYetenekler")) {
+                String teknikYetenekler = oldFormat.get("teknikYetenekler").toString();
+                
+                // Örnek: "Java %50, Kotlin %65, Android %40, HTML %60, CSS %55, JS %50, Figma %30"
+                String[] pairs = teknikYetenekler.split(",");
+                for (String pair : pairs) {
+                    pair = pair.trim();
+                    if (pair.contains("%")) {
+                        String[] parts = pair.split("%");
+                        if (parts.length > 0) {
+                            String language = parts[0].trim();
+                            int percentage = 0;
+                            try {
+                                if (parts.length > 1) {
+                                    percentage = Integer.parseInt(parts[1].trim());
+                                }
+                            } catch (NumberFormatException e) {
+                                // Yüzde değerini çıkaramazsak 0 kullan
+                            }
+                            
+                            Map<String, Object> skill = new HashMap<>();
+                            skill.put("language", language);
+                            skill.put("percentage", percentage);
+                            skillRatings.add(skill);
+                        }
+                    }
+                }
+                newFormat.put("skillRatings", skillRatings);
+            } else if (oldFormat.containsKey("githubDiller")) {
+                // GitHub dilleri varsa onları da ekle
+                Map<String, Object> githubDiller = (Map<String, Object>) oldFormat.get("githubDiller");
+                for (Map.Entry<String, Object> entry : githubDiller.entrySet()) {
+                    String language = entry.getKey();
+                    double percentage = 0;
+                    
+                    try {
+                        Object value = entry.getValue();
+                        if (value instanceof Number) {
+                            percentage = ((Number) value).doubleValue();
+                        } else if (value instanceof String) {
+                            percentage = Double.parseDouble(value.toString());
+                        }
+                    } catch (NumberFormatException e) {
+                        // Yüzde değerini çıkaramazsak 0 kullan
+                    }
+                    
+                    Map<String, Object> skill = new HashMap<>();
+                    skill.put("language", language);
+                    skill.put("percentage", (int) percentage);
+                    skillRatings.add(skill);
+                }
+                
+                // Eğer hala boş ise, null olarak bırak
+                if (skillRatings.isEmpty()) {
+                    newFormat.put("skillRatings", null);
+                } else {
+                    newFormat.put("skillRatings", skillRatings);
+                }
+            } else {
+                newFormat.put("skillRatings", null);
+            }
+            
+            // compatibilityStatus - puan değerini kullan
+            int compatibilityStatus = 0;
+            if (oldFormat.containsKey("puan")) {
+                Object puanObj = oldFormat.get("puan");
+                if (puanObj instanceof Number) {
+                    compatibilityStatus = ((Number) puanObj).intValue();
+                } else if (puanObj instanceof String) {
+                    try {
+                        compatibilityStatus = Integer.parseInt(puanObj.toString());
+                    } catch (NumberFormatException e) {
+                        // Parse hatası, 0 kullan
+                    }
+                }
+            }
+            newFormat.put("compatibilityStatus", compatibilityStatus);
+            
+            // explanation - genelDegerlendirme veya gereksinimUyumlulugu alanlarını kullan
+            StringBuilder explanation = new StringBuilder();
+            if (oldFormat.containsKey("genelDegerlendirme")) {
+                explanation.append(oldFormat.get("genelDegerlendirme"));
+            }
+            if (oldFormat.containsKey("gereksinimUyumlulugu")) {
+                if (explanation.length() > 0) {
+                    explanation.append("\n\n");
+                }
+                explanation.append(oldFormat.get("gereksinimUyumlulugu"));
+            }
+            if (explanation.length() == 0 && oldFormat.containsKey("gucluYonler")) {
+                explanation.append(oldFormat.get("gucluYonler"));
+            }
+            
+            newFormat.put("explanation", explanation.toString());
+            
+            // Yeni JSON formatını string olarak döndür
+            return objectMapper.writeValueAsString(newFormat);
+            
+        } catch (Exception e) {
+            // Hata durumunda orijinal string'i döndür
+            return oldFormatJson;
+        }
     }
 } 

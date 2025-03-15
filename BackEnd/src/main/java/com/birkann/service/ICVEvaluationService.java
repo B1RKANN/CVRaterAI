@@ -43,4 +43,10 @@ public interface ICVEvaluationService {
      * @return Değerlendirme detayları
      */
     CVEvaluationResponse getEvaluation(Long evaluationId);
+    
+    /**
+     * Tüm değerlendirme kayıtlarını yeni formata dönüştürür
+     * @return Dönüştürülen kayıt sayısı
+     */
+    int convertAllToNewFormat();
 } 

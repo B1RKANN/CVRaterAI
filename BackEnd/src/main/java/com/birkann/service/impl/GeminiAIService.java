@@ -552,15 +552,7 @@ public class GeminiAIService {
      */
     private String createPrompt(String fileContent, String fileType, String contentType, String githubUrl, Map<String, Object> githubData, String jobRequirements) {
         StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append("Sen bir CV/Özgeçmiş analizi uzmanısın ve en önemli özelliğin, CV'leri çok doğru şekilde anlamandır. ");
-        promptBuilder.append("Aşağıdaki CV belgesini analiz et ve istenen bilgileri tam olarak çıkar.\n\n");
-        
-        // E-posta ve telefon gibi kişisel bilgileri algılama yönergelerini güçlendir
-        promptBuilder.append("ÖNEMLİ - KİŞİSEL BİLGİLERİ BULMA TALİMATLARI:\n");
-        promptBuilder.append("1. CV'deki kişisel bilgileri (isim, soyisim, e-posta, telefon) MUTLAKA ve DOĞRU tespit et.\n");
-        promptBuilder.append("2. E-posta için şu formatları ara: *@*.com, *@*.net, *@*.org, vb. (örnek: example@domain.com)\n");
-        promptBuilder.append("3. Telefon numaraları genellikle şu formatlarda olur: +90 5XX XXX XXXX, 05XX XXX XXXX, 5XX XXX XX XX, vb.\n");
-        promptBuilder.append("4. Her iletişim bilgisini birçok kez kontrol et ve bulamazsan 'Belirtilmemiş' yerine doğrudan metinden aldığın değeri koy.\n\n");
+        promptBuilder.append("Sen bir CV analiz uzmanısın. Aşağıdaki CV'yi analiz et ve istenen JSON formatında sonuç döndür.\n\n");
         
         // Dosya içeriğini ekle
         promptBuilder.append("### CV İÇERİĞİ ###\n\n");
@@ -593,47 +585,32 @@ public class GeminiAIService {
             promptBuilder.append(jobRequirements).append("\n\n");
         }
         
-        promptBuilder.append("GÖREV:\n");
-        promptBuilder.append("1. CV'yi SATIR SATIR DİKKATLİCE OKU ve kişisel bilgileri (isim, soyisim, e-posta, telefon) ve tüm teknik bilgileri doğru çıkar.\n");
-        promptBuilder.append("2. E-POSTA ve TELEFON bilgilerini özellikle ara ve CV'nin tüm bölümlerine bak. Bu bilgiler genellikle CV'nin başında veya sonunda olur.\n");
-        promptBuilder.append("3. Tüm bölümleri kontrol et, bilgiler CV'nin herhangi bir yerinde olabilir, Header/Footer kısımları da dahil.\n");
-        promptBuilder.append("4. CV ve GitHub bilgilerine göre bu kişinin teknik yeteneklerini gerçekçi yüzde değerleri ile değerlendir.\n");
-        promptBuilder.append("5. Yanıtını aşağıdaki JSON formatında ver ve sadece bu formatı kullan.\n\n");
-
-        promptBuilder.append("JSON FORMATI:\n");
+        // NET VE KESİN JSON FORMAT TALİMATLARI
+        promptBuilder.append("ÖNEMLİ: SADECE ve SADECE aşağıdaki JSON formatında cevap ver. Bunun dışında HİÇBİR açıklama ekleme.\n\n");
+        
+        promptBuilder.append("```json\n");
         promptBuilder.append("{\n");
-        promptBuilder.append("  \"kisiselBilgiler\": {\n");
-        promptBuilder.append("    \"name\": \"CV'den tespit ettiğin isim\",\n");
-        promptBuilder.append("    \"surname\": \"CV'den tespit ettiğin soyisim\",\n");
-        promptBuilder.append("    \"email\": \"CV'den tespit ettiğin e-posta - FORMAT: kullanici@domain.com\",\n");
-        promptBuilder.append("    \"phoneNumber\": \"CV'den tespit ettiğin telefon numarası - FORMAT: +905xxxxxxxxx veya 05xxxxxxxxx\",\n");
-        promptBuilder.append("    \"skills\": \"CV'de ve GitHub'da görünen tüm yeteneklerin listesi\"\n");
+        promptBuilder.append("  \"userInformation\": {\n");
+        promptBuilder.append("    \"name\": \"İsim\",\n");
+        promptBuilder.append("    \"surname\": \"Soyisim\",\n");
+        promptBuilder.append("    \"email\": \"E-posta\",\n");
+        promptBuilder.append("    \"phone\": \"Telefon\",\n");
+        promptBuilder.append("    \"skills\": \"Becerilerin özeti\"\n");
         promptBuilder.append("  },\n");
-        promptBuilder.append("  \"teknikYetenekler\": \"Java %65, Python %72, React %68 şeklinde gerçekçi yüzdelerle listelenen yetenekler\",\n");
-        promptBuilder.append("  \"gucluYonler\": \"Adayın güçlü yönleri\",\n");
-        promptBuilder.append("  \"gelistirilecekAlanlar\": \"Adayın geliştirebileceği beceriler\",\n");
-        promptBuilder.append("  \"egitimVeDeneyim\": \"Eğitim ve iş deneyimi özeti\",\n");
-        promptBuilder.append("  \"genelDegerlendirme\": \"Genel değerlendirme\",\n");
+        promptBuilder.append("  \"skillRatings\": [\n");
+        promptBuilder.append("    { \"language\": \"Programlama Dili/Teknoloji\", \"percentage\": 0-100 arası sayı }\n");
+        promptBuilder.append("  ],\n");
+        promptBuilder.append("  \"compatibilityStatus\": 0-100 arası sayı,\n");
+        promptBuilder.append("  \"explanation\": \"Kısa açıklama\"\n");
+        promptBuilder.append("}\n");
+        promptBuilder.append("```\n\n");
         
-        // İş gereksinimleri uyumluluğunu ekle
-        if (jobRequirements != null && !jobRequirements.trim().isEmpty()) {
-            promptBuilder.append("  \"gereksinimUyumlulugu\": \"İş gereksinimlerine uyumluluk değerlendirmesi\",\n");
-        }
-        
-        // GitHub bölümü
-        if (githubUrl != null && !githubUrl.isEmpty()) {
-            promptBuilder.append("  \"githubDiller\": {\n");
-            promptBuilder.append("    \"Dil1\": \"Yüzde değeri\",\n");
-            promptBuilder.append("    \"Dil2\": \"Yüzde değeri\",\n");
-            promptBuilder.append("    \"Dil3\": \"Yüzde değeri\"\n");
-            promptBuilder.append("  },\n");
-            promptBuilder.append("  \"githubProjeDegerlendirmesi\": \"GitHub projelerinin değerlendirmesi\",\n");
-        }
-        
-        promptBuilder.append("  \"puan\": 0-100 arası bir değer\n");
-        promptBuilder.append("}\n\n");
-        
-        promptBuilder.append("ÖNEMLİ TEKRAR UYARI: CV'yi çok dikkatli oku ve KİŞİSEL BİLGİLERİ özellikle ara. E-POSTA ve TELEFON bilgilerini CV'nin tüm bölümlerinde dikkatle arayıp mutlaka tespit et.\n");
+        promptBuilder.append("KURALLAR:\n");
+        promptBuilder.append("1. SADECE yukarıdaki formatı kullan.\n");
+        promptBuilder.append("2. Kişinin yazılımla ilgisi yoksa, skillRatings null olmalı (skillRatings: null).\n");
+        promptBuilder.append("3. Başka hiçbir açıklama ekleme, sadece JSON döndür.\n");
+        promptBuilder.append("4. JSON içinde Türkçe karakter kullanma.\n");
+        promptBuilder.append("5. Cevabını MUTLAKA JSON biçiminde formatla - başka metin ekleme.\n");
         
         return promptBuilder.toString();
     }
@@ -747,6 +724,10 @@ public class GeminiAIService {
                 logger.error("API hata döndürdü: {}", response.get("error"));
                 result.put("success", false);
                 result.put("error", "API hatası: " + response.get("error"));
+                
+                // Hata durumunda da formatlanmış JSON döndür
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
             
@@ -755,6 +736,10 @@ public class GeminiAIService {
                 logger.error("API yanıtında candidates bulunamadı");
                 result.put("success", false);
                 result.put("error", "API yanıtında candidates bulunamadı");
+                
+                // Hata durumunda da formatlanmış JSON döndür
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
             
@@ -763,6 +748,10 @@ public class GeminiAIService {
                 logger.error("API yanıtındaki candidates listesi boş");
                 result.put("success", false);
                 result.put("error", "API yanıtındaki candidates listesi boş");
+                
+                // Hata durumunda da formatlanmış JSON döndür
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
             
@@ -771,6 +760,10 @@ public class GeminiAIService {
                 logger.error("API yanıtında content bulunamadı");
                 result.put("success", false);
                 result.put("error", "API yanıtında content bulunamadı");
+                
+                // Hata durumunda da formatlanmış JSON döndür
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
             
@@ -779,6 +772,10 @@ public class GeminiAIService {
                 logger.error("API yanıtında parts bulunamadı");
                 result.put("success", false);
                 result.put("error", "API yanıtında parts bulunamadı");
+                
+                // Hata durumunda da formatlanmış JSON döndür
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
             
@@ -787,6 +784,10 @@ public class GeminiAIService {
                 logger.error("API yanıtında text bulunamadı");
                 result.put("success", false);
                 result.put("error", "API yanıtında text bulunamadı");
+                
+                // Hata durumunda da formatlanmış JSON döndür
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
             
@@ -824,9 +825,10 @@ public class GeminiAIService {
                         cleanedText = text.substring(startIndex, endIndex + 1);
                         logger.info("JSON bloğu metinden çıkarıldı: {}", cleanedText.substring(0, Math.min(50, cleanedText.length())));
                     } else {
-                        logger.warn("Metinde JSON formatında bir blok bulunamadı, tüm metni döndürüyorum");
+                        logger.warn("Metinde JSON formatında bir blok bulunamadı, varsayılan JSON formatı döndürülüyor");
+                        Map<String, Object> defaultResponse = getDefaultJsonResponse();
                         result.put("success", true);
-                        result.put("evaluationResult", text);
+                        result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                         result.put("score", 0);
                         return result;
                     }
@@ -836,46 +838,20 @@ public class GeminiAIService {
                     // JSON'ı parse et
                     Map<String, Object> evaluation = objectMapper.readValue(cleanedText, Map.class);
                     
-                    // Puanı çıkar
-                    Object score = null;
-                    if (evaluation.containsKey("puan")) {
-                        score = evaluation.get("puan");
-                    } else if (evaluation.containsKey("score")) {
-                        score = evaluation.get("score");
-                    }
+                    // İstenen JSON formatını dön
+                    Map<String, Object> cvAnalysisResults = createCvAnalysisResults(evaluation);
+                    
+                    // Tüm JSON'ı logla
+                    logger.info("CV Analiz Sonuçları: {}", objectMapper.writeValueAsString(cvAnalysisResults));
                     
                     result.put("success", true);
-                    result.put("evaluationResult", cleanedText);
-                    result.put("score", score != null ? score : 0);
+                    result.put("evaluationResult", objectMapper.writeValueAsString(cvAnalysisResults));
                     
-                    // Kişisel bilgileri log olarak yazdır (debug amacıyla)
-                    if (evaluation.containsKey("kisiselBilgiler")) {
-                        Map<String, Object> kisiselBilgiler = (Map<String, Object>) evaluation.get("kisiselBilgiler");
-                        logger.info("Çıkarılan kişisel bilgiler: isim={}, soyisim={}, e-posta={}, telefon={}",
-                            kisiselBilgiler.getOrDefault("name", "Belirtilmemiş"),
-                            kisiselBilgiler.getOrDefault("surname", "Belirtilmemiş"),
-                            kisiselBilgiler.getOrDefault("email", "Belirtilmemiş"),
-                            kisiselBilgiler.getOrDefault("phoneNumber", "Belirtilmemiş")
-                        );
-                        
-                        // E-posta ve telefon bilgilerini özel olarak kontrol et
-                        Object email = kisiselBilgiler.get("email");
-                        Object phone = kisiselBilgiler.get("phoneNumber");
-                        
-                        if (email == null || "Belirtilmemiş".equals(email) || email.toString().isEmpty()) {
-                            logger.warn("E-posta tespit edilemedi!");
-                        } else {
-                            logger.info("E-posta tespit edildi: {}", email);
-                        }
-                        
-                        if (phone == null || "Belirtilmemiş".equals(phone) || phone.toString().isEmpty()) {
-                            logger.warn("Telefon tespit edilemedi!");
-                        } else {
-                            logger.info("Telefon tespit edildi: {}", phone);
-                        }
-                    }
+                    // Eski değer için de compatibilityStatus değerini koy
+                    result.put("score", cvAnalysisResults.get("compatibilityStatus"));
                     
                     return result;
+                    
                 } catch (Exception e) {
                     logger.warn("JSON parse hatası: {}, JSON: {}", e.getMessage(), cleanedText);
                     
@@ -892,59 +868,154 @@ public class GeminiAIService {
                         try {
                             Map<String, Object> evaluation = objectMapper.readValue(extractedJson, Map.class);
                             
-                            Object score = null;
-                            if (evaluation.containsKey("puan")) {
-                                score = evaluation.get("puan");
-                            } else if (evaluation.containsKey("score")) {
-                                score = evaluation.get("score");
-                            }
+                            // İstenen JSON formatında yanıt oluştur
+                            Map<String, Object> cvAnalysisResults = createCvAnalysisResults(evaluation);
+                            
+                            // Tüm JSON'ı logla
+                            logger.info("CV Analiz Sonuçları (Regex sonrası): {}", objectMapper.writeValueAsString(cvAnalysisResults));
                             
                             result.put("success", true);
-                            result.put("evaluationResult", extractedJson);
-                            result.put("score", score != null ? score : 0);
+                            result.put("evaluationResult", objectMapper.writeValueAsString(cvAnalysisResults));
+                            result.put("score", cvAnalysisResults.get("compatibilityStatus"));
+                            
                             return result;
+                            
                         } catch (Exception ex) {
-                            logger.warn("Regex ile çıkarılan JSON parse edilemedi: {}", ex.getMessage());
-                        }
-                    }
-                    
-                    // JSON parseri başarısız oldu, metni olduğu gibi döndür
-                    result.put("success", true);
-                    result.put("evaluationResult", text);
-                    
-                    // Metinden puanı çıkarmaya çalış
-                    int scoreIndex = text.indexOf("puan");
-                    if (scoreIndex > 0) {
-                        String scorePart = text.substring(Math.max(0, scoreIndex - 10), Math.min(text.length(), scoreIndex + 10));
-                        try {
-                            String scoreStr = scorePart.replaceAll("[^0-9]", "");
-                            if (!scoreStr.isEmpty()) {
-                                result.put("score", Integer.parseInt(scoreStr));
-                            } else {
-                                result.put("score", 0);
-                            }
-                        } catch (Exception ex) {
+                            logger.error("Regex sonrası JSON parse hatası: {}", ex.getMessage(), ex);
+                            // Varsayılan JSON formatında yanıt oluştur
+                            Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                            result.put("success", true);
+                            result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                             result.put("score", 0);
+                            return result;
                         }
                     } else {
+                        logger.warn("Regex ile JSON çıkarılamadı, varsayılan JSON formatı döndürülüyor");
+                        // Varsayılan JSON formatında yanıt oluştur
+                        Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                        result.put("success", true);
+                        result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                         result.put("score", 0);
+                        return result;
                     }
-                    
-                    return result;
                 }
+                
             } catch (Exception e) {
                 logger.error("Yanıt işleme hatası: {}", e.getMessage(), e);
+                
+                // Varsayılan JSON formatında yanıt oluştur
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
                 result.put("success", false);
                 result.put("error", "Yanıt işleme hatası: " + e.getMessage());
-                return result;
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
+                result.put("score", 0);
             }
+            
+            return result;
         } catch (Exception e) {
-            logger.error("Beklenmeyen yanıt işleme hatası: {}", e.getMessage(), e);
-            result.put("success", false);
-            result.put("error", "Beklenmeyen yanıt işleme hatası: " + e.getMessage());
+            logger.error("Yanıt işleme hatası: {}", e.getMessage(), e);
+            
+            try {
+                // Varsayılan JSON formatında yanıt oluştur
+                Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("success", false);
+                result.put("error", "Yanıt işleme hatası: " + e.getMessage());
+                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
+                result.put("score", 0);
+            } catch (Exception ex) {
+                logger.error("Varsayılan JSON formatı oluşturma hatası: {}", ex.getMessage(), ex);
+                result.put("success", false);
+                result.put("error", "Kritik hata: " + e.getMessage() + ", " + ex.getMessage());
+                result.put("evaluationResult", "{}");
+                result.put("score", 0);
+            }
+            
+            return result;
+        }
+    }
+    
+    /**
+     * Değerlendirme verilerinden CV analiz sonuçlarını oluşturan yardımcı metot
+     */
+    private Map<String, Object> createCvAnalysisResults(Map<String, Object> evaluation) {
+        Map<String, Object> cvAnalysisResults = new HashMap<>();
+        
+        // userInformation alanını işle
+        if (evaluation.containsKey("userInformation")) {
+            cvAnalysisResults.put("userInformation", evaluation.get("userInformation"));
+        } else {
+            Map<String, Object> defaultUserInfo = new HashMap<>();
+            defaultUserInfo.put("name", "Belirtilmemiş");
+            defaultUserInfo.put("surname", "Belirtilmemiş");
+            defaultUserInfo.put("email", "Belirtilmemiş");
+            defaultUserInfo.put("phone", "Belirtilmemiş");
+            defaultUserInfo.put("skills", "");
+            cvAnalysisResults.put("userInformation", defaultUserInfo);
         }
         
-        return result;
+        // skillRatings alanını işle
+        if (evaluation.containsKey("skillRatings")) {
+            cvAnalysisResults.put("skillRatings", evaluation.get("skillRatings"));
+        } else {
+            cvAnalysisResults.put("skillRatings", null);
+        }
+        
+        // compatibilityStatus alanını işle
+        if (evaluation.containsKey("compatibilityStatus")) {
+            Object compatibilityStatus = evaluation.get("compatibilityStatus");
+            // Sayı tipine dönüştür
+            if (compatibilityStatus instanceof Integer) {
+                cvAnalysisResults.put("compatibilityStatus", compatibilityStatus);
+            } else if (compatibilityStatus instanceof Double) {
+                cvAnalysisResults.put("compatibilityStatus", ((Double) compatibilityStatus).intValue());
+            } else if (compatibilityStatus instanceof String) {
+                try {
+                    cvAnalysisResults.put("compatibilityStatus", Integer.parseInt(compatibilityStatus.toString()));
+                } catch (NumberFormatException e) {
+                    cvAnalysisResults.put("compatibilityStatus", 0);
+                }
+            } else {
+                cvAnalysisResults.put("compatibilityStatus", 0);
+            }
+        } else {
+            cvAnalysisResults.put("compatibilityStatus", 0);
+        }
+        
+        // explanation alanını işle
+        if (evaluation.containsKey("explanation")) {
+            cvAnalysisResults.put("explanation", evaluation.get("explanation"));
+        } else {
+            cvAnalysisResults.put("explanation", "");
+        }
+        
+        return cvAnalysisResults;
+    }
+    
+    /**
+     * Varsayılan JSON yanıt formatı oluşturan yardımcı metot
+     */
+    private Map<String, Object> getDefaultJsonResponse() {
+        Map<String, Object> defaultResponse = new HashMap<>();
+        
+        // Varsayılan kullanıcı bilgileri
+        Map<String, Object> defaultUserInfo = new HashMap<>();
+        defaultUserInfo.put("name", "Belirtilmemiş");
+        defaultUserInfo.put("surname", "Belirtilmemiş");
+        defaultUserInfo.put("email", "Belirtilmemiş");
+        defaultUserInfo.put("phone", "Belirtilmemiş");
+        defaultUserInfo.put("skills", "");
+        defaultResponse.put("userInformation", defaultUserInfo);
+        
+        // Varsayılan beceri oranları (null olarak ayarla)
+        defaultResponse.put("skillRatings", null);
+        
+        // Varsayılan uyumluluk durumu
+        defaultResponse.put("compatibilityStatus", 0);
+        
+        // Varsayılan açıklama
+        defaultResponse.put("explanation", "CV analizi sırasında bir hata oluştu.");
+        
+        return defaultResponse;
     }
     
     /**
