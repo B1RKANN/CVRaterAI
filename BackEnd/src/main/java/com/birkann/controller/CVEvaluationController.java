@@ -1,6 +1,8 @@
 package com.birkann.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.birkann.dto.CVEvaluationResponse;
 import com.birkann.service.ICVEvaluationService;
+import com.birkann.service.impl.CVEvaluationService;
 
 @RestController
 @RequestMapping("/api/v1/cv-evaluation")
@@ -62,6 +65,23 @@ public class CVEvaluationController {
         logger.info("Kullanıcı değerlendirmeleri istendi: {}", userId);
         
         List<CVEvaluationResponse> evaluations = cvEvaluationService.getUserEvaluations(userId);
+        
+        // JSON içeriğini dönüştür (eski formattan yeni formata)
+        if (evaluations != null && !evaluations.isEmpty()) {
+            for (CVEvaluationResponse evaluation : evaluations) {
+                try {
+                    String result = evaluation.getEvaluationResult();
+                    if (result != null && result.contains("kisiselBilgiler") && !result.contains("userInformation")) {
+                        logger.info("Eski format JSON tespit edildi, yeni formata dönüştürülüyor: {}", evaluation.getId());
+                        String convertedResult = ((CVEvaluationService)cvEvaluationService).convertToNewFormat(result);
+                        evaluation.setEvaluationResult(convertedResult);
+                    }
+                } catch (Exception e) {
+                    logger.error("JSON dönüştürme sırasında hata: {}", e.getMessage());
+                }
+            }
+        }
+        
         return ResponseEntity.ok(evaluations);
     }
     
@@ -76,6 +96,41 @@ public class CVEvaluationController {
         logger.info("Değerlendirme detayı istendi: {}", evaluationId);
         
         CVEvaluationResponse evaluation = cvEvaluationService.getEvaluation(evaluationId);
+        
+        // JSON içeriğini dönüştür (eski formattan yeni formata)
+        if (evaluation != null && evaluation.getEvaluationResult() != null) {
+            try {
+                String result = evaluation.getEvaluationResult();
+                if (result.contains("kisiselBilgiler") && !result.contains("userInformation")) {
+                    logger.info("Eski format JSON tespit edildi, yeni formata dönüştürülüyor: {}", evaluationId);
+                    String convertedResult = ((CVEvaluationService)cvEvaluationService).convertToNewFormat(result);
+                    evaluation.setEvaluationResult(convertedResult);
+                }
+            } catch (Exception e) {
+                logger.error("JSON dönüştürme sırasında hata: {}", e.getMessage());
+            }
+        }
+        
         return ResponseEntity.ok(evaluation);
+    }
+    
+    /**
+     * Tüm CV değerlendirmelerini yeni formata dönüştürür.
+     * Bu endpoint sadece geçiş döneminde kullanılmalıdır.
+     * 
+     * @return Dönüştürülen kayıt sayısı
+     */
+    @PostMapping("/convert-to-new-format")
+    public ResponseEntity<Map<String, Object>> convertAllToNewFormat() {
+        logger.info("Tüm değerlendirmeleri yeni formata dönüştürme isteği alındı");
+        
+        int convertedCount = cvEvaluationService.convertAllToNewFormat();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Değerlendirmeler yeni formata başarıyla dönüştürüldü");
+        response.put("convertedCount", convertedCount);
+        
+        return ResponseEntity.ok(response);
     }
 } 
