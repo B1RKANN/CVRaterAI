@@ -30,6 +30,8 @@ import com.birkann.repository.RefreshTokenRepository;
 import com.birkann.repository.UserRepository;
 import com.birkann.service.IAuthenticationService;
 
+
+
 @Service
 public class AuthenticationService implements IAuthenticationService{
 	
@@ -102,11 +104,15 @@ public class AuthenticationService implements IAuthenticationService{
 			
 			Optional<User> optUser = userRepository.findByEmail(input.getEmail());
 	
-			String accesToken = jwtService.generateToken(optUser.get());
+			String accessToken = jwtService.generateToken(optUser.get());
 			
 			RefreshToken savedRefreshToken = refreshTokenRepository.save(createRefreshToken(optUser.get()));
 			
-			return new AuthResponse(accesToken, savedRefreshToken.getRefreshToken());
+			AuthResponse response = new AuthResponse();
+			response.setToken(accessToken);
+			response.setRefreshToken(savedRefreshToken.getRefreshToken());
+			response.setRole(optUser.get().getRole().toString());
+			return response;
 			
 		} catch (Exception e) {
 			throw new BaseException(new ErrorMessage(MessageType.USERNAME_OR_PASSWORD_INVALID, e.getMessage()));
@@ -132,12 +138,13 @@ public class AuthenticationService implements IAuthenticationService{
 		
 		User user = optRefreshToken.get().getUser();
 		
-		String accesToken = jwtService.generateToken(user);
+		String accessToken = jwtService.generateToken(user);
 		RefreshToken savedRefreshToken = refreshTokenRepository.save(createRefreshToken(user));
 		
-		
-		
-		return new AuthResponse(accesToken, savedRefreshToken.getRefreshToken());
+		AuthResponse response = new AuthResponse();
+		response.setToken(accessToken);
+		response.setRefreshToken(savedRefreshToken.getRefreshToken());
+		response.setRole(user.getRole().toString());
+		return response;
 	}
-	
 }

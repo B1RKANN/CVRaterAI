@@ -44,6 +44,9 @@ public class CVEvaluation extends BaseEntity {
     @Column(name = "evaluation_date")
     private Date evaluationDate;
     
+    @Column(name = "full_name")
+    private String fullName;
+    
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -118,5 +121,13 @@ public class CVEvaluation extends BaseEntity {
 
     public void setJobRequirements(String jobRequirements) {
         this.jobRequirements = jobRequirements;
+    }
+    
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 } 

@@ -56,6 +56,9 @@ public class CVEvaluationService implements ICVEvaluationService {
     @Autowired
     private CreditRepository creditRepository;
     
+    @Autowired
+    private ObjectMapper objectMapper;
+    
     @Override
     @Transactional
     public CVEvaluationResponse evaluateCV(Long userId, MultipartFile file, String githubUrl, String jobRequirements) {
@@ -112,6 +115,25 @@ public class CVEvaluationService implements ICVEvaluationService {
             evaluation.setEvaluationDate(new Date());
             evaluation.setUser(user);
             
+            // İsim ve soyismi JSON'dan çıkarıp birleştir
+            try {
+                Map<String, Object> evaluationMap = objectMapper.readValue(evaluationResult, Map.class);
+                if (evaluationMap.containsKey("userInformation")) {
+                    Map<String, Object> userInfo = (Map<String, Object>) evaluationMap.get("userInformation");
+                    String name = (String) userInfo.getOrDefault("name", "");
+                    String surname = (String) userInfo.getOrDefault("surname", "");
+                    
+                    // Boş değilse birleştir
+                    if (!name.equals("Belirtilmemiş") || !surname.equals("Belirtilmemiş")) {
+                        String fullName = name + " " + surname;
+                        evaluation.setFullName(fullName.trim());
+                        logger.debug("İsim soyisim birleştirildi: {}", fullName);
+                    }
+                }
+            } catch (Exception e) {
+                logger.warn("JSON parse hatası, isim-soyisim birleştirilemedi: {}", e.getMessage());
+            }
+            
             // Değerlendirme kaydını kaydet
             CVEvaluation savedEvaluation = evaluationRepository.save(evaluation);
             
@@ -130,27 +152,51 @@ public class CVEvaluationService implements ICVEvaluationService {
 
     @Override
     public List<CVEvaluationResponse> getUserEvaluations(Long userId) {
-        // Kullanıcıyı kontrol et
+        logger.debug("Kullanıcı değerlendirmeleri getiriliyor. Kullanıcı ID: {}", userId);
+        
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.USER_NOT_FOUND, userId.toString())));
         
-        // Kullanıcının değerlendirmelerini getir
         List<CVEvaluation> evaluations = evaluationRepository.findByUserOrderByEvaluationDateDesc(user);
         
-        // DTO'ya çevir ve dön
-        return evaluations.stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return evaluations.stream().map(evaluation -> {
+            CVEvaluationResponse response = new CVEvaluationResponse();
+            BeanUtils.copyProperties(evaluation, response);
+            response.setId(evaluation.getId());
+            // UserId değerini ayarla
+            response.setUserId(userId);
+            return response;
+        }).collect(Collectors.toList());
     }
 
     @Override
     public CVEvaluationResponse getEvaluation(Long evaluationId) {
-        // Değerlendirmeyi getir
-        CVEvaluation evaluation = evaluationRepository.findById(evaluationId)
-                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.EVALUATION_NOT_FOUND, evaluationId.toString())));
+        logger.debug("değerlendirme getiriliyor. ID: {}", evaluationId);
         
-        // DTO'ya çevir ve dön
-        return mapToResponse(evaluation);
+        Optional<CVEvaluation> evaluationOptional = evaluationRepository.findById(evaluationId);
+        if (!evaluationOptional.isPresent()) {
+            logger.warn("Değerlendirme bulunamadı. ID: {}", evaluationId);
+            return null;
+        }
+        
+        CVEvaluation evaluation = evaluationOptional.get();
+        CVEvaluationResponse response = new CVEvaluationResponse();
+        
+        // Temel özellikleri kopyala
+        BeanUtils.copyProperties(evaluation, response);
+        
+        // ID değerini ayarla
+        response.setId(evaluation.getId());
+        
+        // UserId değerini ayarla (null kontrol yaparak)
+        if (evaluation.getUser() != null) {
+            response.setUserId(evaluation.getUser().getId());
+            logger.debug("Değerlendirme için kullanıcı ID'si ayarlandı: {}", evaluation.getUser().getId());
+        } else {
+            logger.warn("Değerlendirme kaydı için kullanıcı bilgisi bulunamadı. ID: {}", evaluationId);
+        }
+        
+        return response;
     }
     
     @Override
@@ -244,6 +290,47 @@ public class CVEvaluationService implements ICVEvaluationService {
     private CVEvaluationResponse mapToResponse(CVEvaluation evaluation) {
         CVEvaluationResponse response = new CVEvaluationResponse();
         BeanUtils.copyProperties(evaluation, response);
+        
+        // UserId değerini ayarla
+        if (evaluation.getUser() != null) {
+            response.setUserId(evaluation.getUser().getId());
+            logger.debug("Değerlendirme #{} için kullanıcı ID'si ayarlandı: {}", 
+                    evaluation.getId(), evaluation.getUser().getId());
+        } else {
+            logger.warn("Değerlendirme #{} için kullanıcı bilgisi bulunamadı", evaluation.getId());
+        }
+        
+        // Full name bilgisini eksikse JSON'dan çıkar ve ayarla
+        if ((evaluation.getFullName() == null || evaluation.getFullName().isEmpty()) && 
+            evaluation.getEvaluationResult() != null && !evaluation.getEvaluationResult().isEmpty()) {
+            try {
+                Map<String, Object> evaluationMap = objectMapper.readValue(evaluation.getEvaluationResult(), Map.class);
+                if (evaluationMap.containsKey("userInformation")) {
+                    Map<String, Object> userInfo = (Map<String, Object>) evaluationMap.get("userInformation");
+                    String name = (String) userInfo.getOrDefault("name", "");
+                    String surname = (String) userInfo.getOrDefault("surname", "");
+                    
+                    // Boş değilse birleştir ve kaydet
+                    if (!name.equals("Belirtilmemiş") || !surname.equals("Belirtilmemiş")) {
+                        String fullName = name + " " + surname;
+                        
+                        // Veritabanında güncelle
+                        evaluation.setFullName(fullName.trim());
+                        evaluationRepository.save(evaluation);
+                        
+                        // Yanıta da ekle
+                        response.setFullName(fullName.trim());
+                        logger.debug("mapToResponse: İsim soyisim birleştirildi ve kaydedildi: {}", fullName);
+                    }
+                }
+            } catch (Exception e) {
+                logger.warn("mapToResponse: JSON parse hatası, isim-soyisim birleştirilemedi: {}", e.getMessage());
+            }
+        } else if (evaluation.getFullName() != null) {
+            // Full name zaten varsa, yanıta ekle
+            response.setFullName(evaluation.getFullName());
+        }
+        
         return response;
     }
 

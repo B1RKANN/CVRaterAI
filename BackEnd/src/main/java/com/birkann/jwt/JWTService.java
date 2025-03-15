@@ -7,6 +7,8 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.birkann.service.IJWTService;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,10 +16,11 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
-public class JWTService {
+public class JWTService implements IJWTService {
 	
 	public static final String SECRET_KEY = "7UiEQwqHpPeuR9HEyd2NcEgluhuJ9Ctdn8/8lMyvUrY=";//h256 secret key generator
 
+	@Override
 	public String generateToken(UserDetails userDetails) {
 		return Jwts.builder()
 		.setSubject(userDetails.getUsername())
@@ -43,8 +46,27 @@ public class JWTService {
 		return claimsFunc.apply(claims);
 	}
 	
-	public String getUsernameByToken(String token) {
+	@Override
+	public String extractUsername(String token) {
 		return exportToken(token, Claims::getSubject);
+	}
+	
+	public String getUsernameByToken(String token) {
+		return extractUsername(token);
+	}
+	
+	@Override
+	public boolean isTokenValid(String token, UserDetails userDetails) {
+		final String username = extractUsername(token);
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	}
+	
+	public boolean isTokenExpired(String token) {
+		return extractExpiration(token).before(new Date());
+	}
+	
+	private Date extractExpiration(String token) {
+		return exportToken(token, Claims::getExpiration);
 	}
 	
 	public Boolean isTokenValid(String token) {

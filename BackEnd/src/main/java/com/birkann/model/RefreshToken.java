@@ -35,4 +35,31 @@ public class RefreshToken extends BaseEntity {
 	@ManyToOne
 	private User user;
 	
+	/**
+	 * Token değerini döndürür
+	 */
+	public String getToken() {
+		return refreshToken;
+	}
+	
+	/**
+	 * Token değerini ayarlar
+	 */
+	public void setToken(String token) {
+		this.refreshToken = token;
+	}
+	
+	/**
+	 * Sona erme tarihini döndürür
+	 */
+	public Date getExpiryDate() {
+		return expiredTime;
+	}
+	
+	/**
+	 * Sona erme tarihini ayarlar
+	 */
+	public void setExpiryDate(Date date) {
+		this.expiredTime = date;
+	}
 }
