@@ -209,8 +209,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="30dp"
-        android:layout_height="14dp"
+        android:id="@+id/linearLayout3"
+        android:layout_width="48dp"
+        android:layout_height="15dp"
         android:layout_marginTop="150dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -225,6 +226,16 @@
             android:background="@drawable/dot_indicator_selected" />
 
         <View
+            android:id="@+id/view9"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_margin="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/dot_indicator_unselected" />
+
+        <View
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="4dp"
@@ -232,5 +243,19 @@
             android:layout_marginEnd="32dp"
             android:background="@drawable/dot_indicator_unselected" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnBackToHomepage"
+        android:layout_width="169dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="61dp"
+        android:text="@string/back_to_homepage"
+        android:textColor="@color/white"
+        android:backgroundTint="#1A73E8"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoCard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

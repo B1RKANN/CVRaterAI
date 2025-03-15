@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">CVRaterAI</string>
     <string name="hello_blank_fragment">Merhaba boş fragment</string>
+    <string name="ai_note">AI Notu</string>
     
     <!-- FirstPageFragment -->
     <string name="app_title">CVRaterAI</string>
@@ -44,6 +45,7 @@
     <string name="email_colon">E-posta : </string>
     <string name="phone_number_colon">Telefon Numarası : </string>
     <string name="skills_colon">Yetenekler : </string>
+    <string name="back_to_homepage">Anasayfaya dön</string>
     
     <!-- HomePageFragment -->
     <string name="welcome">Hoş Geldiniz!</string>

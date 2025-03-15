@@ -17,10 +17,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [AnalysisFragment.newInstance] factory method to
+ * Use the [AINoteFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AnalysisFragment : Fragment() {
+class AINoteFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -40,19 +40,12 @@ class AnalysisFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_analysis, container, false)
+        val view = inflater.inflate(R.layout.fragment_ai_note, container, false)
         
         // Kaydırma hareketlerini algılamak için GestureDetector oluştur
         setupSwipeGesture(view)
         
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        
-        // Initialize UI elements and set up any necessary listeners
-        setupUI()
     }
     
     private fun setupSwipeGesture(view: View) {
@@ -80,16 +73,10 @@ class AnalysisFragment : Fragment() {
                             Math.abs(diffX) > 100 && 
                             Math.abs(velocityX) > 100) {
                             
-                            // Soldan sağa kaydırma (geri gitme)
+                            // Soldan sağa kaydırma (AnalysisFragment'a geri dönme)
                             if (diffX > 0) {
-                                // InformationFragment'a geri dön
+                                // Geri tuşuna basılmış gibi davran
                                 findNavController().popBackStack()
-                                return true
-                            }
-                            // Sağdan sola kaydırma (AI Note'a gitme)
-                            else if (diffX < 0) {
-                                // AINoteFragment'a git
-                                findNavController().navigate(R.id.action_analysisFragment_to_aiNoteFragment)
                                 return true
                             }
                         }
@@ -111,11 +98,6 @@ class AnalysisFragment : Fragment() {
             true // Olayı tükettiğimizi belirtmek için true döndürüyoruz
         }
     }
-    
-    private fun setupUI() {
-        // Here you would initialize any dynamic elements or set up click listeners
-        // For this static UI, we don't need to do anything special
-    }
 
     companion object {
         /**
@@ -124,10 +106,10 @@ class AnalysisFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment AnalysisFragment.
+         * @return A new instance of fragment AINoteFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() = AnalysisFragment()
+        fun newInstance() = AINoteFragment()
     }
 }
