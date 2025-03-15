@@ -1,21 +1,29 @@
 // Drag and drop işlevselliği
 const uploadBox = document.querySelector('.upload-box');
 const uploadBtn = document.querySelector('.upload-btn');
+const analyzeBtn = document.querySelector('.analyze-btn');
+let file = null;
 
 uploadBox.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadBox.style.borderColor = '#1a5cc7';
+    uploadBox.classList.add('drag-over');
 });
 
 uploadBox.addEventListener('dragleave', () => {
     uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+    uploadBox.classList.remove('drag-over');
 });
 
 uploadBox.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+    uploadBox.classList.remove('drag-over');
     const files = e.dataTransfer.files;
-    handleFiles(files);
+    if (files.length > 0) {
+        file = files[0];
+        showFileName(file.name);
+    }
 });
 
 uploadBtn.addEventListener('click', () => {
@@ -24,22 +32,29 @@ uploadBtn.addEventListener('click', () => {
     input.accept = '.pdf,.doc,.docx';
     input.onchange = (e) => {
         const files = e.target.files;
-        handleFiles(files);
+        if (files.length > 0) {
+            file = files[0];
+            showFileName(file.name);
+        }
     };
     input.click();
 });
 
-function handleFiles(files) {
-    // Burada dosya yükleme işlemlerini gerçekleştirebilirsiniz
-    console.log('Yüklenen dosyalar:', files);
+function showFileName(fileName) {
+    const h2 = uploadBox.querySelector('h2');
+    h2.textContent = fileName;
+    uploadBox.classList.add('file-selected');
+    analyzeBtn.classList.add('active');
 }
 
 // Analyze butonu işlevselliği
-const analyzeBtn = document.querySelector('.analyze-btn');
-
 analyzeBtn.addEventListener('click', () => {
-    // Analiz işlemlerini burada gerçekleştirebilirsiniz
-    console.log('CV analizi başlatıldı');
+    if (file) {
+        // Yükleme ekranına yönlendir
+        window.location.href = 'loading.html';
+    } else {
+        alert('Lütfen önce bir CV dosyası yükleyin.');
+    }
 });
 
 // Scroll effect for balloons
@@ -64,3 +79,53 @@ window.addEventListener('scroll', () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Giriş durumunu kontrol et
+    checkLoginStatus();
+});
+
+// Giriş durumunu kontrol et ve butonları güncelle
+function checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+        updateNavButtons();
+    }
+}
+
+// Butonları güncelle
+function updateNavButtons() {
+    const navButtons = document.querySelector('.nav-buttons');
+    if (navButtons) {
+        const signInBtn = navButtons.querySelector('.sign-in-btn');
+        if (signInBtn) {
+            // Sign In/Up butonunu Profile butonu ile değiştir
+            const profileBtn = document.createElement('button');
+            profileBtn.className = 'sign-in-btn';
+            profileBtn.textContent = 'PROFILE';
+            
+            // Mevcut URL'ye göre doğru yönlendirme yolunu belirle
+            const currentPath = window.location.pathname;
+            let profilePath = '';
+            
+            // Eğer ana sayfadaysak
+            if (currentPath.includes('index.html') || currentPath.endsWith('/') || currentPath.endsWith('/Web/')) {
+                profilePath = 'public/pages/profile.html';
+            } 
+            // Eğer zaten pages klasöründeysek
+            else if (currentPath.includes('/pages/')) {
+                profilePath = 'profile.html';
+            }
+            // Diğer durumlar için
+            else {
+                profilePath = 'public/pages/profile.html';
+            }
+            
+            profileBtn.onclick = function() {
+                window.location.href = profilePath;
+            };
+            
+            navButtons.replaceChild(profileBtn, signInBtn);
+        }
+    }
+}
