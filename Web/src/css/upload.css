@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -10,35 +10,65 @@ body {
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
+    overflow-y: auto;
+    color: white;
 }
 
-/* Background shapes */
-.background-shapes {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(24, 124, 255, 0) 0%, rgba(24, 124, 255, 0.7) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.background-circles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     overflow: hidden;
+    z-index: 0;
 }
 
 .circle {
     position: absolute;
-    background: rgba(64, 147, 255, 0.6);
     border-radius: 50%;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.9;
+    box-shadow: 0 8px 32px rgba(24, 124, 255, 0.3);
 }
 
 .circle-1 {
-    width: 800px;
-    height: 800px;
-    bottom: -400px;
-    right: -300px;
+    width: 600px;
+    height: 600px;
+    top: -150px;
+    right: -150px;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.85;
 }
 
 .circle-2 {
     width: 800px;
     height: 800px;
-    bottom: -400px;
-    left: -300px;
+    bottom: -250px;
+    left: -250px;
+    background: linear-gradient(140deg, #4093FF 0%, #1C82FF 100%);
+    opacity: 0.9;
+}
+
+.circle-3 {
+    width: 400px;
+    height: 400px;
+    top: 35%;
+    right: 10%;
+    background: linear-gradient(140deg, #82BFFF 0%, #69AAFF 100%);
+    opacity: 0.85;
 }
 
 /* Navigation */
@@ -48,64 +78,116 @@ nav {
     align-items: center;
     padding: 20px 80px;
     background-color: transparent;
-    color: white;
+    position: relative;
+    z-index: 10;
 }
 
 .logo {
-    font-size: 30px;
-    font-weight: bold;
+    font-size: 32px;
+    font-weight: 700;
+    color: #F5F7FA;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }
 
 .nav-links {
     display: flex;
-    gap: 40px;
-    margin-left: -200px;
+    align-items: center;
+    gap: 2rem;
 }
 
 .nav-link {
-    color: white;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 16px;
-    padding-bottom: 5px;
+    color: #F5F7FA;
+    font-size: 18px;
+    transition: color 0.3s ease;
     position: relative;
 }
 
-.nav-link::after {
+.nav-link:hover {
+    color: #1D5399;
+}
+
+.nav-link.active::after {
     content: '';
     position: absolute;
+    bottom: -5px;
+    left: 0;
     width: 100%;
     height: 2px;
-    background: white;
-    bottom: 0;
-    left: 0;
+    background-color: #F5F7FA;
 }
 
 .nav-buttons {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 2rem;
+    z-index: 10;
 }
 
-.profile-btn, .download-btn {
+.nav-buttons .download-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border-radius: 50px;
+    gap: 0.8rem;
+    background-color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
     border: none;
+    outline: none;
     cursor: pointer;
-    font-size: 16px;
-    background-color: white;
+    transition: transform 0.3s ease;
+    box-shadow: none;
     color: #187CFF;
-    height: 45px;
+    font-weight: 600;
+    font-size: 16px;
+    z-index: 10;
 }
 
-.profile-btn {
-    width: 120px;
+.nav-buttons .download-btn:hover {
+    transform: translateY(-2px);
 }
 
-.download-btn {
-    width: 160px;
+.nav-buttons .download-btn:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.nav-buttons .download-btn span {
+    color: #187CFF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.nav-buttons .download-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.nav-buttons .profile-btn {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: none;
+    z-index: 10;
+}
+
+.nav-buttons .profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .play-store-icon, .profile-icon {
@@ -120,8 +202,9 @@ nav {
     justify-content: center;
     align-items: flex-start;
     gap: 60px;
-    padding: 0 80px;
-    margin-top: 50px;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 1200px;
 }
 
 .upload-section, .form-section {
@@ -209,4 +292,93 @@ textarea {
 
 .analyze-btn:hover {
     background-color: #1550b3;
+}
+
+/* Responsive tasarım */
+@media (max-width: 992px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    
+    .upload-section, .form-section {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .upload-box {
+        padding: 40px 20px;
+    }
+    
+    .analyze-btn {
+        width: 200px;
+    }
+}
+
+/* Balloon Styles */
+.balloons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.balloon {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(3px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    transition: transform 0.5s ease-out;
+}
+
+.balloon-1 {
+    width: 300px;
+    height: 300px;
+    left: 10%;
+    top: 15%;
+    background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 15s ease-in-out infinite;
+}
+
+.balloon-2 {
+    width: 250px;
+    height: 250px;
+    right: 15%;
+    top: 25%;
+    background: radial-gradient(circle, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 18s ease-in-out infinite 2s;
+}
+
+.balloon-3 {
+    width: 400px;
+    height: 400px;
+    left: 30%;
+    bottom: 10%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 20s ease-in-out infinite 1s;
+}
+
+@keyframes floatBalloon {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(20px, -30px) scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
 }

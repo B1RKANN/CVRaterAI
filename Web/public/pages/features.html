@@ -1,51 +1,113 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVRaterAI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>CVRaterAI - Features</title>
+    <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../src/css/features.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
+    <!-- Arka plan balonları -->
+    <div class="background-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+    
+    <!-- Arka plan balonları -->
+    <div class="balloons">
+        <div class="balloon balloon-1"></div>
+        <div class="balloon balloon-2"></div>
+        <div class="balloon balloon-3"></div>
+    </div>
+    
+    <nav>
         <div class="logo">CVRaterAI</div>
         <div class="nav-links">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#" class="nav-link">Pricing</a>
-            <a href="#" class="nav-link">Features</a>
+            <a href="../../index.html">Home</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="features.html" class="active">Features</a>
         </div>
         <div class="nav-buttons">
-            <button class="btn btn-signin">SIGN IN / SIGN UP</button>
-            <button class="btn btn-download">
-                <img src="download-icon.svg" alt="Download" class="download-icon">
-                Download
+            <button class="sign-in-btn" onclick="openSignInModal()">SIGN IN / SIGN UP</button>
+            <button class="download-btn">
+                <img src="../../images/google_play_logo.png" alt="Google Play">
+                <span>Download</span>
             </button>
         </div>
     </nav>
 
-    <main class="features-section">
-        <h1>Features</h1>
-        <p class="subtitle">Build software faster</p>
+    <main>
+        <div class="features-section">
+            <h1>Features</h1>
+            <p class="subtitle">Build software faster</p>
 
-        <div class="features-grid">
-            <div class="feature-card">
-                <h2>Job Suitability Analysis</h2>
-                <p>Matching the skills in your CV with the job posting and identifying gaps.</p>
-            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h2>Job Suitability Analysis</h2>
+                    <p>Matching the skills in your CV with the job posting and identifying gaps.</p>
+                </div>
 
-            <div class="feature-card">
-                <h2>AI-Powered Features</h2>
-                <p>The AI-powered CV analysis application optimizes the recruitment process by evaluating applications quickly and accurately.</p>
-            </div>
+                <div class="feature-card">
+                    <h2>AI-Powered Features</h2>
+                    <p>The AI-powered CV analysis application optimizes the recruitment process by evaluating applications quickly and accurately.</p>
+                </div>
 
-            <div class="feature-card">
-                <h2>Visual Optimization</h2>
-                <p>Visual Optimization enhances user experience by streamlining design and improving performance.</p>
+                <div class="feature-card">
+                    <h2>Visual Optimization</h2>
+                    <p>Visual Optimization enhances user experience by streamlining design and improving performance.</p>
+                </div>
             </div>
         </div>
     </main>
+
+    <!-- Sign In/Up Modal -->
+    <div id="signInModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSignInModal()">&times;</span>
+            <div class="container" id="container">
+                <div class="form-container sign-up-container">
+                    <form action="#">
+                        <h1>Create Account</h1>
+                        <input type="text" placeholder="Name" />
+                        <input type="text" placeholder="Surname" />
+                        <input type="email" placeholder="Email" />
+                        <input type="password" placeholder="Password" />
+                        <button class="sign-up-btn">Sign Up</button>
+                        <div class="or-divider">or</div>
+                        <div class="social-container">
+                            <a href="#" class="google"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"></a>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-container sign-in-container">
+                    <form action="#">
+                        <h1>Sign In</h1>
+                        <input type="email" placeholder="Email" />
+                        <input type="password" placeholder="Password" />
+                        <button>Sign In</button>
+                    </form>
+                </div>
+                <div class="overlay-container">
+                    <div class="overlay">
+                        <div class="overlay-panel overlay-left">
+                            <h1>Welcome Back!</h1>
+                            <p>Enter your personal information to use the site's features.</p>
+                            <button class="ghost" id="signIn">Sign In</button>
+                        </div>
+                        <div class="overlay-panel overlay-right">
+                            <h1>Hello Friend!</h1>
+                            <p>Register with your personal information and access all the information on the site.</p>
+                            <button class="ghost" id="signUp">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../script.js"></script>
 </body>
 </html> 

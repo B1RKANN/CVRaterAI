@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -11,12 +11,72 @@ body {
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(24, 124, 255, 0) 0%, rgba(24, 124, 255, 0.7) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.background-circles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.9;
+    box-shadow: 0 8px 32px rgba(24, 124, 255, 0.3);
+}
+
+.circle-1 {
+    width: 600px;
+    height: 600px;
+    top: -150px;
+    right: -150px;
+    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
+    opacity: 0.85;
+}
+
+.circle-2 {
+    width: 800px;
+    height: 800px;
+    bottom: -250px;
+    left: -250px;
+    background: linear-gradient(140deg, #4093FF 0%, #1C82FF 100%);
+    opacity: 0.9;
+}
+
+.circle-3 {
+    width: 400px;
+    height: 400px;
+    top: 35%;
+    right: 10%;
+    background: linear-gradient(140deg, #82BFFF 0%, #69AAFF 100%);
+    opacity: 0.85;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
+    z-index: 2;
 }
 
 /* Header Styles */
@@ -28,99 +88,127 @@ header {
 }
 
 .logo {
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 32px;
+    font-weight: 700;
+    color: #F5F7FA;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }
 
 nav {
-    margin-left: 120px;
-    margin-right: auto;
-}
-
-nav ul {
     display: flex;
-    list-style: none;
-    gap: 30px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
     position: relative;
-    padding-bottom: 5px;
+    z-index: 10;
 }
 
-nav ul li a::after {
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-links a {
+    color: #F5F7FA;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: #E0E0E0;
+}
+
+.nav-links a.active::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -5px;
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: white;
-    opacity: 1;
+    background-color: #F5F7FA;
 }
 
-nav ul li a.active::after {
-    opacity: 1;
-}
-
-.header-buttons {
+.nav-buttons {
     display: flex;
-    gap: 15px;
+    gap: 1.5rem;
+    align-items: center;
 }
 
-.profile-btn, .download-btn {
+.sign-in-btn {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: none;
+}
+
+.sign-in-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 50px;
-    text-decoration: none;
+    gap: 0.8rem;
+    background-color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: none;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+}
+
+.download-btn:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.download-btn span {
+    color: #187CFF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
     font-weight: 500;
-    transition: all 0.3s ease;
 }
 
-.profile-btn {
-    background-color: white;
-    color: #187CFF;
-}
-
-.download-btn {
-    background-color: white;
-    color: #187CFF;
-}
-
-.profile-btn img, .download-btn img {
-    width: 20px;
-    height: 20px;
-}
-
-/* SVG icons için base64 kodları */
-.profile-btn {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23187CFF'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 12px center;
-    background-size: 20px;
-    padding-left: 40px;
-}
-
-.download-btn {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23187CFF'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 12px center;
-    background-size: 20px;
-    padding-left: 40px;
+.download-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 /* Main Content */
 main {
+    margin: 40px 0;
+}
+
+/* Results Flex Container */
+.results-flex-container {
     display: flex;
     justify-content: space-between;
-    margin: 40px 0;
-    gap: 20px;
+    gap: 30px;
+    margin-bottom: 40px;
 }
 
 /* Skills Section */
@@ -248,28 +336,15 @@ main {
     border-radius: 10px;
     transition: width 1s ease-in-out;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
 }
 
-.compatibility-percentage {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    z-index: 2;
-    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
-    text-align: right;
-}
-
-/* Marker'ı kaldır */
 .compatibility-marker {
-    display: none;
+    position: absolute;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: #FF5722;
+    z-index: 2;
 }
 
 /* Background Circles */
@@ -297,9 +372,74 @@ main {
     z-index: -1;
 }
 
+/* Balloon Styles */
+.balloons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.balloon {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(3px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    transition: transform 0.5s ease-out;
+}
+
+.balloon-1 {
+    width: 300px;
+    height: 300px;
+    left: 10%;
+    top: 15%;
+    background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 15s ease-in-out infinite;
+}
+
+.balloon-2 {
+    width: 250px;
+    height: 250px;
+    right: 15%;
+    top: 25%;
+    background: radial-gradient(circle, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 18s ease-in-out infinite 2s;
+}
+
+.balloon-3 {
+    width: 400px;
+    height: 400px;
+    left: 30%;
+    bottom: 10%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 20s ease-in-out infinite 1s;
+}
+
+@keyframes floatBalloon {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(20px, -30px) scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 900px) {
-    main {
+    .results-flex-container {
         flex-direction: column;
     }
     
@@ -319,13 +459,26 @@ main {
         width: 100%;
     }
     
-    .header-buttons {
+    .nav-buttons {
         margin-left: auto;
+    }
+    
+    .compatibility-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .compatibility-min, .compatibility-max {
+        min-width: auto;
+    }
+    
+    .compatibility-bar-container {
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .header-buttons {
+    .nav-buttons {
         width: 100%;
         justify-content: center;
         margin-top: 20px;

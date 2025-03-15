@@ -3,107 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVRaterAI</title>
+    <title>CVRaterAI - User Profile</title>
+    <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../src/css/profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="bubbles">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
+    <!-- Arka plan balonları -->
+    <div class="background-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
     </div>
-    <nav class="navbar">
-        <div class="nav-left">
-            <div class="menu-icon">
-                <div class="line"></div>
-            </div>
-            <div class="logo">CVRaterAI</div>
-        </div>
+    
+    <!-- Arka plan balonları -->
+    <div class="balloons">
+        <div class="balloon balloon-1"></div>
+        <div class="balloon balloon-2"></div>
+        <div class="balloon balloon-3"></div>
+    </div>
+    
+    <nav>
+        <div class="logo">CVRaterAI</div>
         <div class="nav-links">
-            <a href="#" class="nav-link active">Home</a>
-            <a href="#" class="nav-link">Pricing</a>
-            <a href="#" class="nav-link">Features</a>
+            <a href="../../index.html">Home</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="features.html">Features</a>
         </div>
         <div class="nav-buttons">
-            <button class="profile-btn">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 10C12.7614 10 15 7.76142 15 5C15 2.23858 12.7614 0 10 0C7.23858 0 5 2.23858 5 5C5 7.76142 7.23858 10 10 10Z" fill="#0D6EFD"/>
-                    <path d="M17.5 20C17.5 16.134 14.134 13 10 13C5.86599 13 2.5 16.134 2.5 20H17.5Z" fill="#0D6EFD"/>
-                </svg>
-                Profile
-            </button>
+            <button class="sign-in-btn" id="logoutBtn" onclick="logout()">LOGOUT</button>
             <button class="download-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.609 3.132L13.792 13.15L3.609 23.167C3.091 22.798 2.75 22.115 2.75 21.367V4.933C2.75 4.184 3.091 3.502 3.609 3.132Z" fill="#EA4335"/>
-                    <path d="M14.227 13.574L4.349 23.608C4.745 23.934 5.268 24.117 5.808 24.117C6.367 24.117 6.926 23.916 7.339 23.55L18.952 16.575L14.227 13.574Z" fill="#FBBC04"/>
-                    <path d="M21.25 12L18.952 10.625L14.227 13.574L18.952 16.575L21.25 15.733C21.917 15.241 21.917 12.741 21.25 12Z" fill="#34A853"/>
-                    <path d="M4.349 3.608L14.227 13.642L18.952 10.641L7.339 3.666C6.926 3.3 6.367 3.099 5.808 3.099C5.268 3.099 4.745 3.282 4.349 3.608Z" fill="#4285F4"/>
-                </svg>
-                Download
+                <img src="../../images/google_play_logo.png" alt="Google Play">
+                <span>Download</span>
             </button>
         </div>
     </nav>
 
-    <div id="sidebar" class="sidebar">
-        <div class="time-group">
-            <h3>Today</h3>
-            <div class="history-item">BİRKAN BOZ</div>
-            <div class="history-item">ARDA YEŞİLÇAYIR</div>
+    <!-- Hamburger Menu Icon -->
+    <div class="menu-icon">
+        <div class="line"></div>
+    </div>
+
+    <main>
+        <div id="sidebar" class="sidebar">
+            <div class="time-group">
+                <h3>Today</h3>
+                <div class="history-item">BİRKAN BOZ</div>
+                <div class="history-item">ARDA YEŞİLÇAYIR</div>
+            </div>
+
+            <div class="time-group">
+                <h3>Last</h3>
+                <div class="history-item">ERDEM EREN</div>
+            </div>
+
+            <div class="time-group">
+                <h3>Previous 7 Days</h3>
+                <div class="history-item">YUNUS YEŞİLÖRDEK</div>
+            </div>
+
+            <div class="time-group">
+                <h3>Previous 30 Days</h3>
+                <div class="history-item">EREN MERT ALMIŞ</div>
+            </div>
         </div>
 
-        <div class="time-group">
-            <h3>Last</h3>
-            <div class="history-item">ERDEM EREN</div>
-        </div>
+        <div class="container">
+            <section class="user-details">
+                <h2>User Details</h2>
+                <div class="details-card">
+                    <div class="detail-row">
+                        <span class="label">Name</span>
+                        <span class="value" id="userName">User</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Email</span>
+                        <span class="value" id="userEmail">x@gmail.com</span>
+                    </div>
+                </div>
+            </section>
 
-        <div class="time-group">
-            <h3>Previous 7 Days</h3>
-            <div class="history-item">YUNUS YEŞİLÖRDEK</div>
+            <section class="credit-section">
+                <h2>Credit</h2>
+                <div class="credit-card">
+                    <div class="credit-info">
+                        <span class="plan">FREE</span>
+                        <span class="usage">8/20</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            </section>
         </div>
+    </main>
 
-        <div class="time-group">
-            <h3>Previous 30 Days</h3>
-            <div class="history-item">EREN MERT ALMIŞ</div>
+    <!-- Sign In/Up Modal -->
+    <div id="signInModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSignInModal()">&times;</span>
+            <div class="container" id="container">
+                <div class="form-container sign-up-container">
+                    <form action="#">
+                        <h1>Create Account</h1>
+                        <input type="text" placeholder="Name" />
+                        <input type="text" placeholder="Surname" />
+                        <input type="email" placeholder="Email" />
+                        <input type="password" placeholder="Password" />
+                        <button class="sign-up-btn">Sign Up</button>
+                        <div class="or-divider">or</div>
+                        <div class="social-container">
+                            <a href="#" class="google"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"></a>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-container sign-in-container">
+                    <form action="#">
+                        <h1>Sign In</h1>
+                        <input type="email" placeholder="Email" />
+                        <input type="password" placeholder="Password" />
+                        <button>Sign In</button>
+                    </form>
+                </div>
+                <div class="overlay-container">
+                    <div class="overlay">
+                        <div class="overlay-panel overlay-left">
+                            <h1>Welcome Back!</h1>
+                            <p>Enter your personal information to use the site's features.</p>
+                            <button class="ghost" id="signIn">Sign In</button>
+                        </div>
+                        <div class="overlay-panel overlay-right">
+                            <h1>Hello Friend!</h1>
+                            <p>Register with your personal information and access all the information on the site.</p>
+                            <button class="ghost" id="signUp">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <main class="container">
-        <section class="user-details">
-            <h2>User Details</h2>
-            <div class="details-card">
-                <div class="detail-row">
-                    <span class="label">Name</span>
-                    <span class="value">Birkan Boz</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Email</span>
-                    <span class="value">birkanboz3301@gmail.com</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="credit-section">
-            <h2>Credit</h2>
-            <div class="credit-card">
-                <div class="credit-info">
-                    <span class="plan">FREE</span>
-                    <span class="usage">8/20</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
+    <script src="../../script.js"></script>
     <script src="../../src/js/profile.js"></script>
 </body>
 </html> 
