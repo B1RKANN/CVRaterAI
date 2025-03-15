@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
-            android:text="CVRaterAI"
+            android:text="@string/app_title"
             android:textColor="@color/box_blue"
             android:textSize="32sp"
             android:elevation="6dp"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins_regular"
-            android:text="Welcome !"
+            android:text="@string/login_welcome"
             android:textColor="@color/box_blue"
             android:textSize="24sp" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Email"
+                android:text="@string/email_hint"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Password"
+                android:text="@string/password_hint"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -105,7 +105,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:paddingVertical="16dp"
-                    android:text="Login"
+                    android:text="@string/login_button"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text=" Don't you have an account?"
+                    android:text="@string/register_prompt"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
@@ -130,8 +130,9 @@
                     android:id="@+id/tvRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Sign up"
+                    android:text="@string/register_action"
                     android:textColor="@color/box_blue"
                     android:textSize="14sp" />
 

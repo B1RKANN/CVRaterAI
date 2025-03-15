@@ -18,42 +18,42 @@
             android:layout_width="62dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="35dp"
             android:padding="12dp"
             android:src="@drawable/ic_menu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/box_blue" />
 
+        <!-- Programming Language Analysis Title -->
         <TextView
             android:id="@+id/tvAppTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="CVRaterAI"
+            android:text="@string/app_name"
             android:textColor="@color/box_blue"
-            android:textSize="28sp"
+            android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/ivMenu"
-            app:layout_constraintStart_toEndOf="@id/ivMenu"
-            app:layout_constraintTop_toTopOf="@id/ivMenu" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivMenu"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <!-- Programming Language Analysis Title -->
+        <!-- Programming Language Analysis Card -->
         <TextView
             android:id="@+id/tvAnalysisTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Programming language analysis"
+            android:text="@string/programming_language_analysis"
             android:textColor="@color/black"
             android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivMenu" />
 
-        <!-- Programming Language Analysis Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardLanguageAnalysis"
             android:layout_width="match_parent"
@@ -73,17 +73,19 @@
                 android:paddingVertical="24dp">
 
                 <!-- Vertical Line -->
+
+                <!-- Java -->
                 <View
                     android:id="@+id/verticalLine"
                     android:layout_width="1dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="120dp"
+                    android:layout_marginStart="80dp"
                     android:background="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
 
-                <!-- Java -->
                 <TextView
                     android:id="@+id/tvJava"
                     android:layout_width="wrap_content"
@@ -244,7 +246,7 @@
                     android:id="@+id/tvPython"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="24dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="python"
@@ -474,86 +476,92 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="Compatibility Status"
+                    android:text="@string/compatibility_status"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tvZeroPercent"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/percentLabels"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%0"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvCompatibilityTitle" />
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/tvCompatibilityTitle">
 
-                <TextView
-                    android:id="@+id/tv65Percent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%65"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvZeroPercent" />
+                    <TextView
+                        android:id="@+id/tvZeroPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="%0"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv100Percent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%100"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvZeroPercent" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv65Percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="%65"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv100Percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="%100"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
                 <FrameLayout
                     android:id="@+id/progressCompatibility"
                     android:layout_width="0dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvZeroPercent">
+                    app:layout_constraintTop_toBottomOf="@id/percentLabels">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/rounded_white_bg" />
-
+                    <!-- İlerleme çubuğu için LinearLayout kullanıyoruz -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
+                        <!-- Mavi ilerleme çubuğu (doldurulmuş kısım - %65) -->
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="70"
-                            android:background="@drawable/compatibility_progress_bg" />
+                            android:layout_weight="65"
+                            android:background="@drawable/rounded_blue_progress_bg" />
 
+                        <!-- Beyaz kısım (doldurulmamış kısım - %35) -->
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="35" />
+                            android:layout_weight="35"
+                            android:background="@drawable/rounded_white_progress_bg" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="65dp"
-                        android:background="@drawable/compatibility_thumb"
-                        android:translationX="-12dp" />
+                    <!-- Kaydırıcı (slider) - Tam olarak %65 konumunda -->
                 </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
