@@ -16,7 +16,7 @@
             android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             android:elevation="4dp"
             android:fontFamily="@font/poppins_bold"
             android:text="CVRaterAI"
@@ -166,6 +166,20 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
+            android:id="@+id/tvLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_medium"
+            android:padding="8dp"
+            android:text="Do you already have an account? Login"
+            android:textColor="@color/primary_blue"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardSignUp" />
+
+        <TextView
             android:id="@+id/tvOr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -176,7 +190,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardSignUp" />
+            app:layout_constraintTop_toBottomOf="@id/tvLogin" />
 
         <FrameLayout
             android:id="@+id/flGoogle"

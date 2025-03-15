@@ -22,7 +22,7 @@
         android:id="@+id/btnGetStarted"
         android:layout_width="192dp"
         android:layout_height="68dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="110dp"
         app:cardBackgroundColor="#042652"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
@@ -144,7 +144,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="70dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
