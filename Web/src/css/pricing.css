@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Scroll çubuğu stilleri */
@@ -90,9 +90,10 @@ body::before {
     opacity: 0.85;
 }
 
-.navbar {
+/* Navbar için z-index değerini artırıyorum */
+nav {
     position: relative;
-    z-index: 2;
+    z-index: 10; /* Daha yüksek z-index değeri */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -101,95 +102,133 @@ body::before {
 }
 
 .logo {
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-size: 32px;
+    font-weight: 700;
+    color: #F5F7FA;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }
 
 .nav-links {
     display: flex;
-    gap: 2.5rem;
+    align-items: center;
+    gap: 2rem;
 }
 
 .nav-links a {
-    color: white;
     text-decoration: none;
-    font-size: 1.3rem;
+    color: #F5F7FA;
+    font-size: 18px;
+    transition: color 0.3s ease;
     position: relative;
-    transition: all 0.3s ease;
-    padding-bottom: 5px;
-}
-
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: white;
 }
 
 .nav-links a:hover {
-    transform: translateY(-2px);
+    color: #1D5399;
+}
+
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #F5F7FA;
 }
 
 .nav-buttons {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 2rem;
+    z-index: 11;
 }
 
-.sign-button, .download-button {
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    background-color: white;
-    color: #187CFF;
-    transition: all 0.3s ease;
-}
-
-.sign-button:hover, .download-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.9);
-}
-
-.download-button {
+.nav-buttons .download-btn {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
+    background-color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: none;
+    color: #187CFF;
+    font-weight: 600;
+    font-size: 16px;
+    z-index: 11;
+}
+
+.nav-buttons .download-btn:hover {
+    transform: translateY(-2px);
+}
+
+.nav-buttons .download-btn:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.nav-buttons .download-btn span {
+    color: #187CFF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
     font-weight: 500;
 }
 
-.download-icon {
-    width: 18px;
-    height: 18px;
+.nav-buttons .download-btn img {
+    width: 24px;
+    height: 24px;
     object-fit: contain;
-    margin-top: 1px;
 }
 
+.nav-buttons .sign-in-btn {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: none;
+    z-index: 11;
+}
+
+.nav-buttons .sign-in-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Pricing container için z-index değerini düşürüyorum ve margin-top değerini artırıyorum */
 .pricing-container {
     position: relative;
     z-index: 2;
-    max-width: 1200px;
-    margin: 2rem auto;
+    max-width: 700px; /* Genişliği daha da azaltıyorum */
+    margin: 8rem auto; /* Üst ve alt margin'i artırıyorum, sayfanın ortasına konumlandırmak için */
     padding: 0 2rem;
 }
 
 .cards-container {
     background: linear-gradient(160deg, #004494 0%, #00367C 100%);
-    border-radius: 30px;
-    padding: 3.5rem 2.5rem;
+    border-radius: 15px; /* Border radius'u azaltıyorum */
+    padding: 1.8rem 1.2rem; /* Padding'i azaltıyorum */
     margin: 0 auto;
-    max-width: 900px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    max-width: 650px; /* Genişliği azaltıyorum */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Gölgeyi azaltıyorum */
     border: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 .container-circles {
@@ -210,22 +249,22 @@ body::before {
 }
 
 .container-circle-1 {
-    width: 400px;
-    height: 400px;
-    top: -150px;
-    right: -150px;
+    width: 300px;
+    height: 300px;
+    top: -120px;
+    right: -120px;
 }
 
 .container-circle-2 {
-    width: 300px;
-    height: 300px;
-    bottom: -100px;
-    left: -100px;
+    width: 220px;
+    height: 220px;
+    bottom: -80px;
+    left: -80px;
 }
 
 .container-circle-3 {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     top: 40%;
     left: 15%;
     background: linear-gradient(140deg, #0066CC 0%, #0055B8 100%);
@@ -233,8 +272,8 @@ body::before {
 }
 
 .container-circle-4 {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     top: 20%;
     right: 25%;
     background: linear-gradient(140deg, #0077E6 0%, #0066CC 100%);
@@ -242,83 +281,62 @@ body::before {
 }
 
 .container-circle-5 {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     bottom: 15%;
     right: 10%;
     background: linear-gradient(140deg, #0088FF 0%, #0077E6 100%);
     opacity: 0.15;
 }
 
-.container-circle-6 {
-    width: 180px;
-    height: 180px;
-    top: 10%;
-    left: 10%;
-    background: linear-gradient(140deg, #0099FF 0%, #0088FF 100%);
-    opacity: 0.2;
-}
-
-.container-circle-7 {
-    width: 250px;
-    height: 250px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(140deg, #0055B8 0%, #004494 100%);
-    opacity: 0.15;
-}
-
-h1, .subtitle {
+h1 {
+    font-size: 2rem; /* Font boyutunu azaltıyorum */
+    text-align: center;
+    margin-bottom: 0.6rem; /* Margin'i azaltıyorum */
     position: relative;
     z-index: 1;
 }
 
-h1 {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    text-align: center;
-    color: white;
-}
-
 .subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 3.5rem;
-    opacity: 0.9;
+    font-size: 1rem; /* Font boyutunu azaltıyorum */
     text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.2rem; /* Margin'i azaltıyorum */
+    opacity: 0.8;
+    position: relative;
+    z-index: 1;
 }
 
 .pricing-cards {
     display: flex;
     justify-content: center;
-    gap: 3rem;
+    gap: 1.2rem; /* Gap'i azaltıyorum */
     position: relative;
-    z-index: 2;
+    z-index: 1;
+    margin-top: 1.2rem; /* Margin'i azaltıyorum */
 }
 
 .pricing-card {
-    background: linear-gradient(140deg, #1C82FF 0%, #1666DB 100%);
-    padding: 3rem 2.5rem;
-    border-radius: 20px;
-    min-width: 320px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px; /* Border radius'u azaltıyorum */
+    padding: 1.2rem; /* Padding'i azaltıyorum */
+    width: 220px; /* Genişliği azaltıyorum */
+    text-align: center;
     backdrop-filter: blur(10px);
-    border: 4px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 350px; /* Minimum yüksekliği azaltıyorum */
 }
 
 .pricing-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    border: 4px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Border kalınlığını ve opaklığını değiştiriyorum */
     background: linear-gradient(140deg, #1C82FF 0%, #1870EC 100%);
 }
 
@@ -332,78 +350,86 @@ h1 {
 }
 
 .pricing-card h2 {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Font boyutunu azaltıyorum */
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem; /* Margin'i azaltıyorum */
     letter-spacing: 1px;
     text-align: center;
     width: 100%;
 }
 
 .price {
-    font-size: 3rem;
+    font-size: 2.2rem; /* Font boyutunu azaltıyorum */
     font-weight: bold;
-    margin: 1rem 0;
+    margin: 0.8rem 0; /* Margin'i azaltıyorum */
     display: flex;
     align-items: baseline;
     justify-content: center;
     gap: 0.3rem;
     color: white;
     letter-spacing: -1px;
+    height: 45px; /* Sabit yüksekliği azaltıyorum */
 }
 
 .price span {
-    font-size: 1.2rem;
+    font-size: 1rem; /* Font boyutunu azaltıyorum */
     color: rgba(255, 255, 255, 0.8);
     font-weight: 500;
 }
 
 .price-amount {
-    font-size: 1.8rem;
+    font-size: 1.8rem; /* Font boyutunu azaltıyorum */
     font-weight: 700;
     margin-right: 2px;
 }
 
 ul {
     list-style: none;
-    margin: 1rem 0 2rem;
+    margin: 0.8rem 0 1.2rem; /* Margin'i azaltıyorum */
+    flex-grow: 1;
 }
 
 li {
-    margin: 2rem 0;
-    font-size: 1.2rem;
+    margin: 1rem 0; /* Margin'i azaltıyorum */
+    font-size: 1rem; /* Font boyutunu azaltıyorum */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     color: rgba(255, 255, 255, 0.95);
-    line-height: 1.4;
+    line-height: 1.3; /* Line height'i azaltıyorum */
     flex-wrap: wrap;
     text-align: center;
 }
 
 li::before {
     content: "•";
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* Font boyutunu azaltıyorum */
     line-height: 0;
     color: rgba(255, 255, 255, 0.9);
 }
 
-.get-started, .buy-now {
-    padding: 1rem 2rem;
-    border-radius: 10px;
+/* Pricing kartlarındaki butonlar için özel stil */
+.pricing-card .get-started, 
+.pricing-card .buy-now {
+    padding: 0.7rem 1.2rem; /* Padding'i azaltıyorum */
+    border-radius: 6px; /* Border radius'u azaltıyorum */
     border: none;
     cursor: pointer;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 0.9rem; /* Font boyutunu azaltıyorum */
     width: 100%;
-    margin-top: auto;
+    margin-top: 0.8rem; /* Margin-top değerini azaltıyorum */
     background-color: white;
     color: #187CFF;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    align-self: flex-end;
 }
 
-.get-started:hover, .buy-now:hover {
+.pricing-card .get-started:hover, 
+.pricing-card .buy-now:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     background-color: rgba(255, 255, 255, 0.9);
@@ -448,4 +474,157 @@ li::before {
 .pricing-card button {
     position: relative;
     z-index: 1;
+}
+
+/* Responsive tasarım için ek kurallar */
+@media (max-width: 992px) {
+    .pricing-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem; /* Gap'i azaltıyorum */
+    }
+    
+    .pricing-card {
+        width: 100%;
+        max-width: 280px; /* Maksimum genişliği azaltıyorum */
+    }
+    
+    .pricing-container {
+        margin: 6rem auto; /* Margin'i azaltıyorum */
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-container {
+        margin: 4rem auto; /* Margin'i azaltıyorum */
+        padding: 0 1.5rem;
+    }
+    
+    .cards-container {
+        padding: 1.2rem 1rem; /* Padding'i azaltıyorum */
+        max-width: 100%;
+    }
+    
+    h1 {
+        font-size: 1.7rem; /* Font boyutunu azaltıyorum */
+    }
+    
+    .subtitle {
+        font-size: 0.9rem; /* Font boyutunu azaltıyorum */
+    }
+    
+    .pricing-card {
+        padding: 1rem; /* Padding'i azaltıyorum */
+        min-height: 320px; /* Minimum yüksekliği azaltıyorum */
+        max-width: 250px;
+    }
+    
+    .pricing-card h2 {
+        font-size: 1.8rem;
+    }
+    
+    .price {
+        font-size: 2rem;
+        height: 40px;
+    }
+    
+    .price-amount {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pricing-container {
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .pricing-card {
+        min-height: 300px;
+        max-width: 220px;
+    }
+    
+    li {
+        font-size: 0.9rem;
+        margin: 0.8rem 0;
+    }
+    
+    .pricing-card .get-started, 
+    .pricing-card .buy-now {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Balloon Styles */
+.balloons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.balloon {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(3px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    transition: transform 0.5s ease-out;
+}
+
+.balloon-1 {
+    width: 300px;
+    height: 300px;
+    left: 10%;
+    top: 15%;
+    background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 15s ease-in-out infinite;
+}
+
+.balloon-2 {
+    width: 250px;
+    height: 250px;
+    right: 15%;
+    top: 25%;
+    background: radial-gradient(circle, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 18s ease-in-out infinite 2s;
+}
+
+.balloon-3 {
+    width: 400px;
+    height: 400px;
+    left: 30%;
+    bottom: 10%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 20s ease-in-out infinite 1s;
+}
+
+@keyframes floatBalloon {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(20px, -30px) scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
 } 

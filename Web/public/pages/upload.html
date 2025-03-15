@@ -1,63 +1,119 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVRaterAI</title>
+    <title>CVRaterAI - Upload CV</title>
+    <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../src/css/upload.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div class="background-shapes">
+    <!-- Arka plan balonları -->
+    <div class="background-circles">
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
     </div>
-
+    
+    <!-- Arka plan balonları -->
+    <div class="balloons">
+        <div class="balloon balloon-1"></div>
+        <div class="balloon balloon-2"></div>
+        <div class="balloon balloon-3"></div>
+    </div>
+    
     <nav>
         <div class="logo">CVRaterAI</div>
         <div class="nav-links">
-            <a href="#" class="nav-link active">Home</a>
-            <a href="#" class="nav-link active">Pricing</a>
-            <a href="#" class="nav-link active">Features</a>
+            <a href="../../index.html">Home</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="features.html">Features</a>
         </div>
         <div class="nav-buttons">
-            <button class="profile-btn">
-                <img src="profile_icon.png" alt="Profile" class="profile-icon">
-                Profile
-            </button>
+            <button class="sign-in-btn" onclick="openSignInModal()">SIGN IN / SIGN UP</button>
             <button class="download-btn">
-                <img src="play_store_icon.png" alt="Google Play" class="play-store-icon">
-                Download
+                <img src="../../images/google_play_logo.png" alt="Google Play">
+                <span>Download</span>
             </button>
         </div>
     </nav>
 
-    <div class="content">
-        <div class="upload-section">
-            <div class="upload-box">
-                <h2>Drag And Drop CV</h2>
-                <p>-OR-</p>
-                <button class="upload-btn">Upload</button>
+    <main>
+        <div class="content">
+            <div class="upload-section">
+                <div class="upload-box">
+                    <h2>Drag And Drop CV</h2>
+                    <p>-OR-</p>
+                    <button class="upload-btn">Upload</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="input-group">
+                    <h3>Aranan Özellikler</h3>
+                    <textarea placeholder="B1 seviye ingilizce java spring boot c++ ve c# bilgisi olsun ekip ile uyumlu çalışsın"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <h3>GitHub Linki (Opsiyonel)</h3>
+                    <input type="text" placeholder="https://github.com/BIRKANN">
+                </div>
             </div>
         </div>
+        
+        <div class="analyze-btn-wrapper">
+            <button class="analyze-btn">Analyze CV</button>
+        </div>
+    </main>
 
-        <div class="form-section">
-            <div class="input-group">
-                <h3>Aranan Özellikler</h3>
-                <textarea placeholder="B1 seviye ingilizce java spring boot c++ ve c# bilgisi olsun ekip ile uyumlu çalışsın"></textarea>
-            </div>
-
-            <div class="input-group">
-                <h3>GitHub Linki (Opsiyonel)</h3>
-                <input type="text" placeholder="https://github.com/BIRKANN">
+    <!-- Sign In/Up Modal -->
+    <div id="signInModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSignInModal()">&times;</span>
+            <div class="container" id="container">
+                <div class="form-container sign-up-container">
+                    <form action="#">
+                        <h1>Create Account</h1>
+                        <input type="text" placeholder="Name" />
+                        <input type="text" placeholder="Surname" />
+                        <input type="email" placeholder="Email" />
+                        <input type="password" placeholder="Password" />
+                        <button class="sign-up-btn">Sign Up</button>
+                        <div class="or-divider">or</div>
+                        <div class="social-container">
+                            <a href="#" class="google"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"></a>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-container sign-in-container">
+                    <form action="#">
+                        <h1>Sign In</h1>
+                        <input type="email" placeholder="Email" />
+                        <input type="password" placeholder="Password" />
+                        <button>Sign In</button>
+                    </form>
+                </div>
+                <div class="overlay-container">
+                    <div class="overlay">
+                        <div class="overlay-panel overlay-left">
+                            <h1>Welcome Back!</h1>
+                            <p>Enter your personal information to use the site's features.</p>
+                            <button class="ghost" id="signIn">Sign In</button>
+                        </div>
+                        <div class="overlay-panel overlay-right">
+                            <h1>Hello Friend!</h1>
+                            <p>Register with your personal information and access all the information on the site.</p>
+                            <button class="ghost" id="signUp">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="analyze-btn-wrapper">
-        <button class="analyze-btn">Analyze CV</button>
-    </div>
 
+    <script src="../../script.js"></script>
     <script src="../../src/js/upload.js"></script>
 </body>
 </html> 

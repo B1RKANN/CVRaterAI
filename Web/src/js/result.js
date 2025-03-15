@@ -61,4 +61,75 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Sayfayı başlat
     initPage();
+    
+    // Giriş durumunu kontrol et
+    checkLoginStatus();
+});
+
+// Giriş durumunu kontrol et ve butonları güncelle
+function checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+        updateNavButtons();
+    }
+}
+
+// Butonları güncelle
+function updateNavButtons() {
+    const navButtons = document.querySelector('.nav-buttons');
+    if (navButtons) {
+        const signInBtn = navButtons.querySelector('.sign-in-btn');
+        if (signInBtn) {
+            // Sign In/Up butonunu Profile butonu ile değiştir
+            const profileBtn = document.createElement('button');
+            profileBtn.className = 'sign-in-btn';
+            profileBtn.textContent = 'PROFILE';
+            
+            // Mevcut URL'ye göre doğru yönlendirme yolunu belirle
+            const currentPath = window.location.pathname;
+            let profilePath = '';
+            
+            // Eğer ana sayfadaysak
+            if (currentPath.includes('index.html') || currentPath.endsWith('/') || currentPath.endsWith('/Web/')) {
+                profilePath = 'public/pages/profile.html';
+            } 
+            // Eğer zaten pages klasöründeysek
+            else if (currentPath.includes('/pages/')) {
+                profilePath = 'profile.html';
+            }
+            // Diğer durumlar için
+            else {
+                profilePath = 'public/pages/profile.html';
+            }
+            
+            profileBtn.onclick = function() {
+                window.location.href = profilePath;
+            };
+            
+            navButtons.replaceChild(profileBtn, signInBtn);
+        }
+    }
+}
+
+// Scroll effect for balloons
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const balloons = document.querySelectorAll('.balloon');
+    
+    // Only apply effect if scrolled
+    if (scrollY > 0) {
+        balloons.forEach((balloon, index) => {
+            // Different movement for each balloon
+            const moveX = (index % 2 === 0) ? scrollY * 0.05 : -scrollY * 0.05;
+            const moveY = (index % 3 === 0) ? scrollY * 0.03 : -scrollY * 0.02;
+            
+            // Apply transform with both the float animation and scroll movement
+            balloon.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    } else {
+        // Reset transform when back at top
+        balloons.forEach(balloon => {
+            balloon.style.transform = 'translate(0, 0)';
+        });
+    }
 });
