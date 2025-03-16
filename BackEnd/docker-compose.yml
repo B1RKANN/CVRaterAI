@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: cvraterai
+      POSTGRES_USER: cvrateruser
+      POSTGRES_PASSWORD: CVRaterAI_2025_Secure_DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    image: cvraterai-backend:latest
+    depends_on:
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      GEMINI_API_KEY: AIzaSyDyUAJK7t3bJ72YbLrHjrCgyD1v99ijTZQ
+      JWT_SECRET: 7UiEQwqHpPeuR9HEyd2NcEgluhuJ9Ctdn8/8lMyvUrY=
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/cvraterai
+      SPRING_DATASOURCE_USERNAME: cvrateruser
+      SPRING_DATASOURCE_PASSWORD: CVRaterAI_2025_Secure_DB
+      FILE_UPLOAD_DIR: /app/uploads
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads_data:/app/uploads
+    restart: always
+
+volumes:
+  postgres_data:
+  uploads_data: 

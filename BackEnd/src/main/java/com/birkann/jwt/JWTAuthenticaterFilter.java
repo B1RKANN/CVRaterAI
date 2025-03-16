@@ -41,12 +41,16 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 		logger.debug("shouldNotFilter kontrol ediliyor, yol: {}", path);
 		
 		// Bu URL'ler filtre uygulanmadan geçebilir
-		return path.equals("/register") || 
+		boolean isPublicEndpoint = path.equals("/register") || 
 			   path.equals("/authenticate") || 
 			   path.equals("/refreshToken") ||
 			   path.startsWith("/auth/v2/register") || 
 			   path.startsWith("/auth/v2/authenticate") || 
-			   path.startsWith("/auth/v2/refreshToken");
+			   path.startsWith("/auth/v2/refreshToken") ||
+			   path.equals("/auth/v2/logout");
+		
+		logger.info("JWT Filter - URL: {}, Public Endpoint: {}", path, isPublicEndpoint);
+		return isPublicEndpoint;
 	}
 
 	@Override
@@ -56,14 +60,22 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 		String requestURI = request.getRequestURI();
 		logger.debug("JWT Filter işleniyor. URI: {}, Metod: {}", requestURI, request.getMethod());
 		
-		String header = request.getHeader("Authorization");
-		if(header == null || !header.startsWith("Bearer ")) {
-			logger.debug("Authorization header bulunamadı veya geçersiz. URI: {}", requestURI);
-			filterChain.doFilter(request, response);
-			return;
+		// Önce cookie'den token'ı almayı dene
+		String token = jwtService.getTokenFromCookie(request);
+		
+		// Cookie'de token yoksa Authorization header'dan almayı dene
+		if (token == null) {
+			String header = request.getHeader("Authorization");
+			if(header == null || !header.startsWith("Bearer ")) {
+				logger.debug("JWT token bulunamadı (cookie veya header). URI: {}", requestURI);
+				filterChain.doFilter(request, response);
+				return;
+			}
+			token = header.substring(7);
+		} else {
+			logger.debug("JWT token cookie'den alındı. URI: {}", requestURI);
 		}
 		
-		String token = header.substring(7);
 		String username = null;
 		
 		try {

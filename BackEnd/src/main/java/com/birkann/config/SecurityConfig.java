@@ -27,7 +27,11 @@ public class SecurityConfig {
 	public static final String[] AUTH_V2_PATHS = {
 	    "/auth/v2/register",
 	    "/auth/v2/authenticate",
-	    "/auth/v2/refreshToken"
+	    "/auth/v2/refreshToken",
+	    "/auth/v2/register-with-cookie",
+	    "/auth/v2/authenticate-with-cookie",
+	    "/auth/v2/refreshToken-with-cookie",
+	    "/auth/v2/logout"
 	};
 	public static final String[] SWAGGER_PATH = {
 			"/swagger-ui/**",
@@ -53,20 +57,28 @@ public class SecurityConfig {
 	@Bean
 	@Order(1)
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable()
+		http.csrf(csrf -> csrf.disable())
 		.authorizeHttpRequests(request-> 
-		request.requestMatchers(AUTHENTICATE, REGISTER, REFRESH_TOKEN).permitAll()
+		request
+		// Public endpoints - herkese açık
+		.requestMatchers(AUTHENTICATE, REGISTER, REFRESH_TOKEN).permitAll()
 		.requestMatchers(AUTH_V2_PATHS).permitAll()  // Auth v2 yollarını herkese açık yap
 		.requestMatchers(SWAGGER_PATH).permitAll()
-		// Credit controller endpointlerini sadece ADMIN rolüne sahip kullanıcılara aç
+		// Admin endpoints - sadece ADMIN rolüne sahip kullanıcılar için
 		.requestMatchers("/api/v1/credit/**").hasRole("ADMIN")
 		.requestMatchers("/rest/api/credit/**").hasRole("ADMIN")
+		// Diğer tüm endpoint'ler için kimlik doğrulama gerekli
 		.anyRequest()
 		.authenticated())
-		.exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
-		.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.exceptionHandling(exceptionHandling -> 
+		    exceptionHandling.authenticationEntryPoint(authEntryPoint)
+		)
+		.sessionManagement(session-> 
+		    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		)
 		.authenticationProvider(authenticationProvider)
 		.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		
 		return http.build();
 	}
 	
