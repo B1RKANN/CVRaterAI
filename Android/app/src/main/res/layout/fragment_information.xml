@@ -89,8 +89,9 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:fontFamily="@font/poppins_regular"
                     android:text="Yunus"
                     android:textColor="@color/white"
@@ -112,6 +113,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/surname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -135,6 +137,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -158,6 +161,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/phonenumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -181,6 +185,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/skills"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -250,9 +255,9 @@
         android:layout_height="64dp"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="61dp"
+        android:backgroundTint="#1A73E8"
         android:text="@string/back_to_homepage"
         android:textColor="@color/white"
-        android:backgroundTint="#1A73E8"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
