@@ -89,4 +89,5 @@
     <string name="recommendations">Recommendations</string>
     <string name="programming_language_analysis">Programming language analysis</string>
     <string name="compatibility_status">Compatibility Status</string>
+    <string name="logout">Logout</string>
 </resources>

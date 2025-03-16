@@ -5,9 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.navigation.fragment.findNavController
+import com.cvraterai.myapplication.data.repository.AuthRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,10 +23,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HomePageFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class HomePageFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    
+    @Inject
+    lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +61,18 @@ class HomePageFragment : Fragment() {
         view.findViewById<CardView>(R.id.cardUploadCV).setOnClickListener {
             // UploadCvFragment'e geçiş yap
             findNavController().navigate(R.id.action_homePageFragment_to_uploadCvFragment)
+        }
+        
+        // Logout butonuna tıklama olayını ayarla
+        view.findViewById<ImageButton>(R.id.btnLogout).setOnClickListener {
+            // Oturumu kapat
+            authRepository.logout()
+            
+            // Kullanıcıya bilgi ver
+            Toast.makeText(requireContext(), getString(R.string.logout), Toast.LENGTH_SHORT).show()
+            
+            // FirstPageFragment'a geri dön
+            findNavController().navigate(R.id.action_homePageFragment_to_firstPageFragment)
         }
     }
 
