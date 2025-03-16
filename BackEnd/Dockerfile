@@ -9,6 +9,9 @@ COPY pom.xml ./
 COPY mvnw ./
 COPY .mvn .mvn
 
+# mvnw dosyasına çalıştırma izni ver
+RUN chmod +x ./mvnw
+
 # Uygulamayı kopyala
 COPY src src
 
