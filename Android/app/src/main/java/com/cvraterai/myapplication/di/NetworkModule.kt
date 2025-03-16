@@ -2,6 +2,7 @@ package com.cvraterai.myapplication.di
 
 import com.cvraterai.myapplication.data.TokenManager
 import com.cvraterai.myapplication.data.api.AuthApiService
+import com.cvraterai.myapplication.data.api.ProfileApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -76,5 +77,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
         return retrofit.create(AuthApiService::class.java)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideProfileApiService(retrofit: Retrofit): ProfileApiService {
+        return retrofit.create(ProfileApiService::class.java)
     }
 } 
