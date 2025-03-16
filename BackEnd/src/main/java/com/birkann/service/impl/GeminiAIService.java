@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,8 +73,8 @@ public class GeminiAIService {
         this.ocrRestTemplate = new RestTemplate();
         org.springframework.http.client.SimpleClientHttpRequestFactory requestFactory = 
             new org.springframework.http.client.SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(60000); // 60 saniye bağlantı zaman aşımı
-        requestFactory.setReadTimeout(60000);    // 60 saniye okuma zaman aşımı
+        requestFactory.setConnectTimeout(15000); // 15 saniye bağlantı zaman aşımı
+        requestFactory.setReadTimeout(15000);    // 15 saniye okuma zaman aşımı
         this.ocrRestTemplate.setRequestFactory(requestFactory);
         
         this.objectMapper = new ObjectMapper();

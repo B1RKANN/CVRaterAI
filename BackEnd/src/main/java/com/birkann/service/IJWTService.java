@@ -1,6 +1,8 @@
 package com.birkann.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * JWT token işlemleri için servis arayüzü
@@ -28,4 +30,24 @@ public interface IJWTService {
      * @return Oluşturulan JWT token
      */
     String generateToken(UserDetails userDetails);
+    
+    /**
+     * JWT token'ı HTTP response'a cookie olarak ekler
+     * @param response HTTP servlet response
+     * @param token JWT token
+     */
+    void addTokenToCookie(HttpServletResponse response, String token);
+    
+    /**
+     * HTTP request içindeki cookie'den JWT token'ı çıkarır
+     * @param request HTTP servlet request
+     * @return JWT token, eğer cookie yoksa null
+     */
+    String getTokenFromCookie(HttpServletRequest request);
+    
+    /**
+     * HTTP response'dan JWT cookie'sini siler
+     * @param response HTTP servlet response
+     */
+    void clearTokenCookie(HttpServletResponse response);
 } 

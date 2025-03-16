@@ -86,7 +86,7 @@ public class CreditSchedulerService {
                 logger.info("JDBC ile direkt güncelleme yapılıyor...");
                 Date newExpiredDate = new Date(currentDate.getTime() + ONE_WEEK_IN_MS);
                 int updatedRows = jdbcTemplate.update(
-                    "UPDATE cvraterai.credit SET user_credit = 20, start_date = ?, expired_date = ? WHERE expired_date <= ?",
+                    "UPDATE public.credit SET user_credit = 20, start_date = ?, expired_date = ? WHERE expired_date <= ?",
                     currentDate, newExpiredDate, currentDate);
                 
                 logger.info("JDBC ile {} kredi kaydı güncellendi", updatedRows);
@@ -161,7 +161,7 @@ public class CreditSchedulerService {
             Date newExpireDate = new Date(currentDate.getTime() + ONE_WEEK_IN_MS);
             
             int updated = jdbcTemplate.update(
-                "UPDATE cvraterai.credit SET user_credit = 20, start_date = ?, expired_date = ? " +
+                "UPDATE public.credit SET user_credit = 20, start_date = ?, expired_date = ? " +
                 "WHERE expired_date IS NOT NULL AND expired_date <= ?",
                 currentDate, newExpireDate, currentDate);
             

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Entity
-@Table(name = "credit", schema = "cvraterai")
+@Table(name = "credit", schema = "public")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -14,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "cv_evaluation", schema = "cvraterai")
+@Table(name = "cv_evaluation", schema = "public")
 public class CVEvaluation extends BaseEntity {
 
     @Column(name = "file_name")
