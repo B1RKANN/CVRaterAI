@@ -7,8 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.LinearLayout
+import androidx.core.os.bundleOf
 import androidx.core.view.GestureDetectorCompat
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.cvraterai.myapplication.adapter.SkillRatingAdapter
+import com.cvraterai.myapplication.databinding.FragmentAnalysisBinding
+import com.cvraterai.myapplication.model.SkillRating
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,101 +27,149 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AnalysisFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AnalysisFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
+    private var _binding: FragmentAnalysisBinding? = null
+    private val binding get() = _binding!!
     
     private lateinit var gestureDetector: GestureDetectorCompat
+    
+    private var evaluationResponse: String? = null
+    private var evaluationResultJson: String? = null
+    private val skillRatings = mutableListOf<SkillRating>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            evaluationResponse = it.getString("evaluationResponse")
+            evaluationResultJson = it.getString("evaluationResultJson")
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_analysis, container, false)
-        
-        // Kaydırma hareketlerini algılamak için GestureDetector oluştur
-        setupSwipeGesture(view)
-        
-        return view
+    ): View {
+        _binding = FragmentAnalysisBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Initialize UI elements and set up any necessary listeners
-        setupUI()
-    }
-    
-    private fun setupSwipeGesture(view: View) {
-        // SimpleOnGestureListener kullanarak kaydırma hareketlerini algıla
-        val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-            // Dokunma olayını algıla
-            override fun onDown(e: MotionEvent): Boolean {
-                return true
-            }
-            
-            override fun onFling(
-                e1: MotionEvent?,
-                e2: MotionEvent,
-                velocityX: Float,
-                velocityY: Float
-            ): Boolean {
-                try {
-                    // Yatay kaydırma mesafesi ve hızı kontrol et
-                    if (e1 != null) {
-                        val diffX = e2.x - e1.x
-                        val diffY = e2.y - e1.y
-                        
-                        // Yatay kaydırma dikey kaydırmadan daha belirginse ve yeterince hızlıysa
-                        if (Math.abs(diffX) > Math.abs(diffY) && 
-                            Math.abs(diffX) > 100 && 
-                            Math.abs(velocityX) > 100) {
-                            
-                            // Soldan sağa kaydırma (geri gitme)
-                            if (diffX > 0) {
-                                // InformationFragment'a geri dön
-                                findNavController().popBackStack()
-                                return true
-                            }
-                            // Sağdan sola kaydırma (AI Note'a gitme)
-                            else if (diffX < 0) {
-                                // AINoteFragment'a git
-                                findNavController().navigate(R.id.action_analysisFragment_to_aiNoteFragment)
-                                return true
-                            }
-                        }
-                    }
-                } catch (exception: Exception) {
-                    // Herhangi bir hata durumunda çökmeyi önle
-                }
-                return false
-            }
-        }
+        // RecyclerView'ı ayarla
+        setupRecyclerView()
         
-        // GestureDetector'ı başlat
-        gestureDetector = GestureDetectorCompat(requireContext(), gestureListener)
+        // Verileri yükle
+        loadSkillRatingsFromJson()
         
-        // Tüm view'a dokunma olaylarını dinle
+        // Gesture detector'ı başlat
+        gestureDetector = GestureDetectorCompat(requireContext(), this)
+        
+        // Ana layout'a dokunma olaylarını dinle
         view.setOnTouchListener { _, event ->
-            // Gesture detector'a gönder
             gestureDetector.onTouchEvent(event)
-            true // Olayı tükettiğimizi belirtmek için true döndürüyoruz
+            true
         }
     }
     
-    private fun setupUI() {
-        // Here you would initialize any dynamic elements or set up click listeners
-        // For this static UI, we don't need to do anything special
+    private fun setupRecyclerView() {
+        binding.recyclerViewSkills.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewSkills.adapter = SkillRatingAdapter(skillRatings)
+    }
+    
+    private fun loadSkillRatingsFromJson() {
+        if (evaluationResultJson != null) {
+            try {
+                val resultJson = JSONObject(evaluationResultJson!!)
+                val skillsArray = resultJson.getJSONArray("skillRatings")
+                
+                skillRatings.clear()
+                
+                // Beceri derecelendirmelerini ekle
+                for (i in 0 until skillsArray.length()) {
+                    val skillObj = skillsArray.getJSONObject(i)
+                    val skillName = skillObj.getString("language")
+                    val skillRating = skillObj.getInt("percentage")
+                    
+                    skillRatings.add(SkillRating(skillName, skillRating))
+                }
+                
+                // Adapter'ı güncelle
+                binding.recyclerViewSkills.adapter?.notifyDataSetChanged()
+                
+                // Uyumluluk çubuğunu güncelle
+                updateCompatibilityStatus()
+                
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    
+    private fun updateCompatibilityStatus() {
+        try {
+            // evaluationResponse'dan JSON nesnesi oluştur
+            val responseJson = JSONObject(evaluationResponse ?: return)
+            
+            // evaluationScore değerini al
+            val score = responseJson.getInt("evaluationScore")
+            
+            // Yüzdelik değeri TextView'e ayarla
+            binding.tvScorePercent.text = "%$score"
+            
+            // Progress bar'ın weight değerlerini güncelle
+            val filledLayoutParams = binding.compatibilityStatusBar.layoutParams as LinearLayout.LayoutParams
+            filledLayoutParams.weight = score.toFloat()
+            binding.compatibilityStatusBar.layoutParams = filledLayoutParams
+            
+            // Boş alanın weight değerini güncelle
+            val remainingWeight = 100 - score
+            val emptyView = (binding.compatibilityStatusBar.parent as LinearLayout).getChildAt(1)
+            val emptyLayoutParams = emptyView.layoutParams as LinearLayout.LayoutParams
+            emptyLayoutParams.weight = remainingWeight.toFloat()
+            emptyView.layoutParams = emptyLayoutParams
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // GestureDetector.OnGestureListener metodları
+    override fun onDown(e: MotionEvent): Boolean = false
+    
+    override fun onShowPress(e: MotionEvent) {}
+    
+    override fun onSingleTapUp(e: MotionEvent): Boolean = false
+    
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = false
+    
+    override fun onLongPress(e: MotionEvent) {}
+    
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+        // Sola kaydırma hareketi algılandığında
+        if (e1 != null && e2.x < e1.x && Math.abs(e1.x - e2.x) > 100 && Math.abs(velocityX) > 100) {
+            // AINoteFragment'a geçiş yap ve veriyi aktar
+            val bundle = bundleOf(
+                "evaluationResponse" to evaluationResponse,
+                "evaluationResultJson" to evaluationResultJson
+            )
+            
+            // aiNoteFragment küçük harfle başladığı için (muhtemelen) action ID de öyle
+            findNavController().navigate(R.id.action_analysisFragment_to_aiNoteFragment, bundle)
+            return true
+        }
+        // Sağa kaydırma hareketi algılandığında
+        else if (e1 != null && e2.x > e1.x && Math.abs(e1.x - e2.x) > 100 && Math.abs(velocityX) > 100) {
+            // InformationFragment'a geri dön
+            findNavController().navigateUp()
+            return true
+        }
+        return false
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

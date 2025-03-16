@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.Button
 import androidx.core.view.GestureDetectorCompat
 import androidx.navigation.fragment.findNavController
+import com.cvraterai.myapplication.databinding.FragmentAiNoteBinding
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,83 +23,98 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AINoteFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AINoteFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class AINoteFragment : Fragment(), GestureDetector.OnGestureListener {
+    private var _binding: FragmentAiNoteBinding? = null
+    private val binding get() = _binding!!
     
     private lateinit var gestureDetector: GestureDetectorCompat
+    
+    private var evaluationResponse: String? = null
+    private var evaluationResultJson: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            evaluationResponse = it.getString("evaluationResponse")
+            evaluationResultJson = it.getString("evaluationResultJson")
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_ai_note, container, false)
+    ): View {
+        _binding = FragmentAiNoteBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         
-        // Kaydırma hareketlerini algılamak için GestureDetector oluştur
-        setupSwipeGesture(view)
+        // Verileri göster
+        displayAiNote()
         
-        return view
+        // Gesture detector'ı başlat
+        gestureDetector = GestureDetectorCompat(requireContext(), this)
+        
+        // Ana layout'a dokunma olaylarını dinle
+        view.setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
+            true
+        }
+        
+        // Anasayfaya dön butonuna tıklama olayını ayarla
+        view.findViewById<Button>(R.id.btnBackToHomepage)?.setOnClickListener {
+            // Ana sayfaya dön (geriye giderek)
+            findNavController().popBackStack(R.id.homePageFragment, false)
+            // Alternatif olarak:
+            // findNavController().navigate(R.id.action_aiNoteFragment_to_homePageFragment)
+        }
     }
     
-    private fun setupSwipeGesture(view: View) {
-        // SimpleOnGestureListener kullanarak kaydırma hareketlerini algıla
-        val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-            // Dokunma olayını algıla
-            override fun onDown(e: MotionEvent): Boolean {
-                return true
+    private fun displayAiNote() {
+        if (evaluationResultJson != null) {
+            try {
+                // Değerlendirme sonucunu JSON olarak çözümle
+                val resultJson = JSONObject(evaluationResultJson!!)
+                val explanation = resultJson.getString("explanation")
+                
+                // Açıklama metnini göster
+                binding.tvNoteContent.text = explanation
+                
+            } catch (e: Exception) {
+                e.printStackTrace()
+                binding.tvNoteContent.text = "Açıklama yüklenirken bir hata oluştu."
             }
-            
-            override fun onFling(
-                e1: MotionEvent?,
-                e2: MotionEvent,
-                velocityX: Float,
-                velocityY: Float
-            ): Boolean {
-                try {
-                    // Yatay kaydırma mesafesi ve hızı kontrol et
-                    if (e1 != null) {
-                        val diffX = e2.x - e1.x
-                        val diffY = e2.y - e1.y
-                        
-                        // Yatay kaydırma dikey kaydırmadan daha belirginse ve yeterince hızlıysa
-                        if (Math.abs(diffX) > Math.abs(diffY) && 
-                            Math.abs(diffX) > 100 && 
-                            Math.abs(velocityX) > 100) {
-                            
-                            // Soldan sağa kaydırma (AnalysisFragment'a geri dönme)
-                            if (diffX > 0) {
-                                // Geri tuşuna basılmış gibi davran
-                                findNavController().popBackStack()
-                                return true
-                            }
-                        }
-                    }
-                } catch (exception: Exception) {
-                    // Herhangi bir hata durumunda çökmeyi önle
-                }
-                return false
-            }
+        } else {
+            binding.tvNoteContent.text = "Açıklama bulunamadı."
         }
-        
-        // GestureDetector'ı başlat
-        gestureDetector = GestureDetectorCompat(requireContext(), gestureListener)
-        
-        // Tüm view'a dokunma olaylarını dinle
-        view.setOnTouchListener { _, event ->
-            // Gesture detector'a gönder
-            gestureDetector.onTouchEvent(event)
-            true // Olayı tükettiğimizi belirtmek için true döndürüyoruz
+    }
+
+    // GestureDetector.OnGestureListener metodları
+    override fun onDown(e: MotionEvent): Boolean = false
+    
+    override fun onShowPress(e: MotionEvent) {}
+    
+    override fun onSingleTapUp(e: MotionEvent): Boolean = false
+    
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = false
+    
+    override fun onLongPress(e: MotionEvent) {}
+    
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+        // Sağa kaydırma hareketi algılandığında
+        if (e1 != null && e2.x > e1.x && Math.abs(e1.x - e2.x) > 100 && Math.abs(velocityX) > 100) {
+            // AnalysisFragment'a geri dön
+            findNavController().navigateUp()
+            return true
         }
+        return false
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

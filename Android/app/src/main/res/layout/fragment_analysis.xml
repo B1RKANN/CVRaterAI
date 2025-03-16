@@ -54,403 +54,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivMenu" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardLanguageAnalysis"
+        <!-- RecyclerView for skill ratings -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="@color/box_blue"
+            android:id="@+id/recyclerViewSkills"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/box_blue"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="4dp"
+            android:layout_marginHorizontal="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAnalysisTitle">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="24dp">
-
-                <!-- Vertical Line -->
-
-                <!-- Java -->
-                <View
-                    android:id="@+id/verticalLine"
-                    android:layout_width="1dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="80dp"
-                    android:background="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <TextView
-                    android:id="@+id/tvJava"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="java"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <LinearLayout
-                    android:id="@+id/progressJava"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvJava"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvJava">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="60"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="40" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvJavaPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%60"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressJava"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressJava" />
-
-                <!-- HTML -->
-                <TextView
-                    android:id="@+id/tvHtml"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="html"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvJava" />
-
-                <LinearLayout
-                    android:id="@+id/progressHtml"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvHtml"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvHtml">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="40"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="60" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvHtmlPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%40"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressHtml"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressHtml" />
-
-                <!-- CSS -->
-                <TextView
-                    android:id="@+id/tvCss"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="css"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvHtml" />
-
-                <LinearLayout
-                    android:id="@+id/progressCss"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvCss"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvCss">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="35"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="65" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvCssPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%35"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressCss"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressCss" />
-
-                <!-- Python -->
-                <TextView
-                    android:id="@+id/tvPython"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="python"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvCss" />
-
-                <LinearLayout
-                    android:id="@+id/progressPython"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvPython"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvPython">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="90"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="10" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvPythonPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%90"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressPython"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressPython" />
-
-                <!-- C++ -->
-                <TextView
-                    android:id="@+id/tvCpp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="C++"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvPython" />
-
-                <LinearLayout
-                    android:id="@+id/progressCpp"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvCpp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvCpp">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="55"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="45" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvCppPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%55"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressCpp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressCpp" />
-
-                <!-- C# -->
-                <TextView
-                    android:id="@+id/tvCSharp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="C#"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvCpp" />
-
-                <LinearLayout
-                    android:id="@+id/progressCSharp"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvCSharp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvCSharp">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="75"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="25" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvCSharpPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%75"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressCSharp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressCSharp" />
-
-                <!-- PHP -->
-                <TextView
-                    android:id="@+id/tvPhp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="PHP"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvCSharp" />
-
-                <LinearLayout
-                    android:id="@+id/progressPhp"
-                    android:layout_width="0dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="80dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_white_bg"
-                    app:layout_constraintBottom_toBottomOf="@id/tvPhp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/verticalLine"
-                    app:layout_constraintTop_toTopOf="@id/tvPhp">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="10"
-                        android:background="@drawable/rounded_progress_bg" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="90" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvPhpPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="%10"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/progressPhp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/progressPhp" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintTop_toBottomOf="@+id/tvAnalysisTitle"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_skill_rating" />
 
         <!-- Compatibility Status Card -->
         <androidx.cardview.widget.CardView
@@ -464,7 +80,7 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardLanguageAnalysis">
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewSkills">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -504,16 +120,6 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" />
 
-                    <TextView
-                        android:id="@+id/tv65Percent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="60dp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:text="%65"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
@@ -528,6 +134,20 @@
                         android:textColor="@color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvScorePercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="%30"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toTopOf="@id/progressCompatibility"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/percentLabels" />
 
                 <FrameLayout
                     android:id="@+id/progressCompatibility"
@@ -548,22 +168,20 @@
 
                         <!-- Mavi ilerleme çubuğu (doldurulmuş kısım - %65) -->
                         <View
+                            android:id="@+id/compatibilityStatusBar"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="65"
+                            android:layout_weight="30"
                             android:background="@drawable/rounded_blue_progress_bg" />
 
                         <!-- Beyaz kısım (doldurulmamış kısım - %35) -->
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="35"
+                            android:layout_weight="70"
                             android:background="@drawable/rounded_white_progress_bg" />
                     </LinearLayout>
-
-                    <!-- Kaydırıcı (slider) - Tam olarak %65 konumunda -->
                 </FrameLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
