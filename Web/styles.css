@@ -17,7 +17,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 4rem;
+    padding: 1rem 2rem;
     position: fixed;
     width: 100%;
     top: 0;
@@ -34,8 +34,14 @@ nav.scrolled {
     backdrop-filter: blur(8px);
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .logo {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 700;
     color: #F5F7FA;
     cursor: pointer;
@@ -50,6 +56,8 @@ nav.scrolled {
     display: flex;
     align-items: center;
     gap: 2rem;
+    justify-content: center;
+    flex: 1;
 }
 
 .nav-links a {
@@ -84,7 +92,6 @@ nav.scrolled {
     display: flex;
     align-items: center;
     gap: 2rem;
-    z-index: 1001;
 }
 
 .nav-buttons .download-btn {
@@ -102,17 +109,6 @@ nav.scrolled {
     color: #187CFF;
     font-weight: 600;
     font-size: 16px;
-    z-index: 1001;
-}
-
-.nav-buttons .download-btn:hover {
-    transform: translateY(-2px);
-}
-
-.nav-buttons .download-btn:focus {
-    outline: none;
-    border: none;
-    box-shadow: none;
 }
 
 .nav-buttons .download-btn span {
@@ -140,7 +136,6 @@ nav.scrolled {
     transition: all 0.3s ease;
     outline: none;
     box-shadow: none;
-    z-index: 1001;
 }
 
 .sign-in-btn:hover {
@@ -447,33 +442,116 @@ nav.scrolled {
 
 @media (max-width: 768px) {
     nav {
-        padding: 1rem 2rem;
+        padding: 1rem;
         flex-wrap: wrap;
-        gap: 1rem;
+    }
+
+    .logo {
+        font-size: 24px;
+        margin-right: auto;
+    }
+
+    .nav-buttons {
+        order: 2;
+        margin-left: auto;
     }
 
     .nav-links {
         order: 3;
         width: 100%;
+        margin-top: 1rem;
         justify-content: center;
+    }
+
+    .nav-buttons .download-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 14px;
+        gap: 0.4rem;
+        height: 36px;
+    }
+
+    .nav-buttons .download-btn span {
+        font-size: 14px;
+    }
+
+    .nav-buttons .download-btn img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .sign-in-btn {
+        padding: 0.5rem 1rem;
+        font-size: 14px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-transform: uppercase;
+    }
+
+    .hero-section {
+        padding: 6rem 1rem 3rem;
     }
 
     .hero-section h1 {
         font-size: 36px;
+        line-height: 1.2;
     }
 
     .hero-section p {
-        font-size: 18px;
+        font-size: 16px;
+        padding: 0 1rem;
     }
 
     .hero-buttons {
         flex-direction: column;
-        align-items: center;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .hero-buttons button {
+        width: 100%;
+    }
+
+    .steps-section {
+        padding: 3rem 1rem;
+        flex-direction: column;
     }
 
     .step-card {
         width: 100%;
-        max-width: 320px;
+        margin: 1rem 0;
+    }
+
+    .balloon-1,
+    .balloon-2,
+    .balloon-3 {
+        opacity: 0.3;
+        transform: scale(0.7);
+    }
+
+    .fast-simple {
+        padding: 3rem 1rem;
+    }
+
+    .fast-simple h2 {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section h1 {
+        font-size: 32px;
+    }
+
+    .nav-links {
+        width: 85%;
+    }
+
+    .balloon {
+        display: none;
     }
 }
 
