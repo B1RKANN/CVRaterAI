@@ -88,4 +88,5 @@
     <string name="recommendations">Öneriler</string>
     <string name="programming_language_analysis">Programlama dili analizi</string>
     <string name="compatibility_status">Uyumluluk Durumu</string>
+    <string name="logout">Çıkış Yap</string>
 </resources> 
