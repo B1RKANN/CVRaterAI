@@ -2,14 +2,20 @@ package com.cvraterai.myapplication
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.cvraterai.myapplication.ui.auth.LoginState
+import com.cvraterai.myapplication.ui.auth.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,15 +27,21 @@ private const val ARG_PARAM2 = "param2"
  * Use the [LoginFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
+    private val TAG = "LoginFragment"
+    
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: CardView
     private lateinit var tvRegister: TextView
+    private lateinit var progressBar: ProgressBar
+    
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +67,19 @@ class LoginFragment : Fragment() {
         etPassword = view.findViewById(R.id.etPassword)
         btnLogin = view.findViewById(R.id.btnLogin)
         tvRegister = view.findViewById(R.id.tvRegister)
+        progressBar = view.findViewById(R.id.progressBar)
+        
+        // Otomatik giriş kontrolü
+        if (viewModel.isLoggedIn()) {
+            // Otomatik giriş durumunda token'ları logcat'te göster
+            Log.d(TAG, "Auto Login - Access Token: ${viewModel.getAccessToken()}")
+            Log.d(TAG, "Auto Login - Refresh Token: ${viewModel.getRefreshToken()}")
+            println("Auto Login - Access Token: ${viewModel.getAccessToken()}")
+            println("Auto Login - Refresh Token: ${viewModel.getRefreshToken()}")
+            
+            findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
+            return
+        }
         
         // Giriş butonuna tıklama olayını ayarla
         btnLogin.setOnClickListener {
@@ -67,29 +92,60 @@ class LoginFragment : Fragment() {
             // RegisterFragment'a geçiş yap
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
+        
+        // ViewModel'dan gelen durumu gözlemle
+        observeLoginState()
+    }
+    
+    private fun observeLoginState() {
+        viewModel.loginState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is LoginState.Loading -> {
+                    showLoading(true)
+                }
+                is LoginState.Success -> {
+                    showLoading(false)
+                    
+                    // Başarılı giriş durumunda token'ları logcat'te göster
+                    val effectiveAccessToken = state.data.getEffectiveAccessToken()
+                    val effectiveRefreshToken = state.data.getEffectiveRefreshToken()
+                    
+                    Log.d(TAG, "Login Success - Effective Access Token: $effectiveAccessToken")
+                    Log.d(TAG, "Login Success - Effective Refresh Token: $effectiveRefreshToken")
+                    
+                    // Ayrıca println ile de gösterelim
+                    println("Login Success - Effective Access Token: $effectiveAccessToken")
+                    println("Login Success - Effective Refresh Token: $effectiveRefreshToken")
+                    
+                    // TokenManager'da saklanan token'ları da kontrol edelim
+                    Log.d(TAG, "Saved Access Token: ${viewModel.getAccessToken()}")
+                    Log.d(TAG, "Saved Refresh Token: ${viewModel.getRefreshToken()}")
+                    println("Saved Access Token: ${viewModel.getAccessToken()}")
+                    println("Saved Refresh Token: ${viewModel.getRefreshToken()}")
+                    
+                    Toast.makeText(requireContext(), "Giriş başarılı!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
+                }
+                is LoginState.Error -> {
+                    showLoading(false)
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
     
     private fun performLogin() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
         
-        // Basit doğrulama
-        if (email.isEmpty()) {
-            etEmail.error = "E-posta adresi gerekli"
-            return
-        }
-        
-        if (password.isEmpty()) {
-            etPassword.error = "Şifre gerekli"
-            return
-        }
-        
-        // Gerçek bir uygulamada burada API çağrısı yapılır
-        // Şimdilik başarılı giriş yapıldığını varsayalım
-        Toast.makeText(requireContext(), "Giriş başarılı!", Toast.LENGTH_SHORT).show()
-        
-        // Başarılı girişten sonra HomePageFragment'a geçiş yap
-        findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
+        viewModel.login(email, password)
+    }
+    
+    private fun showLoading(isLoading: Boolean) {
+        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        btnLogin.isEnabled = !isLoading
+        etEmail.isEnabled = !isLoading
+        etPassword.isEnabled = !isLoading
     }
 
     companion object {

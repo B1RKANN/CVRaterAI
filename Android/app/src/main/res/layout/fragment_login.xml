@@ -90,26 +90,38 @@
                 android:textColorHint="#99000000"
                 android:textSize="16sp" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btnLogin"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                app:cardBackgroundColor="@color/box_blue"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp">
+                android:layout_marginTop="32dp">
 
-                <TextView
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:gravity="center"
-                    android:paddingVertical="16dp"
-                    android:text="@string/login_button"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    app:cardBackgroundColor="@color/box_blue"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="0dp">
 
-            </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
+                        android:gravity="center"
+                        android:paddingVertical="16dp"
+                        android:text="@string/login_button"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </androidx.cardview.widget.CardView>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

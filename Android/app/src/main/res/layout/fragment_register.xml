@@ -139,31 +139,44 @@
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardSignUp"
+        <FrameLayout
+            android:id="@+id/frameSignUp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/box_blue"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
             app:layout_constraintWidth_percent="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etPassword">
 
-            <TextView
-                android:id="@+id/btnSignUp"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:gravity="center"
-                android:paddingVertical="12dp"
-                android:text="@string/sign_up"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </androidx.cardview.widget.CardView>
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/box_blue"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp">
+
+                <TextView
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center"
+                    android:paddingVertical="12dp"
+                    android:text="@string/sign_up"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvLogin"
@@ -177,7 +190,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardSignUp" />
+            app:layout_constraintTop_toBottomOf="@id/frameSignUp" />
 
         <TextView
             android:id="@+id/tvOr"
