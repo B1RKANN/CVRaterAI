@@ -231,7 +231,7 @@ body::before {
     justify-content: center;
     cursor: pointer;
     position: fixed;
-    top: 80px;
+    top: 65px;
     left: 20px;
     z-index: 101;
     background-color: rgba(0, 59, 147, 0.7);
@@ -356,6 +356,7 @@ body::before {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 2rem;
+    margin-top: 9rem;
 }
 
 h2 {
@@ -370,27 +371,28 @@ h2 {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    gap: 180px;
     margin: 10px 0;
     padding: 0 15px;
+    gap: 50px;
 }
 
 .label {
     font-weight: 600;
     color: #000000;
     font-size: 16px;
-    min-width: 80px;
+    min-width: 120px;
 }
 
 .value {
     color: #666;
     font-size: 16px;
+    flex: 1;
 }
 
 .details-card, .credit-card {
     background: white;
     border-radius: 16px;
-    padding: 20px 15px;
+    padding: 30px 15px;
     margin: 15px 0;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
@@ -535,9 +537,73 @@ h2 {
         left: -100%;
         border-radius: 0;
     }
-    
+
+    nav {
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 24px;
+        margin-right: 0;
+    }
+
+    .nav-buttons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+    }
+
+    .nav-buttons .sign-in-btn {
+        padding: 5px 15px;
+        font-size: 14px;
+        height: 30px;
+        min-width: auto;
+        border-radius: 20px;
+        border-width: 1px;
+        background-color: transparent;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-transform: uppercase;
+    }
+
+    .nav-buttons .download-btn {
+        padding: 5px 10px;
+        font-size: 14px;
+        height: 30px;
+        min-width: auto;
+        border-radius: 4px;
+        border-width: 1px;
+        background-color: white !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-buttons .download-btn img {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
     .container {
+        margin-top: 15rem;
         padding: 0 1rem;
+    }
+
+    .sidebar {
+        margin-top: 1rem;
     }
 }
 
@@ -604,5 +670,4 @@ h2 {
         transform: translate(0, 0) scale(1);
         opacity: 0.7;
     }
-}
 } 
