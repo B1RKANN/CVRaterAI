@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../src/css/profile.css">
+    <link rel="stylesheet" href="../../src/css/mobile.css">
 </head>
 <body>
     <!-- Arka plan balonları -->
@@ -26,9 +27,11 @@
     <nav>
         <div class="logo">CVRaterAI</div>
         <div class="nav-links">
-            <a href="../../index.html">Home</a>
-            <a href="pricing.html">Pricing</a>
-            <a href="features.html">Features</a>
+            <div class="nav-group">
+                <a href="../../index.html">Home</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="features.html">Features</a>
+            </div>
         </div>
         <div class="nav-buttons">
             <button class="sign-in-btn" id="logoutBtn" onclick="logout()">LOGOUT</button>
@@ -39,10 +42,14 @@
         </div>
     </nav>
 
-    <!-- Hamburger Menu Icon -->
-    <div class="menu-icon">
-        <div class="line"></div>
-    </div>
+    <!-- Sidebar hamburger butonu - Yeniden tasarlandı -->
+    <button class="hamburger-btn">
+        <div class="hamburger-lines">
+            <span class="line line1"></span>
+            <span class="line line2"></span>
+            <span class="line line3"></span>
+        </div>
+    </button>
 
     <main>
         <div id="sidebar" class="sidebar">
@@ -145,5 +152,6 @@
 
     <script src="../../script.js"></script>
     <script src="../../src/js/profile.js"></script>
+    <script src="../../src/js/animations.js"></script>
 </body>
 </html> 

@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Dosya yüklenmiş mi kontrol et
+    const fileUploaded = localStorage.getItem('cvFileUploaded') === 'true';
+    
+    if (!fileUploaded) {
+        // Dosya yüklenmemişse upload sayfasına yönlendir
+        alert('Lütfen önce bir CV dosyası yükleyin.');
+        window.location.href = 'upload.html';
+        return;
+    }
+    
     // Yükleme animasyonu ve ilerleme çubuğu
     let progress = 0;
     const progressBar = document.querySelector('.progress-fill');

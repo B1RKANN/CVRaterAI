@@ -45,15 +45,73 @@ function showFileName(fileName) {
     h2.textContent = fileName;
     uploadBox.classList.add('file-selected');
     analyzeBtn.classList.add('active');
+    
+    // Dosya yüklendiğinde localStorage'a bilgi kaydet
+    localStorage.setItem('cvFileUploaded', 'true');
+    localStorage.setItem('cvFileName', fileName);
 }
 
 // Analyze butonu işlevselliği
 analyzeBtn.addEventListener('click', () => {
     if (file) {
+        // Dosya bilgilerini localStorage'a kaydet
+        localStorage.setItem('cvFileUploaded', 'true');
+        localStorage.setItem('cvFileName', file.name);
+        
+        // Form bilgilerini de kaydet
+        const requiredSkills = document.querySelector('.form-section textarea').value;
+        const githubLink = document.querySelector('.form-section input[type="text"]').value;
+        
+        if (requiredSkills) {
+            localStorage.setItem('requiredSkills', requiredSkills);
+        }
+        
+        if (githubLink) {
+            localStorage.setItem('githubLink', githubLink);
+        }
+        
         // Yükleme ekranına yönlendir
         window.location.href = 'loading.html';
     } else {
+        // Dosya yüklenmemişse uyarı göster
         alert('Lütfen önce bir CV dosyası yükleyin.');
+        
+        // Upload box'ı vurgula
+        uploadBox.style.borderColor = '#ff3860';
+        uploadBox.classList.add('error');
+        
+        // 2 saniye sonra normal haline getir
+        setTimeout(() => {
+            uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+            uploadBox.classList.remove('error');
+        }, 2000);
+    }
+});
+
+// Sayfa yüklendiğinde dosya yükleme durumunu kontrol et
+document.addEventListener('DOMContentLoaded', function() {
+    // Giriş durumunu kontrol et
+    checkLoginStatus();
+    
+    // Daha önce dosya yüklenmiş mi kontrol et
+    const fileUploaded = localStorage.getItem('cvFileUploaded') === 'true';
+    const fileName = localStorage.getItem('cvFileName');
+    
+    if (fileUploaded && fileName) {
+        // Dosya adını göster
+        showFileName(fileName);
+    }
+    
+    // Form bilgilerini doldur
+    const requiredSkills = localStorage.getItem('requiredSkills');
+    const githubLink = localStorage.getItem('githubLink');
+    
+    if (requiredSkills) {
+        document.querySelector('.form-section textarea').value = requiredSkills;
+    }
+    
+    if (githubLink) {
+        document.querySelector('.form-section input[type="text"]').value = githubLink;
     }
 });
 
@@ -78,11 +136,6 @@ window.addEventListener('scroll', () => {
             balloon.style.transform = 'translate(0, 0)';
         });
     }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Giriş durumunu kontrol et
-    checkLoginStatus();
 });
 
 // Giriş durumunu kontrol et ve butonları güncelle

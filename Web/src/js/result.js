@@ -1,4 +1,46 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Dosya yüklenmiş mi kontrol et
+    const fileUploaded = localStorage.getItem('cvFileUploaded') === 'true';
+    
+    if (!fileUploaded) {
+        // Dosya yüklenmemişse upload sayfasına yönlendir
+        alert('Lütfen önce bir CV dosyası yükleyin.');
+        window.location.href = 'upload.html';
+        return;
+    }
+    
+    // Kullanıcı bilgilerini doldur
+    const fileName = localStorage.getItem('cvFileName');
+    if (fileName) {
+        // Kullanıcı adını dosya adından çıkar (örnek: "John_Doe_CV.pdf" -> "John")
+        const nameMatch = fileName.split('_')[0] || fileName.split('.')[0];
+        if (nameMatch) {
+            const nameElement = document.querySelector('.info-item:nth-child(1) .info-value');
+            if (nameElement) {
+                nameElement.textContent = nameMatch;
+            }
+        }
+    }
+    
+    // Aranan özellikleri doldur
+    const requiredSkills = localStorage.getItem('requiredSkills');
+    if (requiredSkills) {
+        const skillsElement = document.querySelector('.skills-info .info-value');
+        if (skillsElement) {
+            // Aranan özellikleri virgülle ayırıp paragraf olarak ekle
+            const skillsArray = requiredSkills.split(',');
+            skillsElement.innerHTML = '';
+            
+            skillsArray.forEach(skill => {
+                if (skill.trim()) {
+                    const p = document.createElement('p');
+                    p.textContent = skill.trim() + ',';
+                    skillsElement.appendChild(p);
+                }
+            });
+        }
+    }
+    
     // Beceri değerleri (görseldeki değerlerle tanımlanmış)
     const skills = {
         java: { target: 60, current: 0 },
