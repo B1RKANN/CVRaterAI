@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Attempting login with email:', email);
                         
                         // Giriş için authenticate-with-cookie endpoint'ine istek gönder
-                        const responseData = await apiRequest('http://69.62.120.202:8080/auth/authenticate-with-cookie', 'POST', {
+                        const responseData = await apiRequest('http://69.62.120.202:8080/auth/v2/authenticate-with-cookie', 'POST', {
                             email: email,
                             password: password
                         });
@@ -171,8 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         // Kullanıcı bilgilerini localStorage'a kaydet
                         localStorage.setItem('userEmail', email);
-                        localStorage.setItem('userName', responseData.name || 'User'); // Yanıttan gelen isim veya varsayılan değer
-                        localStorage.setItem('userSurname', responseData.surname || 'Account'); // Yanıttan gelen soyisim veya varsayılan değer
+                        localStorage.setItem('userName', responseData.name || 'User');
+                        localStorage.setItem('userSurname', responseData.surname || 'Account');
                         localStorage.setItem('isLoggedIn', 'true');
                         
                         // Sign In/Up butonunu Profile butonu ile değiştir
@@ -700,7 +700,8 @@ async function apiRequest(url, method, data) {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Access-Control-Allow-Credentials': 'true'
             },
             credentials: 'include', // Cookie'leri gönder
             mode: 'cors' // CORS modunu açıkça belirt
