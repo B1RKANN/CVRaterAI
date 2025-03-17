@@ -64,6 +64,8 @@ public class SecurityConfig {
 		.requestMatchers(AUTHENTICATE, REGISTER, REFRESH_TOKEN).permitAll()
 		.requestMatchers(AUTH_V2_PATHS).permitAll()  // Auth v2 yollarını herkese açık yap
 		.requestMatchers(SWAGGER_PATH).permitAll()
+		// OPTIONS isteklerine izin ver
+		.requestMatchers("OPTIONS", "/**").permitAll()
 		// Admin endpoints - sadece ADMIN rolüne sahip kullanıcılar için
 		.requestMatchers("/api/v1/credit/**").hasRole("ADMIN")
 		.requestMatchers("/rest/api/credit/**").hasRole("ADMIN")
