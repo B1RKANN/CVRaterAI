@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CVRaterAI</string>
+    <string name="hello_blank_fragment">Merhaba boş fragment</string>
+    <string name="ai_note">AI Notu</string>
+    
+    <!-- FirstPageFragment -->
+    <string name="app_title">CVRaterAI</string>
+    <string name="app_subtitle">Yapay Zeka Destekli\nÖzgeçmiş Analiz Platformu</string>
+    <string name="app_description">Doğru adayı daha hızlı bulun!\nÖzgeçmişleri yapay zeka ile analiz edin ve\nişe alım sürecinizi optimize edin.</string>
+    <string name="get_started">Başla</string>
+    <string name="continue_in_turkish">Türkçe devam et</string>
+    <string name="continue_in_english">Continue in English</string>
+    
+    <!-- Step Fragments -->
+    <string name="step1_title">1. Adım</string>
+    <string name="step1_description">CV\'nizi Yükleyin</string>
+    <string name="step2_title">2. Adım</string>
+    <string name="step2_description">Yapay Zeka Analizi</string>
+    <string name="step3_title">3. Adım</string>
+    <string name="step3_description">Analiz Sonuçları</string>
+    <string name="swipe_left">Devam etmek için sola kaydırın</string>
+    <string name="next">İleri</string>
+    
+    <!-- LoginFragment -->
+    <string name="login_title">Giriş Yap</string>
+    <string name="login_welcome">CVRaterAI\'ya Hoş Geldiniz</string>
+    <string name="email_hint">E-posta</string>
+    <string name="password_hint">Şifre</string>
+    <string name="login_button">Giriş Yap</string>
+    <string name="register_prompt">Hesabınız yok mu?</string>
+    <string name="register_action">Kayıt ol</string>
+    
+    <!-- RegisterFragment -->
+    <string name="register_hello">Merhaba, Hoşgeldin!</string>
+    <string name="surname">Soyad</string>
+    <string name="sign_up">Kayıt Ol</string>
+    <string name="have_account">Zaten hesabınız var mı? Giriş Yap</string>
+    <string name="or">veya</string>
+    
+    <!-- InformationFragment -->
+    <string name="user_information">Kullanıcı Bilgileri</string>
+    <string name="name_colon">Ad : </string>
+    <string name="surname_colon">Soyad : </string>
+    <string name="email_colon">E-posta : </string>
+    <string name="phone_number_colon">Telefon Numarası : </string>
+    <string name="skills_colon">Yetenekler : </string>
+    <string name="back_to_homepage">Anasayfaya dön</string>
+    
+    <!-- HomePageFragment -->
+    <string name="welcome">Hoş Geldiniz!</string>
+    <string name="home_description">CVRaterAI ile özgeçmişleri analiz edin ve en uygun adayları bulun.</string>
+    <string name="upload_cv">CV Yükle</string>
+    <string name="recent_analyses">Son Analizler</string>
+    <string name="no_analyses">Henüz analiz yapılmadı</string>
+    <string name="explore">Keşfet</string>
+    <string name="profile_card_title">Profilinizi Görüntüleyin</string>
+    <string name="upload_card_title">CV Yükleyin</string>
+    
+    <!-- ProfileFragment -->
+    <string name="user_details">Kullanıcı Bilgileri</string>
+    <string name="name">İsim</string>
+    <string name="email">E-posta</string>
+    <string name="credit">Kredi</string>
+    <string name="free">ÜCRETSİZ</string>
+    
+    <!-- UploadCvFragment -->
+    <string name="upload_title">CV Yükle</string>
+    <string name="upload_description">Analiz etmek istediğiniz özgeçmişi yükleyin</string>
+    <string name="select_file">Dosya Seç</string>
+    <string name="upload_description1">CVRaterAI CV\'nizi hızlıca analiz edin ve işe alım sürecinizi hızlandırın.</string>
+    <string name="upload_description2">İK ekibiniz için hızlı ve detaylı analiz.</string>
+    
+    <!-- CvRequiredFragment -->
+    <string name="required_features">Gerekli Özellikler</string>
+    <string name="github_link">GitHub Linki (Opsiyonel)</string>
+    <string name="analyze_cv">CV\'yi Analiz Et</string>
+    <string name="required_features_example">B1 seviye ingilizce java spring boot c++ ve c# bilgisi olsun ekip ile uyumlu çalışsın</string>
+    <string name="github_link_example">https://github.com/kullaniciadi</string>
+    
+    <!-- AnalysisFragment -->
+    <string name="analysis_title">Özgeçmiş Analizi</string>
+    <string name="analysis_in_progress">Analiz devam ediyor...</string>
+    <string name="analysis_complete">Analiz tamamlandı!</string>
+    <string name="score">Puan</string>
+    <string name="strengths">Güçlü Yönler</string>
+    <string name="weaknesses">Geliştirilmesi Gereken Yönler</string>
+    <string name="recommendations">Öneriler</string>
+    <string name="programming_language_analysis">Programlama dili analizi</string>
+    <string name="compatibility_status">Uyumluluk Durumu</string>
+    <string name="logout">Çıkış Yap</string>
+</resources> 

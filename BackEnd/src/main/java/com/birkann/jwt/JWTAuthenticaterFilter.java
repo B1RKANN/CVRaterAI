@@ -1,6 +1,8 @@
 package com.birkann.jwt;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,19 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticaterFilter.class);
 	
+	private static final List<String> PUBLIC_PATHS = Arrays.asList(
+		"/register",
+		"/authenticate",
+		"/refreshToken",
+		"/auth/v2/register",
+		"/auth/v2/authenticate",
+		"/auth/v2/refreshToken",
+		"/auth/v2/register-with-cookie",
+		"/auth/v2/authenticate-with-cookie",
+		"/auth/v2/refreshToken-with-cookie",
+		"/auth/v2/logout"
+	);
+	
 	@Autowired
 	private IJWTService jwtService;
 	
@@ -38,15 +53,21 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		String path = request.getServletPath();
-		logger.debug("shouldNotFilter kontrol ediliyor, yol: {}", path);
+		String method = request.getMethod();
+		logger.debug("shouldNotFilter kontrol ediliyor, yol: {}, metod: {}", path, method);
 		
-		// Bu URL'ler filtre uygulanmadan geçebilir
-		return path.equals("/register") || 
-			   path.equals("/authenticate") || 
-			   path.equals("/refreshToken") ||
-			   path.startsWith("/auth/v2/register") || 
-			   path.startsWith("/auth/v2/authenticate") || 
-			   path.startsWith("/auth/v2/refreshToken");
+		// OPTIONS isteklerini her zaman geçir
+		if ("OPTIONS".equalsIgnoreCase(method)) {
+			logger.info("JWT Filter - OPTIONS isteği geçiriliyor: {}", path);
+			return true;
+		}
+		
+		// Public endpoint kontrolü
+		boolean isPublicEndpoint = PUBLIC_PATHS.stream()
+			.anyMatch(publicPath -> path.equals(publicPath) || path.equals("/auth" + publicPath));
+		
+		logger.info("JWT Filter - URL: {}, Public Endpoint: {}", path, isPublicEndpoint);
+		return isPublicEndpoint;
 	}
 
 	@Override
@@ -56,14 +77,22 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 		String requestURI = request.getRequestURI();
 		logger.debug("JWT Filter işleniyor. URI: {}, Metod: {}", requestURI, request.getMethod());
 		
-		String header = request.getHeader("Authorization");
-		if(header == null || !header.startsWith("Bearer ")) {
-			logger.debug("Authorization header bulunamadı veya geçersiz. URI: {}", requestURI);
-			filterChain.doFilter(request, response);
-			return;
+		// Önce cookie'den token'ı almayı dene
+		String token = jwtService.getTokenFromCookie(request);
+		
+		// Cookie'de token yoksa Authorization header'dan almayı dene
+		if (token == null) {
+			String header = request.getHeader("Authorization");
+			if(header == null || !header.startsWith("Bearer ")) {
+				logger.debug("JWT token bulunamadı (cookie veya header). URI: {}", requestURI);
+				filterChain.doFilter(request, response);
+				return;
+			}
+			token = header.substring(7);
+		} else {
+			logger.debug("JWT token cookie'den alındı. URI: {}", requestURI);
 		}
 		
-		String token = header.substring(7);
 		String username = null;
 		
 		try {

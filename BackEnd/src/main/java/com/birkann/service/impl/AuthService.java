@@ -26,6 +26,7 @@ import com.birkann.repository.UserRepository;
 import com.birkann.service.IAuthService;
 import com.birkann.service.IJWTService;
 
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @Service
@@ -94,6 +95,28 @@ public class AuthService implements IAuthService {
 		authResponse.setRefreshToken(refreshToken.getToken());
 		authResponse.setRole(user.getRole().toString()); // Kullanıcı rolünü ayarla
 		
+		// Kullanıcı bilgilerini response'a ekle
+		authResponse.setUserId(user.getId());
+		authResponse.setEmail(user.getEmail());
+		authResponse.setName(user.getName());
+		
+		return authResponse;
+	}
+	
+	@Override
+	public AuthResponse signupWithCookie(RegisterRequest request, HttpServletResponse response) {
+		// Normal kayıt işlemini gerçekleştir
+		AuthResponse authResponse = signup(request);
+		
+		// JWT token'ı cookie olarak ayarla
+		jwtService.addTokenToCookie(response, authResponse.getToken());
+		
+		// Kullanıcı bilgilerini response'a ekle
+		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+		authResponse.setUserId(user.getId());
+		authResponse.setEmail(user.getEmail());
+		authResponse.setName(user.getName());
+		
 		return authResponse;
 	}
 
@@ -118,6 +141,28 @@ public class AuthService implements IAuthService {
 		authResponse.setRefreshToken(refreshToken.getToken());
 		authResponse.setRole(user.getRole().toString()); // Kullanıcı rolünü ekle
 		
+		// Kullanıcı bilgilerini response'a ekle
+		authResponse.setUserId(user.getId());
+		authResponse.setEmail(user.getEmail());
+		authResponse.setName(user.getName());
+		
+		return authResponse;
+	}
+	
+	@Override
+	public AuthResponse signinWithCookie(AuthRequest request, HttpServletResponse response) {
+		// Normal giriş işlemini gerçekleştir
+		AuthResponse authResponse = signin(request);
+		
+		// JWT token'ı cookie olarak ayarla
+		jwtService.addTokenToCookie(response, authResponse.getToken());
+		
+		// Kullanıcı bilgilerini response'a ekle
+		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+		authResponse.setUserId(user.getId());
+		authResponse.setEmail(user.getEmail());
+		authResponse.setName(user.getName());
+		
 		return authResponse;
 	}
 	
@@ -135,18 +180,49 @@ public class AuthService implements IAuthService {
 				throw new RuntimeException("Refresh token was expired. Please make a new signin request");
 			}
 			
-			UserDetails userDetails = token.getUser();
-			var jwt = jwtService.generateToken(userDetails);
+			User user = (User) token.getUser();
+			var jwt = jwtService.generateToken(user);
 			
 			AuthResponse authResponse = new AuthResponse();
 			authResponse.setToken(jwt);
 			authResponse.setRefreshToken(requestRefreshToken);
-			authResponse.setRole(((User)userDetails).getRole().toString()); // Kullanıcı rolünü ekle
+			authResponse.setRole(user.getRole().toString()); // Kullanıcı rolünü ekle
+			
+			// Kullanıcı bilgilerini response'a ekle
+			authResponse.setUserId(user.getId());
+			authResponse.setEmail(user.getEmail());
+			authResponse.setName(user.getName());
 			
 			return authResponse;
 		}
 		
 		throw new RuntimeException("Refresh token is not in database!");
+	}
+	
+	@Override
+	public AuthResponse refreshTokenWithCookie(RefreshTokenRequest request, HttpServletResponse response) {
+		// Normal token yenileme işlemini gerçekleştir
+		AuthResponse authResponse = refreshToken(request);
+		
+		// JWT token'ı cookie olarak ayarla
+		jwtService.addTokenToCookie(response, authResponse.getToken());
+		
+		// Refresh token'dan kullanıcı bilgilerini al
+		Optional<RefreshToken> refreshTokenOpt = refreshTokenRepository.findByToken(request.getRefreshToken());
+		if (refreshTokenOpt.isPresent()) {
+			User user = (User) refreshTokenOpt.get().getUser();
+			authResponse.setUserId(user.getId());
+			authResponse.setEmail(user.getEmail());
+			authResponse.setName(user.getName());
+		}
+		
+		return authResponse;
+	}
+	
+	@Override
+	public void logout(HttpServletResponse response) {
+		// JWT token'ı temizleyen cookie ayarla
+		jwtService.clearTokenCookie(response);
 	}
 	
     public RefreshToken createRefreshToken(User user) {

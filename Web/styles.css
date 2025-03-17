@@ -17,7 +17,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 4rem;
+    padding: 1rem 2rem;
     position: fixed;
     width: 100%;
     top: 0;
@@ -34,8 +34,14 @@ nav.scrolled {
     backdrop-filter: blur(8px);
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .logo {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 700;
     color: #F5F7FA;
     cursor: pointer;
@@ -50,6 +56,8 @@ nav.scrolled {
     display: flex;
     align-items: center;
     gap: 2rem;
+    justify-content: center;
+    flex: 1;
 }
 
 .nav-links .nav-group {
@@ -97,7 +105,6 @@ nav.scrolled {
     display: flex;
     align-items: center;
     gap: 2rem;
-    z-index: 1001;
 }
 
 .nav-buttons .download-btn {
@@ -115,17 +122,6 @@ nav.scrolled {
     color: #187CFF;
     font-weight: 600;
     font-size: 16px;
-    z-index: 1001;
-}
-
-.nav-buttons .download-btn:hover {
-    transform: translateY(-2px);
-}
-
-.nav-buttons .download-btn:focus {
-    outline: none;
-    border: none;
-    box-shadow: none;
 }
 
 .nav-buttons .download-btn span {
@@ -154,7 +150,6 @@ nav.scrolled {
     transition: all 0.3s ease;
     outline: none;
     box-shadow: none;
-    z-index: 1001;
 }
 
 .sign-in-btn:hover {
@@ -551,6 +546,7 @@ nav.scrolled {
         transform: translate(0, 0) scale(1) rotate(0deg);
     }
 }
+
 
 /* Main content için margin-top değerini artırıyorum */
 main {

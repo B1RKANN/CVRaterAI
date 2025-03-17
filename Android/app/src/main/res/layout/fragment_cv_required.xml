@@ -18,23 +18,38 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="CVRaterAI"
+            android:text="@string/app_name"
             android:textColor="@color/primary_blue"
             android:textSize="32sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tvSelectedFile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="Seçili Dosya"
+            android:textColor="@color/primary_blue"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAppName" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardRequiredFeatures"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/tvAppName">
+            app:layout_constraintTop_toBottomOf="@id/tvSelectedFile">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,7 +63,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="Required Features"
+                    android:text="@string/required_features"
                     android:textColor="@color/primary_blue"
                     android:textSize="20sp" />
 
@@ -63,8 +78,9 @@
                     android:minHeight="100dp"
                     android:padding="16dp"
                     android:inputType="textMultiLine"
-                    android:text="B1 seviye ingilizce java spring boot c++ ve c# bilgisi olsun ekip ile uyumlu çalışsın"
+                    android:hint="İş gereksinimleri (opsiyonel)"
                     android:textColor="@color/white"
+                    android:textColorHint="#80FFFFFF"
                     android:textSize="16sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -74,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="24dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="@color/white"
@@ -92,7 +108,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="GitHub Linki (Opsiyonel)"
+                    android:text="@string/github_link"
                     android:textColor="@color/primary_blue"
                     android:textSize="20sp" />
 
@@ -105,24 +121,35 @@
                     android:fontFamily="@font/poppins_light"
                     android:inputType="textUri"
                     android:padding="16dp"
-                    android:text="https://github.com/B1RKANN"
+                    android:hint="GitHub linki (opsiyonel)"
                     android:textColor="@color/white"
+                    android:textColorHint="#80FFFFFF"
                     android:textSize="16sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+        
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/cardGithubLink"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardAnalyzeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="24dp"
             app:cardCornerRadius="24dp"
             app:cardElevation="6dp"
             app:cardBackgroundColor="@color/primary_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardGithubLink">
+            app:layout_constraintTop_toBottomOf="@id/progressBar">
 
             <TextView
                 android:id="@+id/btnAnalyze"
@@ -131,7 +158,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center"
                 android:paddingVertical="14dp"
-                android:text="Analyze CV"
+                android:text="@string/analyze_cv"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </androidx.cardview.widget.CardView>

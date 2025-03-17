@@ -17,6 +17,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_firstPageFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -81,7 +88,15 @@
         android:id="@+id/analysisFragment"
         android:name="com.cvraterai.myapplication.AnalysisFragment"
         android:label="fragment_analysis"
-        tools:layout="@layout/fragment_analysis" />
+        tools:layout="@layout/fragment_analysis">
+        <action
+            android:id="@+id/action_analysisFragment_to_aiNoteFragment"
+            app:destination="@id/aiNoteFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
@@ -123,6 +138,15 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homePageFragment_to_firstPageFragment"
+            app:destination="@id/firstPageFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/firstPageFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -185,6 +209,19 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_informationFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/aiNoteFragment"
+        android:name="com.cvraterai.myapplication.AINoteFragment"
+        android:label="fragment_ai_note"
+        tools:layout="@layout/fragment_ai_note" />
 
 </navigation> 

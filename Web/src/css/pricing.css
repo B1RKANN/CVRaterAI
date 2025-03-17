@@ -203,6 +203,9 @@ nav {
     outline: none;
     box-shadow: none;
     z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-buttons .sign-in-btn:hover {
@@ -496,41 +499,85 @@ li::before {
 }
 
 @media (max-width: 768px) {
+    nav {
+        padding: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-buttons {
+        order: 2;
+        margin-left: 1rem;
+        gap: 0.3rem;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+
+    .nav-buttons .download-btn {
+        padding: 0.2rem 0.5rem;
+        font-size: 11px;
+        gap: 0.2rem;
+        height: 24px;
+        min-width: 60px;
+        border-radius: 4px;
+    }
+
+    .nav-buttons .download-btn span {
+        font-size: 11px;
+    }
+
+    .nav-buttons .download-btn img {
+        width: 12px;
+        height: 12px;
+    }
+
+    .nav-buttons .sign-in-btn {
+        padding: 0.2rem 0.8rem;
+        font-size: 11px;
+        height: 24px;
+        min-width: 75px;
+        border-radius: 4px;
+        border-width: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        white-space: nowrap;
+        letter-spacing: 0px;
+        font-weight: 600;
+        text-transform: uppercase;
+        transform: scaleY(0.95);
+    }
+
     .pricing-container {
-        margin: 4rem auto; /* Margin'i azaltıyorum */
-        padding: 0 1.5rem;
+        margin-top: 6rem;
+        padding: 0 1rem;
     }
-    
+
     .cards-container {
-        padding: 1.2rem 1rem; /* Padding'i azaltıyorum */
-        max-width: 100%;
+        padding: 1.5rem 1rem;
     }
-    
+
     h1 {
-        font-size: 1.7rem; /* Font boyutunu azaltıyorum */
+        font-size: 28px;
     }
-    
+
     .subtitle {
-        font-size: 0.9rem; /* Font boyutunu azaltıyorum */
+        font-size: 16px;
     }
-    
+
     .pricing-card {
-        padding: 1rem; /* Padding'i azaltıyorum */
-        min-height: 320px; /* Minimum yüksekliği azaltıyorum */
-        max-width: 250px;
-    }
-    
-    .pricing-card h2 {
-        font-size: 1.8rem;
-    }
-    
-    .price {
-        font-size: 2rem;
-        height: 40px;
-    }
-    
-    .price-amount {
-        font-size: 1.6rem;
+        padding: 1.5rem;
     }
 }
 

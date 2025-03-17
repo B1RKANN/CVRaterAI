@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
-            android:text="CVRaterAI"
+            android:text="@string/app_title"
             android:textColor="@color/box_blue"
             android:textSize="32sp"
             android:elevation="6dp"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins_regular"
-            android:text="Welcome !"
+            android:text="@string/login_welcome"
             android:textColor="@color/box_blue"
             android:textSize="24sp" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Email"
+                android:text="@string/email_hint"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Password"
+                android:text="@string/password_hint"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -90,26 +90,38 @@
                 android:textColorHint="#99000000"
                 android:textSize="16sp" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btnLogin"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                app:cardBackgroundColor="@color/box_blue"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp">
+                android:layout_marginTop="32dp">
 
-                <TextView
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:gravity="center"
-                    android:paddingVertical="16dp"
-                    android:text="Login"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    app:cardBackgroundColor="@color/box_blue"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="0dp">
 
-            </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
+                        android:gravity="center"
+                        android:paddingVertical="16dp"
+                        android:text="@string/login_button"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </androidx.cardview.widget.CardView>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -122,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text=" Don't you have an account?"
+                    android:text="@string/register_prompt"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
@@ -130,8 +142,9 @@
                     android:id="@+id/tvRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Sign up"
+                    android:text="@string/register_action"
                     android:textColor="@color/box_blue"
                     android:textSize="14sp" />
 

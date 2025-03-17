@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Kaydırıcı konumu için boyut değeri -->
+    <dimen name="thumb_position">180dp</dimen>
+</resources> 

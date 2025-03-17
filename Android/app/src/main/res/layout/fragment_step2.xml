@@ -88,28 +88,30 @@
             android:padding="24dp">
 
             <TextView
-                android:layout_width="111dp"
-                android:layout_height="wrap_content"
+                android:layout_width="166dp"
+                android:layout_height="47dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="2.Step"
+                android:gravity="center"
+                android:text="@string/step2_title"
                 android:textColor="@color/white"
                 android:textSize="34sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="213dp"
+                android:layout_height="85dp"
                 android:layout_marginBottom="3dp"
                 android:fontFamily="@font/poppins_light"
-                android:text="Start AI Analysis"
+                android:gravity="center"
+                android:text="@string/step2_description"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="159dp"
-                android:layout_height="132dp"
-                android:layout_marginBottom="15dp"
+                android:layout_width="109dp"
+                android:layout_height="97dp"
+                android:layout_marginBottom="2dp"
                 android:src="@drawable/ai" />
 
         </LinearLayout>

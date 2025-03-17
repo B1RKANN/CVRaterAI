@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.birkann.model.User;
 import com.birkann.service.IJWTService;
 
 import io.jsonwebtoken.Claims;
@@ -14,16 +15,25 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class JWTService implements IJWTService {
 	
+	private static final String JWT_COOKIE_NAME = "jwt";
 	public static final String SECRET_KEY = "7UiEQwqHpPeuR9HEyd2NcEgluhuJ9Ctdn8/8lMyvUrY=";//h256 secret key generator
 
 	@Override
 	public String generateToken(UserDetails userDetails) {
+		// UserDetails'i User sınıfına cast ediyoruz
+		User user = (User) userDetails;
+		
 		return Jwts.builder()
 		.setSubject(userDetails.getUsername())
+		.claim("userId", user.getId()) // Kullanıcı ID'sini claim olarak ekliyoruz
+		.claim("role", user.getRole().name()) // Kullanıcı rolünü de ekleyebiliriz
 		.setIssuedAt(new Date())
 		.setExpiration(new Date(System.currentTimeMillis()+1000*60*60*2))
 		.signWith(getKey(), SignatureAlgorithm.HS256)
@@ -77,5 +87,38 @@ public class JWTService implements IJWTService {
 	public Key getKey() {
 		byte[] bytes = Decoders.BASE64.decode(SECRET_KEY);
 		return Keys.hmacShaKeyFor(bytes);
+	}
+	
+	@Override
+	public void addTokenToCookie(HttpServletResponse response, String token) {
+		Cookie cookie = new Cookie(JWT_COOKIE_NAME, token);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(false); // true olarak değiştirin (HTTPS için)
+		cookie.setPath("/");
+		cookie.setMaxAge(2 * 60 * 60); // 2 saat
+		response.addCookie(cookie);
+	}
+
+	@Override
+	public String getTokenFromCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (JWT_COOKIE_NAME.equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void clearTokenCookie(HttpServletResponse response) {
+		Cookie cookie = new Cookie(JWT_COOKIE_NAME, null);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(false); // true olarak değiştirin (HTTPS için)
+		cookie.setPath("/");
+		cookie.setMaxAge(0); // Cookie'yi hemen sil
+		response.addCookie(cookie);
 	}
 }

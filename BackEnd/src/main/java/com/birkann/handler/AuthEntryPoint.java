@@ -16,8 +16,10 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED,authException.getMessage());
-		
+		System.out.println("AuthEntryPoint commence metodu çağrıldı: " + request.getRequestURI() + ", Hata: " + authException.getMessage());
+		System.out.println("Metot: " + request.getMethod());
+		System.out.println("Headers: " + request.getHeaderNames());
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Yetkilendirme hatası: " + authException.getMessage());
 	}
 	
 }
