@@ -38,7 +38,14 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		String path = request.getServletPath();
-		logger.debug("shouldNotFilter kontrol ediliyor, yol: {}", path);
+		String method = request.getMethod();
+		logger.debug("shouldNotFilter kontrol ediliyor, yol: {}, metod: {}", path, method);
+		
+		// OPTIONS isteklerini her zaman geçir
+		if ("OPTIONS".equalsIgnoreCase(method)) {
+			logger.info("JWT Filter - OPTIONS isteği geçiriliyor: {}", path);
+			return true;
+		}
 		
 		// Bu URL'ler filtre uygulanmadan geçebilir
 		boolean isPublicEndpoint = path.equals("/register") || 
