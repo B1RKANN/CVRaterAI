@@ -64,7 +64,7 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 		
 		// Public endpoint kontrolü
 		boolean isPublicEndpoint = PUBLIC_PATHS.stream()
-			.anyMatch(publicPath -> path.equals(publicPath));
+			.anyMatch(publicPath -> path.equals(publicPath) || path.equals("/auth" + publicPath));
 		
 		logger.info("JWT Filter - URL: {}, Public Endpoint: {}", path, isPublicEndpoint);
 		return isPublicEndpoint;
