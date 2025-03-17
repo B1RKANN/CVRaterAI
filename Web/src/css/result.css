@@ -143,13 +143,14 @@ nav {
 }
 
 .sign-in-btn {
-    background-color: transparent;
-    border: 2px solid #FFFFFF;
-    color: #FFFFFF;
+    background-color: #FFFFFF;
+    border: none;
+    color: #187CFF;
     padding: 0.7rem 1.2rem;
     border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     outline: none;
@@ -463,17 +464,74 @@ main {
         margin-left: auto;
     }
     
+    .compatibility {
+        margin: 30px 0;
+    }
+
+    .compatibility h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
     .compatibility-container {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 10px;
+        padding: 0 10px;
     }
     
     .compatibility-min, .compatibility-max {
-        min-width: auto;
+        font-size: 16px;
+        min-width: 40px;
     }
     
     .compatibility-bar-container {
-        width: 100%;
+        height: 30px;
+    }
+
+    .skills-container, .user-info {
+        padding: 25px 20px;
+    }
+
+    .skill-item {
+        margin-bottom: 15px;
+    }
+
+    .skill-name {
+        font-size: 16px;
+        min-width: 70px;
+    }
+
+    .skill-bar-container {
+        height: 16px;
+        margin: 0 12px;
+    }
+
+    .skill-percent {
+        width: 50px;
+        font-size: 16px;
+    }
+
+    .user-info h2 {
+        font-size: 22px;
+        margin-bottom: 18px;
+    }
+
+    .info-item {
+        margin-bottom: 12px;
+    }
+
+    .info-label {
+        min-width: 130px;
+        font-size: 16px;
+    }
+
+    .info-value {
+        font-size: 16px;
+    }
+
+    .skills-info .info-value p {
+        margin-bottom: 4px;
+        font-size: 16px;
     }
 }
 
@@ -482,5 +540,73 @@ main {
         width: 100%;
         justify-content: center;
         margin-top: 20px;
+    }
+    
+    .compatibility {
+        margin: 25px 0;
+    }
+
+    .compatibility h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .compatibility-container {
+        padding: 0 5px;
+    }
+    
+    .compatibility-min, .compatibility-max {
+        font-size: 14px;
+        min-width: 35px;
+    }
+    
+    .compatibility-bar-container {
+        height: 25px;
+    }
+
+    .skills-container, .user-info {
+        padding: 20px 15px;
+    }
+
+    .skill-item {
+        margin-bottom: 12px;
+    }
+
+    .skill-name {
+        font-size: 14px;
+        min-width: 60px;
+    }
+
+    .skill-bar-container {
+        height: 14px;
+        margin: 0 10px;
+    }
+
+    .skill-percent {
+        width: 45px;
+        font-size: 14px;
+    }
+
+    .user-info h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .info-item {
+        margin-bottom: 10px;
+    }
+
+    .info-label {
+        min-width: 110px;
+        font-size: 14px;
+    }
+
+    .info-value {
+        font-size: 14px;
+    }
+
+    .skills-info .info-value p {
+        margin-bottom: 3px;
+        font-size: 14px;
     }
 }

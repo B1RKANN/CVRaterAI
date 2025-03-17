@@ -1,17 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const menuIcon = document.querySelector('.menu-icon');
+    // Hamburger butonu ve sidebar
+    const hamburgerBtn = document.querySelector('.hamburger-btn');
     const sidebar = document.getElementById('sidebar');
-
-    // Toggle sidebar
-    if (menuIcon && sidebar) {
-        menuIcon.addEventListener('click', () => {
-            menuIcon.classList.toggle('active');
+    
+    // Hamburger butonuna tıklama olayı
+    if (hamburgerBtn && sidebar) {
+        hamburgerBtn.addEventListener('click', function() {
+            // Toggle active class
+            this.classList.toggle('active');
             sidebar.classList.toggle('active');
+            
+            // Sayfada scroll'u engelle veya serbest bırak
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Sidebar dışına tıklanınca kapat
+        document.addEventListener('click', function(event) {
+            if (sidebar.classList.contains('active')) {
+                // Tıklama sidebar veya hamburger butonu dışında mı?
+                if (!sidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                    hamburgerBtn.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
         });
     }
 
     // Button hover effects
-    const buttons = document.querySelectorAll('button');
+    const buttons = document.querySelectorAll('button:not(.hamburger-btn)');
     buttons.forEach(button => {
         button.addEventListener('mouseover', () => {
             if (button.classList.contains('profile-btn')) {

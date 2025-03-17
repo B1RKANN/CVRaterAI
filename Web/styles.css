@@ -60,19 +60,31 @@ nav.scrolled {
     flex: 1;
 }
 
-.nav-links a {
+.nav-links .nav-group {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links .nav-group a {
     text-decoration: none;
     color: #F5F7FA;
     font-size: 18px;
     transition: color 0.3s ease;
     position: relative;
+    padding: 0;
+    width: auto;
+    background: none;
+    border-radius: 0;
+    margin: 0;
+    text-align: left;
 }
 
-.nav-links a:hover {
+.nav-links .nav-group a:hover {
     color: #1D5399;
 }
 
-.nav-links a.active::after {
+.nav-links .nav-group a.active::after {
     content: '';
     position: absolute;
     bottom: -5px;
@@ -80,6 +92,7 @@ nav.scrolled {
     width: 100%;
     height: 2px;
     background-color: #F5F7FA;
+    display: block;
 }
 
 .separator {
@@ -125,13 +138,14 @@ nav.scrolled {
 }
 
 .sign-in-btn {
-    background-color: transparent;
-    border: 2px solid #FFFFFF;
-    color: #FFFFFF;
+    background-color: #FFFFFF;
+    border: none;
+    color: #187CFF;
     padding: 0.7rem 1.2rem;
     border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     outline: none;
@@ -157,50 +171,48 @@ nav.scrolled {
 .balloon {
     position: absolute;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.35);
-    pointer-events: none;
-    z-index: 1;
-    filter: blur(3px);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    transition: transform 0.5s ease-out;
+    background: rgba(255, 255, 255, 0.25);
+    filter: blur(5px);
+    z-index: 0;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .balloons {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     z-index: 0;
     pointer-events: none;
 }
 
 .balloon-1 {
-    width: 300px;
-    height: 300px;
-    left: 10%;
-    top: 15%;
-    background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
-    animation: floatBalloon 15s ease-in-out infinite;
+    width: 250px;
+    height: 250px;
+    left: 15%;
+    top: 20%;
+    background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 18s ease-in-out infinite;
 }
 
 .balloon-2 {
-    width: 250px;
-    height: 250px;
-    right: 15%;
-    top: 25%;
-    background: radial-gradient(circle, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0) 100%);
-    animation: floatBalloon 18s ease-in-out infinite 2s;
+    width: 200px;
+    height: 200px;
+    right: 20%;
+    top: 30%;
+    background: radial-gradient(circle, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 20s ease-in-out infinite 2s;
 }
 
 .balloon-3 {
-    width: 400px;
-    height: 400px;
-    left: 30%;
-    bottom: 10%;
-    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-    animation: floatBalloon 20s ease-in-out infinite 1s;
+    width: 180px;
+    height: 180px;
+    left: 40%;
+    bottom: 15%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    animation: floatBalloon 22s ease-in-out infinite 1s;
 }
 
 @keyframes floatBalloon {
@@ -268,28 +280,49 @@ nav.scrolled {
     display: flex;
     justify-content: center;
     gap: 2rem;
-    padding: 4rem 2rem 6rem;
+    margin: 3rem auto;
+    max-width: 1200px;
+    padding: 0 1rem;
+    flex-wrap: wrap;
     position: relative;
     z-index: 2;
-    background-color: #FFFFFF;
-    margin-top: 80px;
-    margin-bottom: 0;
 }
 
 .step-card {
-    background-color: #187CFF;
-    padding: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
-    width: 280px;
+    padding: 2rem;
+    width: 300px;
     text-align: center;
+    position: relative;
     transition: all 0.3s ease;
-    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+}
+
+.step-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.step-card:hover::before {
+    opacity: 1;
 }
 
 .step-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    background-color: #1D5399;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .step-content {
@@ -302,27 +335,101 @@ nav.scrolled {
 
 .step-card:hover img {
     transform: scale(1.1);
-    transition: transform 0.3s ease;
 }
 
 .step-number {
-    font-size: 24px;
-    font-weight: 600;
-    color: #FFFFFF;
-    margin-bottom: 1rem;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #F5F7FA;
+    background: rgba(29, 83, 153, 0.6);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
 }
 
 .step-content h3 {
-    font-size: 24px;
-    font-weight: 500;
-    color: #FFFFFF;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #F5F7FA;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .step-content img {
     width: 80px;
     height: 80px;
+    object-fit: contain;
     margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+@media (max-width: 992px) {
+    .steps-section {
+        gap: 1.5rem;
+    }
+    
+    .step-card {
+        width: 280px;
+        padding: 1.8rem;
+    }
+    
+    .fast-simple {
+        padding: 1.5rem;
+    }
+    
+    .fast-simple h2 {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .steps-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .step-card {
+        width: 100%;
+        max-width: 320px;
+    }
+    
+    .fast-simple {
+        padding: 1.2rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .fast-simple h2 {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-card {
+        padding: 1.5rem;
+    }
+    
+    .step-content h3 {
+        font-size: 1.3rem;
+    }
+    
+    .step-content img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .fast-simple h2 {
+        font-size: 28px;
+    }
+    
+    .step-number {
+        font-size: 0.9rem;
+        padding: 0.2rem 0.6rem;
+    }
 }
 
 /* Fast and Simple Section */
@@ -330,17 +437,24 @@ nav.scrolled {
     text-align: center;
     padding: 2rem;
     position: relative;
-    z-index: 3;
+    z-index: 2;
     margin-top: 2rem;
+    margin-bottom: 2rem;
     width: 100%;
-    background-color: #FFFFFF;
-    margin-bottom: -8rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .fast-simple h2 {
     font-size: 42px;
     font-weight: 700;
-    color: #187CFF;
+    color: #FFFFFF;
     position: relative;
     z-index: 3;
     margin: 0;
@@ -433,127 +547,6 @@ nav.scrolled {
     }
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .steps-section {
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 768px) {
-    nav {
-        padding: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .logo {
-        font-size: 24px;
-        margin-right: auto;
-    }
-
-    .nav-buttons {
-        order: 2;
-        margin-left: auto;
-    }
-
-    .nav-links {
-        order: 3;
-        width: 100%;
-        margin-top: 1rem;
-        justify-content: center;
-    }
-
-    .nav-buttons .download-btn {
-        padding: 0.5rem 0.8rem;
-        font-size: 14px;
-        gap: 0.4rem;
-        height: 36px;
-    }
-
-    .nav-buttons .download-btn span {
-        font-size: 14px;
-    }
-
-    .nav-buttons .download-btn img {
-        width: 16px;
-        height: 16px;
-    }
-
-    .sign-in-btn {
-        padding: 0.5rem 1rem;
-        font-size: 14px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-transform: uppercase;
-    }
-
-    .hero-section {
-        padding: 6rem 1rem 3rem;
-    }
-
-    .hero-section h1 {
-        font-size: 36px;
-        line-height: 1.2;
-    }
-
-    .hero-section p {
-        font-size: 16px;
-        padding: 0 1rem;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 0 1rem;
-    }
-
-    .hero-buttons button {
-        width: 100%;
-    }
-
-    .steps-section {
-        padding: 3rem 1rem;
-        flex-direction: column;
-    }
-
-    .step-card {
-        width: 100%;
-        margin: 1rem 0;
-    }
-
-    .balloon-1,
-    .balloon-2,
-    .balloon-3 {
-        opacity: 0.3;
-        transform: scale(0.7);
-    }
-
-    .fast-simple {
-        padding: 3rem 1rem;
-    }
-
-    .fast-simple h2 {
-        font-size: 32px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-section h1 {
-        font-size: 32px;
-    }
-
-    .nav-links {
-        width: 85%;
-    }
-
-    .balloon {
-        display: none;
-    }
-}
 
 /* Main content için margin-top değerini artırıyorum */
 main {
@@ -563,50 +556,54 @@ main {
     padding: 0 2rem;
 }
 
-/* Arka plan balonları */
+/* Arka plan daireleri düzeltmesi */
 .background-circles {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    z-index: 0;
+    z-index: -1;
+    pointer-events: none;
 }
 
 .circle {
     position: absolute;
     border-radius: 50%;
-    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
-    opacity: 0.9;
-    box-shadow: 0 8px 32px rgba(24, 124, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    filter: blur(8px);
+    z-index: -1;
+    animation: floatSlow 15s infinite ease-in-out;
 }
 
 .circle-1 {
-    width: 600px;
-    height: 600px;
-    top: -150px;
-    right: -150px;
-    background: linear-gradient(140deg, #69AAFF 0%, #4093FF 100%);
-    opacity: 0.85;
+    width: 400px;
+    height: 400px;
+    left: -100px;
+    top: 10%;
+    background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+    animation-duration: 20s;
 }
 
 .circle-2 {
-    width: 800px;
-    height: 800px;
-    bottom: -250px;
-    left: -250px;
-    background: linear-gradient(140deg, #4093FF 0%, #1C82FF 100%);
-    opacity: 0.9;
+    width: 350px;
+    height: 350px;
+    right: -50px;
+    top: 40%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+    animation-duration: 25s;
+    animation-delay: 2s;
 }
 
 .circle-3 {
-    width: 400px;
-    height: 400px;
-    top: 35%;
-    right: 10%;
-    background: linear-gradient(140deg, #82BFFF 0%, #69AAFF 100%);
-    opacity: 0.85;
+    width: 300px;
+    height: 300px;
+    left: 30%;
+    bottom: -50px;
+    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+    animation-duration: 22s;
+    animation-delay: 1s;
 }
 
 body::before {
@@ -908,5 +905,94 @@ body::before {
     
     .modal form {
         padding: 0 20px;
+    }
+}
+
+/* Mobil menü düzeltmeleri */
+.menu-icon {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menu-icon {
+        display: block;
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        cursor: pointer;
+        z-index: 1002;
+        width: 30px;
+        height: 25px;
+    }
+    
+    .menu-icon .line {
+        width: 30px;
+        height: 3px;
+        background-color: #F5F7FA;
+        margin: 6px 0;
+        transition: all 0.3s ease;
+        display: block;
+    }
+    
+    .menu-icon.active .line:nth-child(1) {
+        transform: rotate(45deg) translate(7px, 7px);
+    }
+    
+    .menu-icon.active .line:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .menu-icon.active .line:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .nav-links.mobile-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: #187CFF;
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateY(-100%);
+        transition: transform 0.4s ease;
+    }
+    
+    .nav-links.mobile-menu.active {
+        transform: translateY(0);
+        display: flex;
+    }
+    
+    .nav-buttons {
+        display: none;
+    }
+    
+    .mobile-buttons {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        bottom: 80px;
+        left: 0;
+        width: 100%;
+        z-index: 1002;
+        align-items: center;
+        gap: 15px;
+        padding: 0 20px;
+    }
+    
+    .mobile-buttons button {
+        width: 80%;
+        max-width: 250px;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 30px;
     }
 } 

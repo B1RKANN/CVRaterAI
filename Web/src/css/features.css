@@ -170,13 +170,14 @@ body::before {
 }
 
 .nav-buttons .sign-in-btn {
-    background-color: transparent;
-    border: 2px solid #FFFFFF;
-    color: #FFFFFF;
+    background-color: #FFFFFF;
+    border: none;
+    color: #187CFF;
     padding: 0.7rem 1.2rem;
     border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     outline: none;
