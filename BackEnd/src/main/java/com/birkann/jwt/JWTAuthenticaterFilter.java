@@ -1,6 +1,8 @@
 package com.birkann.jwt;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,19 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticaterFilter.class);
 	
+	private static final List<String> PUBLIC_PATHS = Arrays.asList(
+		"/register",
+		"/authenticate",
+		"/refreshToken",
+		"/auth/v2/register",
+		"/auth/v2/authenticate",
+		"/auth/v2/refreshToken",
+		"/auth/v2/register-with-cookie",
+		"/auth/v2/authenticate-with-cookie",
+		"/auth/v2/refreshToken-with-cookie",
+		"/auth/v2/logout"
+	);
+	
 	@Autowired
 	private IJWTService jwtService;
 	
@@ -47,14 +62,9 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 			return true;
 		}
 		
-		// Bu URL'ler filtre uygulanmadan geçebilir
-		boolean isPublicEndpoint = path.equals("/register") || 
-			   path.equals("/authenticate") || 
-			   path.equals("/refreshToken") ||
-			   path.startsWith("/auth/v2/register") || 
-			   path.startsWith("/auth/v2/authenticate") || 
-			   path.startsWith("/auth/v2/refreshToken") ||
-			   path.equals("/auth/v2/logout");
+		// Public endpoint kontrolü
+		boolean isPublicEndpoint = PUBLIC_PATHS.stream()
+			.anyMatch(publicPath -> path.equals(publicPath));
 		
 		logger.info("JWT Filter - URL: {}, Public Endpoint: {}", path, isPublicEndpoint);
 		return isPublicEndpoint;
