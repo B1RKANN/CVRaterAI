@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import com.birkann.dto.AuthRequest;
@@ -122,48 +123,81 @@ public class AuthService implements IAuthService {
 
 	@Override
 	public AuthResponse signin(AuthRequest request) {
-		
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-		
-		var user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new IllegalArgumentException("Invalid email or password."));
+		try {
+			// Email kontrolü
+			if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+				throw new IllegalArgumentException("Email adresi boş olamaz");
+			}
 			
-		var jwt = jwtService.generateToken(user);
-		
-		// Önceki refresh token varsa sil
-		refreshTokenRepository.deleteByUser(user);
-		
-		// Yeni refresh token oluştur
-		RefreshToken refreshToken = createRefreshToken(user);
-		
-		AuthResponse authResponse = new AuthResponse();
-		authResponse.setToken(jwt);
-		authResponse.setRefreshToken(refreshToken.getToken());
-		authResponse.setRole(user.getRole().toString()); // Kullanıcı rolünü ekle
-		
-		// Kullanıcı bilgilerini response'a ekle
-		authResponse.setUserId(user.getId());
-		authResponse.setEmail(user.getEmail());
-		authResponse.setName(user.getName());
-		
-		return authResponse;
+			// Şifre kontrolü
+			if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+				throw new IllegalArgumentException("Şifre boş olamaz");
+			}
+			
+			// Kullanıcıyı kontrol et
+			var userOptional = userRepository.findByEmail(request.getEmail());
+			if (userOptional.isEmpty()) {
+				throw new IllegalArgumentException("Kullanıcı bulunamadı");
+			}
+			
+			// Kimlik doğrulama işlemini gerçekleştir
+			try {
+				authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+				);
+			} catch (BadCredentialsException e) {
+				throw new IllegalArgumentException("Hatalı email veya şifre");
+			}
+			
+			var user = userOptional.get();
+			
+			// JWT token oluştur
+			var jwt = jwtService.generateToken(user);
+			
+			// Önceki refresh token varsa sil
+			refreshTokenRepository.deleteByUser(user);
+			
+			// Yeni refresh token oluştur
+			RefreshToken refreshToken = createRefreshToken(user);
+			
+			// Response oluştur
+			AuthResponse authResponse = new AuthResponse();
+			authResponse.setToken(jwt);
+			authResponse.setRefreshToken(refreshToken.getToken());
+			authResponse.setRole(user.getRole().toString());
+			
+			// Kullanıcı bilgilerini ekle
+			authResponse.setUserId(user.getId());
+			authResponse.setEmail(user.getEmail());
+			authResponse.setName(user.getName());
+			
+			System.out.println("Başarılı giriş: " + user.getEmail());
+			return authResponse;
+			
+		} catch (Exception e) {
+			System.out.println("Signin hatası: " + e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException("Giriş başarısız: " + e.getMessage());
+		}
 	}
 	
 	@Override
 	public AuthResponse signinWithCookie(AuthRequest request, HttpServletResponse response) {
-		// Normal giriş işlemini gerçekleştir
-		AuthResponse authResponse = signin(request);
-		
-		// JWT token'ı cookie olarak ayarla
-		jwtService.addTokenToCookie(response, authResponse.getToken());
-		
-		// Kullanıcı bilgilerini response'a ekle
-		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-		authResponse.setUserId(user.getId());
-		authResponse.setEmail(user.getEmail());
-		authResponse.setName(user.getName());
-		
-		return authResponse;
+		try {
+			// Normal giriş işlemini gerçekleştir
+			AuthResponse authResponse = signin(request);
+			
+			// JWT token'ı cookie olarak ayarla
+			jwtService.addTokenToCookie(response, authResponse.getToken());
+			
+			System.out.println("Cookie ile giriş başarılı: " + request.getEmail());
+			return authResponse;
+			
+		} catch (Exception e) {
+			System.out.println("Cookie ile giriş hatası: " + e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException("Cookie ile giriş başarısız: " + e.getMessage());
+		}
 	}
 	
 	@Override
