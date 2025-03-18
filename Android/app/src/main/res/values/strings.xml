@@ -90,4 +90,10 @@
     <string name="programming_language_analysis">Programming language analysis</string>
     <string name="compatibility_status">Compatibility Status</string>
     <string name="logout">Logout</string>
+
+    <!-- Loading Screen -->
+    <string name="loading_title">CV Analiz Ediliyor...</string>
+    <string name="loading_subtitle">Lütfen bekleyiniz</string>
+    <string name="loading_title_en">Analyzing CV...</string>
+    <string name="loading_subtitle_en">Please wait</string>
 </resources>

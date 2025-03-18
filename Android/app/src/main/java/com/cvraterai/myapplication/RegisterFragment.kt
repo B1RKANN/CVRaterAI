@@ -111,6 +111,10 @@ class RegisterFragment : Fragment() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
         
+        if (!validateEmail(email)) {
+            return
+        }
+        
         viewModel.register(name, surname, email, password)
     }
     
@@ -121,6 +125,17 @@ class RegisterFragment : Fragment() {
         etSurname.isEnabled = !isLoading
         etEmail.isEnabled = !isLoading
         etPassword.isEnabled = !isLoading
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.com$"
+        val isValid = email.matches(emailPattern.toRegex())
+        
+        if (!isValid) {
+            Toast.makeText(requireContext(), "Lütfen geçerli bir e-posta adresi giriniz", Toast.LENGTH_SHORT).show()
+        }
+        
+        return isValid
     }
 
     companion object {

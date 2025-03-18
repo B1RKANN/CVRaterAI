@@ -112,7 +112,21 @@
             android:padding="16dp"
             android:textColor="@color/text_dark"
             android:textSize="16sp"
+            android:hint="ornek@email.com"
             app:layout_constraintTop_toBottomOf="@id/tvEmailLabel" />
+
+        <TextView
+            android:id="@+id/tvEmailError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Lütfen geçerli bir e-posta adresi giriniz"
+            android:textColor="#FF0000"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
         <TextView
             android:id="@+id/tvPasswordLabel"

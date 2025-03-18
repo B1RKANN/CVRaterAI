@@ -131,17 +131,47 @@ class UploadCvFragment : Fragment() {
     
     private fun handleSelectedFile(uri: Uri) {
         try {
+            Log.d(TAG, "Dosya seçme işlemi başladı: $uri")
+            
             val inputStream = requireContext().contentResolver.openInputStream(uri)
+            if (inputStream == null) {
+                Log.e(TAG, "Dosya okunamadı: $uri")
+                Toast.makeText(requireContext(), "Dosya okunamadı", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
             val fileName = getFileNameFromUri(uri) ?: "cv_file"
+            Log.d(TAG, "Dosya adı: $fileName")
             
             // Create a temporary file
             val tempFile = File(requireContext().cacheDir, fileName)
+            Log.d(TAG, "Geçici dosya yolu: ${tempFile.absolutePath}")
+            
             val outputStream = FileOutputStream(tempFile)
             
-            inputStream?.use { input ->
+            inputStream.use { input ->
                 outputStream.use { output ->
                     input.copyTo(output)
                 }
+            }
+            
+            // Verify file was created and has content
+            if (!tempFile.exists()) {
+                Log.e(TAG, "Geçici dosya oluşturulamadı: ${tempFile.absolutePath}")
+                Toast.makeText(requireContext(), "Dosya kaydedilemedi", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            if (tempFile.length() == 0L) {
+                Log.e(TAG, "Geçici dosya boş: ${tempFile.absolutePath}")
+                Toast.makeText(requireContext(), "Dosya boş", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            if (!tempFile.canRead()) {
+                Log.e(TAG, "Geçici dosya okunamıyor: ${tempFile.absolutePath}")
+                Toast.makeText(requireContext(), "Dosya okunamıyor", Toast.LENGTH_SHORT).show()
+                return
             }
             
             // Update the upload button text to show selected file
@@ -150,7 +180,7 @@ class UploadCvFragment : Fragment() {
             // Set the file in the ViewModel
             viewModel.setSelectedFile(tempFile)
             
-            Log.d(TAG, "Dosya seçildi: ${tempFile.absolutePath}, boyut: ${tempFile.length()} byte")
+            Log.d(TAG, "Dosya başarıyla seçildi: ${tempFile.absolutePath}, boyut: ${tempFile.length()} byte")
             Toast.makeText(requireContext(), "CV dosyası seçildi", Toast.LENGTH_SHORT).show()
             
         } catch (e: Exception) {
@@ -173,16 +203,49 @@ class UploadCvFragment : Fragment() {
     }
     
     private fun navigateToCvRequired() {
-        // Get the selected file from ViewModel
-        val selectedFile = viewModel.getSelectedFile() ?: return
-        
-        // Create bundle with file path
-        val bundle = bundleOf("filePath" to selectedFile.absolutePath)
-        
-        Log.d(TAG, "CvRequiredFragment'e geçiliyor, dosya yolu: ${selectedFile.absolutePath}")
-        
-        // Navigate to CvRequiredFragment with the bundle
-        findNavController().navigate(R.id.action_uploadCvFragment_to_cvRequiredFragment, bundle)
+        try {
+            // Get the selected file from ViewModel
+            val selectedFile = viewModel.getSelectedFile()
+            Log.d(TAG, "Seçili dosya: ${selectedFile?.absolutePath}")
+            
+            if (selectedFile == null) {
+                Log.e(TAG, "Dosya seçilmemiş")
+                Toast.makeText(requireContext(), "Lütfen önce bir CV dosyası seçin", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            if (!selectedFile.exists()) {
+                Log.e(TAG, "Dosya bulunamadı: ${selectedFile.absolutePath}")
+                Toast.makeText(requireContext(), "Seçilen dosya bulunamadı", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // Dosya boyutunu kontrol et
+            if (selectedFile.length() == 0L) {
+                Log.e(TAG, "Dosya boş: ${selectedFile.absolutePath}")
+                Toast.makeText(requireContext(), "Seçilen dosya boş", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // Dosya okunabilir mi kontrol et
+            if (!selectedFile.canRead()) {
+                Log.e(TAG, "Dosya okunamıyor: ${selectedFile.absolutePath}")
+                Toast.makeText(requireContext(), "Dosya okunamıyor", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // Create bundle with file path
+            val bundle = bundleOf("filePath" to selectedFile.absolutePath)
+            
+            Log.d(TAG, "CvRequiredFragment'e geçiliyor, dosya yolu: ${selectedFile.absolutePath}")
+            
+            // Navigate to CvRequiredFragment with the bundle
+            findNavController().navigate(R.id.action_uploadCvFragment_to_cvRequiredFragment, bundle)
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Geçiş hatası: ${e.message}", e)
+            Toast.makeText(requireContext(), "Geçiş sırasında bir hata oluştu: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
     
     override fun onDestroyView() {

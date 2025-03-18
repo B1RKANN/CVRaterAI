@@ -67,21 +67,27 @@
                     android:textColor="@color/primary_blue"
                     android:textSize="20sp" />
 
-                <EditText
-                    android:id="@+id/etRequiredFeatures"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="200dp"
                     android:layout_margin="16dp"
                     android:background="@drawable/rounded_edit_text_bg"
-                    android:fontFamily="@font/poppins_light"
-                    android:gravity="top|start"
-                    android:minHeight="100dp"
-                    android:padding="16dp"
-                    android:inputType="textMultiLine"
-                    android:hint="İş gereksinimleri (opsiyonel)"
-                    android:textColor="@color/white"
-                    android:textColorHint="#80FFFFFF"
-                    android:textSize="16sp" />
+                    android:scrollbars="vertical"
+                    android:fadeScrollbars="false">
+
+                    <EditText
+                        android:id="@+id/etRequiredFeatures"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_light"
+                        android:gravity="top|start"
+                        android:padding="16dp"
+                        android:inputType="textMultiLine"
+                        android:hint="İş gereksinimleri (opsiyonel)"
+                        android:textColor="@color/white"
+                        android:textColorHint="#80FFFFFF"
+                        android:textSize="16sp" />
+                </ScrollView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -128,16 +134,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
         
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/cardGithubLink"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <androidx.cardview.widget.CardView
             android:id="@+id/cardAnalyzeButton"
             android:layout_width="match_parent"
@@ -149,7 +145,7 @@
             app:cardBackgroundColor="@color/primary_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBar">
+            app:layout_constraintTop_toBottomOf="@id/cardGithubLink">
 
             <TextView
                 android:id="@+id/btnAnalyze"
@@ -164,4 +160,62 @@
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Loading Overlay -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/loadingAnimation"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/loading_animation" />
+
+                <TextView
+                    android:id="@+id/tvLoadingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/loading_title"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvLoadingSubText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="@string/loading_subtitle"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+
 </FrameLayout>
