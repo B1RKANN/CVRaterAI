@@ -222,22 +222,19 @@ body::before {
 }
 
 .feature-card {
-    background-color: white;
+    background: #fff;
     border-radius: 20px;
-    padding: 4rem 2rem;
-    min-height: 350px;
-    color: #333;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-    transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    padding: 30px;
     text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    transform: translateY(0) scale(1);
 }
 
 .feature-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(1.03);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
 }
 
 .feature-card h2 {
