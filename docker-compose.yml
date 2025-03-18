@@ -2,6 +2,9 @@ version: '3.8'
 
 services:
   backend:
+    build:
+      context: ./BackEnd
+      dockerfile: Dockerfile
     image: cvraterai-backend:latest
     container_name: backend
     restart: unless-stopped
@@ -14,6 +17,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
     depends_on:
       - db
+    volumes:
+      - ./BackEnd/target/cvraterai-0.0.1-SNAPSHOT.jar:/app/app.jar
 
   db:
     image: postgres:13
