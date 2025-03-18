@@ -4,6 +4,7 @@ import android.util.Log
 import com.cvraterai.myapplication.data.TokenManager
 import com.cvraterai.myapplication.data.JwtUtil
 import com.cvraterai.myapplication.data.api.CvEvaluationApiService
+import com.cvraterai.myapplication.data.model.ApiResponse
 import com.cvraterai.myapplication.data.model.CvEvaluationResponse
 import com.cvraterai.myapplication.data.model.FileType
 import com.cvraterai.myapplication.data.repository.AuthRepository
@@ -149,6 +150,48 @@ class CvEvaluationRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e(TAG, "Exception during CV evaluation: ${e.message}", e)
             return@withContext Result.failure(e)
+        }
+    }
+    
+    suspend fun getUserEvaluations(userId: Long): Result<List<CvEvaluationResponse>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val token = tokenManager.getAccessToken() ?: return@withContext Result.failure(Exception("Token bulunamadı"))
+                val response = cvEvaluationApiService.getUserEvaluations(userId, "Bearer $token")
+                
+                if (response.isSuccessful && response.body() != null) {
+                    val evaluations = response.body() ?: emptyList()
+                    Result.success(evaluations)
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: "Bilinmeyen hata"
+                    Log.e("CvEvaluationRepository", "getUserEvaluations Hata: $errorBody")
+                    Result.failure(Exception(errorBody))
+                }
+            } catch (e: Exception) {
+                Log.e("CvEvaluationRepository", "getUserEvaluations Exception: ${e.message}")
+                Result.failure(e)
+            }
+        }
+    }
+    
+    suspend fun getEvaluationById(evaluationId: Long): Result<CvEvaluationResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val token = tokenManager.getAccessToken() ?: return@withContext Result.failure(Exception("Token bulunamadı"))
+                val response = cvEvaluationApiService.getEvaluationById(evaluationId, "Bearer $token")
+                
+                if (response.isSuccessful && response.body() != null) {
+                    val evaluation = response.body()!!
+                    Result.success(evaluation)
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: "Bilinmeyen hata"
+                    Log.e("CvEvaluationRepository", "getEvaluationById Hata: $errorBody")
+                    Result.failure(Exception(errorBody))
+                }
+            } catch (e: Exception) {
+                Log.e("CvEvaluationRepository", "getEvaluationById Exception: ${e.message}")
+                Result.failure(e)
+            }
         }
     }
 } 

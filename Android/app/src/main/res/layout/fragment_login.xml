@@ -66,8 +66,7 @@
                 android:paddingHorizontal="16dp"
                 android:textColor="@color/black"
                 android:textColorHint="#99000000"
-                android:textSize="16sp"
-                android:hint="ornek@email.com" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvEmailError"

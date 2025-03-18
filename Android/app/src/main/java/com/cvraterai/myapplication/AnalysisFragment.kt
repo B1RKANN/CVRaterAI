@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.LinearLayout
+import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.core.view.GestureDetectorCompat
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,7 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
     
     private var evaluationResponse: String? = null
     private var evaluationResultJson: String? = null
+    private var evaluationId: Long = -1L
     private val skillRatings = mutableListOf<SkillRating>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,7 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
         arguments?.let {
             evaluationResponse = it.getString("evaluationResponse")
             evaluationResultJson = it.getString("evaluationResultJson")
+            evaluationId = it.getLong("evaluationId", -1L)
         }
     }
 
@@ -70,6 +73,82 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
             gestureDetector.onTouchEvent(event)
             true
         }
+        
+        // RecyclerView için özel dokunma olayı ekle
+        binding.recyclerViewSkills.setOnTouchListener(object : View.OnTouchListener {
+            // Yatay kaydırma algılandığında bu değişkeni true yapacağız
+            var isHorizontalSwipe = false
+            // İlk dokunuş koordinatı
+            var startX = 0f
+            var startY = 0f
+            
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        // İlk dokunuşta koordinatları kaydet
+                        startX = event.x
+                        startY = event.y
+                        isHorizontalSwipe = false
+                        // RecyclerView'ın normal dikey kaydırmasını engelleme
+                        return false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        // Yatay hareket dikey hareketten daha fazla ise
+                        val deltaX = Math.abs(event.x - startX)
+                        val deltaY = Math.abs(event.y - startY)
+                        
+                        if (deltaX > deltaY && deltaX > 50) {
+                            isHorizontalSwipe = true
+                            // RecyclerView'ın normal dikey kaydırmasını engelle
+                            return true
+                        }
+                        
+                        // Yatay kaydırma yoksa RecyclerView'ın normal davranışını sürdür
+                        return isHorizontalSwipe
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        if (isHorizontalSwipe) {
+                            // Yatay kaydırma miktarı
+                            val deltaX = event.x - startX
+                            
+                            // Sola kaydırma (sonraki sayfa)
+                            if (deltaX < -100) {
+                                navigateToAiNote()
+                                return true
+                            }
+                            // Sağa kaydırma (önceki sayfa)
+                            else if (deltaX > 100) {
+                                findNavController().navigateUp()
+                                return true
+                            }
+                        }
+                        return isHorizontalSwipe
+                    }
+                }
+                return false
+            }
+        })
+        
+        // Geri butonu 
+        view.findViewById<ImageButton>(R.id.btnBack)?.setOnClickListener {
+            findNavController().navigateUp()
+        }
+        
+        // İleri butonu
+        view.findViewById<ImageButton>(R.id.btnNext)?.setOnClickListener {
+            navigateToAiNote()
+        }
+    }
+    
+    private fun navigateToAiNote() {
+        // AINoteFragment'a geçiş yap ve veriyi aktar
+        val bundle = bundleOf(
+            "evaluationResponse" to evaluationResponse,
+            "evaluationResultJson" to evaluationResultJson,
+            "evaluationId" to evaluationId
+        )
+        
+        findNavController().navigate(R.id.action_analysisFragment_to_aiNoteFragment, bundle)
     }
     
     private fun setupRecyclerView() {
@@ -148,14 +227,7 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
     override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
         // Sola kaydırma hareketi algılandığında
         if (e1 != null && e2.x < e1.x && Math.abs(e1.x - e2.x) > 100 && Math.abs(velocityX) > 100) {
-            // AINoteFragment'a geçiş yap ve veriyi aktar
-            val bundle = bundleOf(
-                "evaluationResponse" to evaluationResponse,
-                "evaluationResultJson" to evaluationResultJson
-            )
-            
-            // aiNoteFragment küçük harfle başladığı için (muhtemelen) action ID de öyle
-            findNavController().navigate(R.id.action_analysisFragment_to_aiNoteFragment, bundle)
+            navigateToAiNote()
             return true
         }
         // Sağa kaydırma hareketi algılandığında

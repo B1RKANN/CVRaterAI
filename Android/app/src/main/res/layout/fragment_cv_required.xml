@@ -8,158 +8,167 @@
     tools:context=".CvRequiredFragment">
 
     <!-- Content -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/tvAppName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/app_name"
-            android:textColor="@color/primary_blue"
-            android:textSize="32sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvSelectedFile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center"
-            android:text="Seçili Dosya"
-            android:textColor="@color/primary_blue"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAppName" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardRequiredFeatures"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/tvSelectedFile">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvAppName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/app_name"
+                android:textColor="@color/primary_blue"
+                android:textSize="32sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvSelectedFile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="Seçili Dosya"
+                android:textColor="@color/primary_blue"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAppName" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardRequiredFeatures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/tvSelectedFile">
 
-                <TextView
-                    android:id="@+id/tvRequiredFeatures"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:text="@string/required_features"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="20sp" />
-
-                <ScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_margin="16dp"
-                    android:background="@drawable/rounded_edit_text_bg"
-                    android:scrollbars="vertical"
-                    android:fadeScrollbars="false">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvRequiredFeatures"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="@string/required_features"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="20sp" />
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/rounded_edit_text_bg"
+                        android:scrollbars="vertical"
+                        android:fadeScrollbars="false">
+
+                        <EditText
+                            android:id="@+id/etRequiredFeatures"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="top|start"
+                            android:padding="16dp"
+                            android:inputType="textMultiLine"
+                            android:hint="İş gereksinimleri (opsiyonel)"
+                            android:textColor="@color/white"
+                            android:textColorHint="#80FFFFFF"
+                            android:textSize="16sp"
+                            android:background="@null" />
+                    </ScrollView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardGithubLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/cardRequiredFeatures">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvGithubLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="@string/github_link"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="20sp" />
 
                     <EditText
-                        android:id="@+id/etRequiredFeatures"
+                        android:id="@+id/etGithubLink"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/rounded_edit_text_bg"
                         android:fontFamily="@font/poppins_light"
-                        android:gravity="top|start"
+                        android:inputType="textUri"
                         android:padding="16dp"
-                        android:inputType="textMultiLine"
-                        android:hint="İş gereksinimleri (opsiyonel)"
+                        android:hint="GitHub linki (opsiyonel)"
                         android:textColor="@color/white"
                         android:textColorHint="#80FFFFFF"
                         android:textSize="16sp" />
-                </ScrollView>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardGithubLink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/cardRequiredFeatures">
-
-            <LinearLayout
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardAnalyzeButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/primary_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardGithubLink"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <TextView
-                    android:id="@+id/tvGithubLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:text="@string/github_link"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="20sp" />
-
-                <EditText
-                    android:id="@+id/etGithubLink"
+                    android:id="@+id/btnAnalyze"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:background="@drawable/rounded_edit_text_bg"
-                    android:fontFamily="@font/poppins_light"
-                    android:inputType="textUri"
-                    android:padding="16dp"
-                    android:hint="GitHub linki (opsiyonel)"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center"
+                    android:paddingVertical="14dp"
+                    android:text="@string/analyze_cv"
                     android:textColor="@color/white"
-                    android:textColorHint="#80FFFFFF"
                     android:textSize="16sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardAnalyzeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="6dp"
-            app:cardBackgroundColor="@color/primary_blue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardGithubLink">
+            </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/btnAnalyze"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:gravity="center"
-                android:paddingVertical="14dp"
-                android:text="@string/analyze_cv"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <!-- Loading Overlay -->
     <FrameLayout

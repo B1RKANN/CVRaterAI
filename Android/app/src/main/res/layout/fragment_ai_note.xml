@@ -15,7 +15,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="48dp"
         android:layout_height="15dp"
-        android:layout_marginTop="145dp"
+        android:layout_marginTop="24dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -93,6 +93,16 @@
         app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
 
     <!-- Kırmızı çerçeveli metin kutusu -->
+    <View
+        android:id="@+id/view8"
+        android:layout_width="204dp"
+        android:layout_height="223dp"
+        android:layout_marginEnd="290dp"
+        android:layout_marginBottom="-100dp"
+        android:background="@drawable/circle_red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardNote"
         android:layout_width="336dp"
@@ -112,29 +122,57 @@
             android:layout_height="match_parent"
             android:background="@color/redd" />
 
-        <TextView
-            android:id="@+id/tvNoteContent"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:lineSpacingExtra="4dp"
-            android:padding="16dp"
-            android:text="Yunus Yeşilördek yazılım mühendisliği alanında eğitimine devam eden bazı alanlar üzerine deneyim kazanmış bir adaydır. Java, Kotlin, Android ve web teknolojilerine hakim olup, çok dilli yetkinliğiyle küresel projelere adapte olabilir. Teknik becerilerini staj ve projelerle destekleyerek kariyerine güçlü bir başlangıç yapma potansiyeline sahiptir"
-            android:textColor="@color/background_light"
-            android:textSize="20sp" />
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarThumbVertical="@drawable/custom_scrollbar"
+            android:scrollbarSize="8dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:overScrollMode="always"
+            android:clickable="true"
+            android:focusable="true"
+            android:nestedScrollingEnabled="true">
+
+            <TextView
+                android:id="@+id/tvNoteContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:lineSpacingExtra="4dp"
+                android:padding="16dp"
+                android:text="Yunus Yeşilördek yazılım mühendisliği alanında eğitimine devam eden bazı alanlar üzerine deneyim kazanmış bir adaydır. Java, Kotlin, Android ve web teknolojilerine hakim olup, çok dilli yetkinliğiyle küresel projelere adapte olabilir. Teknik becerilerini staj ve projelerle destekleyerek kariyerine güçlü bir başlangıç yapma potansiyeline sahiptir"
+                android:textColor="@color/background_light"
+                android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </ScrollView>
 
     </androidx.cardview.widget.CardView>
 
-    <View
-        android:id="@+id/view8"
-        android:layout_width="236dp"
-        android:layout_height="232dp"
+    <!-- Navigation Buttons -->
+    <LinearLayout
+        android:id="@+id/navigationButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-        android:layout_marginTop="134dp"
-        android:layout_marginEnd="57dp"
-        android:background="@drawable/circle_red"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
-        app:layout_constraintTop_toBottomOf="@+id/cardNote" />
+        <Button
+            android:id="@+id/btnBackToHomepage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/redd"
+            android:text="@string/back_to_homepage"
+            android:textColor="@color/white"
+            android:padding="16dp" />
+    </LinearLayout>
 
     <!-- Alt sol köşedeki kırmızı yarım daire -->
 
