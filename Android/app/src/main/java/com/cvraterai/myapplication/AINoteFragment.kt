@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.core.view.GestureDetectorCompat
 import androidx.navigation.fragment.findNavController
 import com.cvraterai.myapplication.databinding.FragmentAiNoteBinding
@@ -31,12 +32,15 @@ class AINoteFragment : Fragment(), GestureDetector.OnGestureListener {
     
     private var evaluationResponse: String? = null
     private var evaluationResultJson: String? = null
+    private var evaluationId: Long = -1L
+    private var fromHistory: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             evaluationResponse = it.getString("evaluationResponse")
             evaluationResultJson = it.getString("evaluationResultJson")
+            evaluationId = it.getLong("evaluationId", -1L)
         }
     }
 
@@ -63,12 +67,121 @@ class AINoteFragment : Fragment(), GestureDetector.OnGestureListener {
             true
         }
         
+        // ScrollView için özel dokunma olayı ekle
+        binding.scrollView.setOnTouchListener(object : View.OnTouchListener {
+            // Yatay kaydırma algılandığında bu değişkeni true yapacağız
+            var isHorizontalSwipe = false
+            // İlk dokunuş koordinatı
+            var startX = 0f
+            var startY = 0f
+            
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        // İlk dokunuşta koordinatları kaydet
+                        startX = event.x
+                        startY = event.y
+                        isHorizontalSwipe = false
+                        // ScrollView'in normal dikey kaydırmasını engelleme
+                        return false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        // Yatay hareket dikey hareketten daha fazla ise
+                        val deltaX = Math.abs(event.x - startX)
+                        val deltaY = Math.abs(event.y - startY)
+                        
+                        if (deltaX > deltaY && deltaX > 50) {
+                            isHorizontalSwipe = true
+                            // ScrollView'in normal dikey kaydırmasını engelle
+                            return true
+                        }
+                        
+                        // Yatay kaydırma yoksa ScrollView'in normal davranışını sürdür
+                        return isHorizontalSwipe
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        if (isHorizontalSwipe) {
+                            // Yatay kaydırma miktarı
+                            val deltaX = event.x - startX
+                            
+                            // Sağa kaydırma (önceki sayfa)
+                            if (deltaX > 100) {
+                                findNavController().navigateUp() // AnalysisFragment'a geri dön
+                                return true
+                            }
+                        }
+                        return isHorizontalSwipe
+                    }
+                }
+                return false
+            }
+        })
+        
+        // tvNoteContent için özel dokunma olayı ekle
+        binding.tvNoteContent.setOnTouchListener(object : View.OnTouchListener {
+            // Yatay kaydırma algılandığında bu değişkeni true yapacağız
+            var isHorizontalSwipe = false
+            // İlk dokunuş koordinatı
+            var startX = 0f
+            var startY = 0f
+            
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        // İlk dokunuşta koordinatları kaydet
+                        startX = event.x
+                        startY = event.y
+                        isHorizontalSwipe = false
+                        // TextView'in normal davranışını engelleme
+                        return false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        // Yatay hareket dikey hareketten daha fazla ise
+                        val deltaX = Math.abs(event.x - startX)
+                        val deltaY = Math.abs(event.y - startY)
+                        
+                        if (deltaX > deltaY && deltaX > 50) {
+                            isHorizontalSwipe = true
+                            // TextView'in normal dikey kaydırmasını engelle
+                            return true
+                        }
+                        
+                        // Yatay kaydırma yoksa TextView'in normal davranışını sürdür
+                        return isHorizontalSwipe
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        if (isHorizontalSwipe) {
+                            // Yatay kaydırma miktarı
+                            val deltaX = event.x - startX
+                            
+                            // Sağa kaydırma (önceki sayfa)
+                            if (deltaX > 100) {
+                                findNavController().navigateUp() // AnalysisFragment'a geri dön
+                                return true
+                            }
+                        }
+                        return isHorizontalSwipe
+                    }
+                }
+                return false
+            }
+        })
+        
+        // Geri butonu
+        view.findViewById<ImageButton>(R.id.btnBack)?.setOnClickListener {
+            findNavController().navigateUp()
+        }
+        
         // Anasayfaya dön butonuna tıklama olayını ayarla
         view.findViewById<Button>(R.id.btnBackToHomepage)?.setOnClickListener {
             // Ana sayfaya dön (geriye giderek)
-            findNavController().popBackStack(R.id.homePageFragment, false)
-            // Alternatif olarak:
-            // findNavController().navigate(R.id.action_aiNoteFragment_to_homePageFragment)
+            if (evaluationId != -1L) {
+                // Eğer geçmiş değerlendirmeden gelindiyse, geçmiş sayfasına git
+                findNavController().popBackStack(R.id.historyFragment, false)
+            } else {
+                // Normal akışta ana sayfaya dön
+                findNavController().popBackStack(R.id.homePageFragment, false)
+            }
         }
     }
     

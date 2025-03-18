@@ -96,4 +96,8 @@
     <string name="loading_subtitle">Lütfen bekleyiniz</string>
     <string name="loading_title_en">Analyzing CV...</string>
     <string name="loading_subtitle_en">Please wait</string>
+
+    <!-- Analysis History -->
+    <string name="analysis_history_title">Analysis History</string>
+    <string name="view_history">View History</string>
 </resources>

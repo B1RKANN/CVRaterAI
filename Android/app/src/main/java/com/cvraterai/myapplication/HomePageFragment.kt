@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.cvraterai.myapplication.data.repository.AuthRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import android.widget.Button
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +62,18 @@ class HomePageFragment : Fragment() {
         view.findViewById<CardView>(R.id.cardUploadCV).setOnClickListener {
             // UploadCvFragment'e geçiş yap
             findNavController().navigate(R.id.action_homePageFragment_to_uploadCvFragment)
+        }
+        
+        // Boş durum kartına tıklama olayını ayarla
+        view.findViewById<CardView>(R.id.cardEmptyState).setOnClickListener {
+            // Geçmiş sayfasına geçiş yap
+            findNavController().navigate(R.id.action_homePageFragment_to_historyFragment)
+        }
+        
+        // Geçmişi Görüntüle butonuna tıklama olayını ayarla
+        view.findViewById<Button>(R.id.btnViewHistory)?.setOnClickListener {
+            // Geçmiş sayfasına geçiş yap
+            findNavController().navigate(R.id.action_homePageFragment_to_historyFragment)
         }
         
         // Logout butonuna tıklama olayını ayarla

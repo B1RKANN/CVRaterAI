@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -17,16 +27,9 @@
         android:paddingVertical="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/menuIcon"
-            android:layout_width="41dp"
-            android:layout_height="39dp"
-            android:src="@drawable/ic_menu"
-            app:tint="@color/primary_blue" />
-
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="373dp"
+            android:layout_height="51dp"
             android:layout_weight="1"
             android:elevation="6dp"
             android:fontFamily="@font/poppins_bold"
@@ -213,15 +216,16 @@
 
     </LinearLayout>
 
+    <!-- Navigation Dots -->
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="48dp"
         android:layout_height="15dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoCard">
+        app:layout_constraintTop_toBottomOf="@+id/navigationButtons">
 
         <View
             android:id="@+id/view5"
@@ -235,8 +239,6 @@
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="32dp"
             android:layout_weight="1"
             android:background="@drawable/dot_indicator_unselected" />
 
@@ -244,23 +246,27 @@
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="32dp"
             android:background="@drawable/dot_indicator_unselected" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnBackToHomepage"
-        android:layout_width="169dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="61dp"
-        android:backgroundTint="#1A73E8"
-        android:text="@string/back_to_homepage"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoCard" />
+    <!-- Navigation Buttons -->
+    <LinearLayout
+        android:id="@+id/navigationButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/infoCard">
+
+        <Button
+            android:id="@+id/btnBackToHomepage"
+            android:layout_width="169dp"
+            android:layout_height="64dp"
+            android:backgroundTint="#1A73E8"
+            android:text="@string/back_to_homepage"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

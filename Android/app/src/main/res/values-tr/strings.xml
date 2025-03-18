@@ -57,6 +57,10 @@
     <string name="profile_card_title">Profilinizi Görüntüleyin</string>
     <string name="upload_card_title">CV Yükleyin</string>
     
+    <!-- Analysis History -->
+    <string name="analysis_history_title">Analiz Geçmişi</string>
+    <string name="view_history">Geçmişi Görüntüle</string>
+    
     <!-- ProfileFragment -->
     <string name="user_details">Kullanıcı Bilgileri</string>
     <string name="name">İsim</string>

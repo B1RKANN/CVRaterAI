@@ -25,4 +25,16 @@ interface CvEvaluationApiService {
         @Part("jobRequirements") jobRequirements: RequestBody?,
         @Header("Authorization") authorization: String
     ): Response<CvEvaluationResponse>
+    
+    @GET("api/v1/cv-evaluation/user/{userId}")
+    suspend fun getUserEvaluations(
+        @Path("userId") userId: Long,
+        @Header("Authorization") authorization: String
+    ): Response<List<CvEvaluationResponse>>
+    
+    @GET("api/v1/cv-evaluation/evaluate/{id}")
+    suspend fun getEvaluationById(
+        @Path("id") id: Long,
+        @Header("Authorization") authorization: String
+    ): Response<CvEvaluationResponse>
 } 

@@ -96,6 +96,10 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="evaluationId"
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
 
     <fragment
@@ -147,6 +151,13 @@
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/firstPageFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homePageFragment_to_historyFragment"
+            app:destination="@id/historyFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -216,6 +227,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="evaluationId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <argument
+            android:name="fromHistory"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
 
     <fragment
@@ -223,5 +242,26 @@
         android:name="com.cvraterai.myapplication.AINoteFragment"
         android:label="fragment_ai_note"
         tools:layout="@layout/fragment_ai_note" />
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.cvraterai.myapplication.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_analysisFragment"
+            app:destination="@id/analysisFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_historyFragment_to_informationFragment"
+            app:destination="@id/informationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
 </navigation> 
