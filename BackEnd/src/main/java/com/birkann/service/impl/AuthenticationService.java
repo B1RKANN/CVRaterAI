@@ -76,7 +76,7 @@ public class AuthenticationService implements IAuthenticationService{
 	private RefreshToken createRefreshToken(User user) {
 		RefreshToken refreshToken = new RefreshToken();
 		refreshToken.setCreateTime(new Date());
-		refreshToken.setExpiredTime(new Date(System.currentTimeMillis()+1000*60*60*4));
+		refreshToken.setExpiredTime(new Date(System.currentTimeMillis() + 604800000)); // 7 gün (1 hafta)
 		refreshToken.setRefreshToken(UUID.randomUUID().toString());
 		refreshToken.setUser(user);
 		return refreshToken;
