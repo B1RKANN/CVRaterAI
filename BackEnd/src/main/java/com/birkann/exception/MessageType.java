@@ -17,6 +17,7 @@ public enum MessageType {
 	FILE_PROCESSING_ERROR("1013","Dosya İşleme Hatası"),
 	EVALUATION_FAILED("1014","Değerlendirme Başarısız"),
 	EVALUATION_NOT_FOUND("1015","Değerlendirme Kaydı Bulunamadı"),
+	ACCESS_DENIED("1016","Bu Kaynağa Erişim İzniniz Yok"),
 	GENERAL_EXCEPTION("9999","Genel Bir Hata Oluştu");
 	
 	private String code;

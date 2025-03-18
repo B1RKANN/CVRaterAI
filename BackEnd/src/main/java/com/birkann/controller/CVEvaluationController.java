@@ -3,6 +3,7 @@ package com.birkann.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +31,16 @@ import com.birkann.service.IUserService;
 import com.birkann.service.impl.CVEvaluationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/cv-evaluation")
+@Tag(name = "CV Değerlendirme", description = "CV değerlendirme işlemleri API'si")
 public class CVEvaluationController {
 
     private static final Logger logger = LoggerFactory.getLogger(CVEvaluationController.class);
@@ -85,167 +92,98 @@ public class CVEvaluationController {
     }
     
     /**
-     * Kullanıcının tüm değerlendirmelerini getirir
-     * 
+     * Kullanıcı ID'sine göre CV değerlendirmelerini listeler (sadece id, userId ve fullName döndürür)
      * @param userId Kullanıcı ID
-     * @return Değerlendirme listesi
+     * @return CV değerlendirme listesi (minimal)
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<CVEvaluationResponse>> getUserEvaluations(@PathVariable Long userId) {
-        // Mevcut kimlik doğrulama bilgilerini loglayalım
-        logCurrentAuthentication("getUserEvaluations");
+    @Operation(summary = "Kullanıcı ID'sine göre CV değerlendirmelerini listeler", 
+               description = "Belirtilen kullanıcının tüm CV değerlendirmelerini minimal bilgilerle (id, userId, fullName) getirir.")
+    @ApiResponse(responseCode = "200", description = "İşlem başarılı")
+    @ApiResponse(responseCode = "403", description = "Erişim reddedildi")
+    @ApiResponse(responseCode = "404", description = "Kullanıcı bulunamadı")
+    public ResponseEntity<List<Map<String, Object>>> getUserEvaluations(
+            @Parameter(description = "Kullanıcı ID", required = true) @PathVariable Long userId) {
         
-        // Kullanıcı erişim kontrolü
-        if (!userService.canAccessUser(userId)) {
-            logger.warn("Yetkisiz erişim denemesi! Kullanıcı sadece kendi değerlendirmelerine erişebilir. Erişilmek istenen kullanıcı ID: {}", userId);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        logger.debug("Kullanıcı değerlendirmeleri isteniyor. Kullanıcı ID: {}", userId);
         
-        List<CVEvaluationResponse> evaluations = cvEvaluationService.getUserEvaluations(userId);
-        
-        // JSON içeriğini dönüştür (eski formattan yeni formata)
-        if (evaluations != null && !evaluations.isEmpty()) {
-            for (CVEvaluationResponse evaluation : evaluations) {
-                try {
-                    String result = evaluation.getEvaluationResult();
-                    if (result != null && result.contains("kisiselBilgiler") && !result.contains("userInformation")) {
-                        logger.info("Eski format JSON tespit edildi, yeni formata dönüştürülüyor: {}", evaluation.getId());
-                        String convertedResult = ((CVEvaluationService)cvEvaluationService).convertToNewFormat(result);
-                        evaluation.setEvaluationResult(convertedResult);
-                    }
-                } catch (Exception e) {
-                    logger.error("JSON dönüştürme sırasında hata: {}", e.getMessage());
-                }
-            }
-        }
-        
-        return ResponseEntity.ok(evaluations);
-    }
-    
-    /**
-     * Belirli bir değerlendirme kaydını getirir
-     * 
-     * @param evaluationId Değerlendirme ID
-     * @return Değerlendirme detayları
-     */
-    @GetMapping("/{evaluationId}")
-    public ResponseEntity<CVEvaluationResponse> getEvaluation(@PathVariable Long evaluationId) {
-        // Mevcut kimlik doğrulama bilgilerini loglayalım
-        logCurrentAuthentication("getEvaluation");
-        
-        logger.info("Değerlendirme detayı istendi: {}", evaluationId);
-        
-        CVEvaluationResponse evaluation = cvEvaluationService.getEvaluation(evaluationId);
-        
-        if (evaluation == null) {
-            logger.warn("Değerlendirme bulunamadı: {}", evaluationId);
-            return ResponseEntity.notFound().build();
-        }
-        
-        // Kullanıcının ID'sini logla
-        logger.debug("Değerlendirme için kullanıcı ID: {}", evaluation.getUserId());
-        
-        // Erişim kontrolü öncesi kullanıcı servisi kontrol edilsin
+        // Giriş yapmış kullanıcıyı al
         User currentUser = userService.getCurrentUser();
-        if (currentUser != null) {
-            logger.debug("Giriş yapmış kullanıcı: id={}, email={}, role={}", 
-                    currentUser.getId(), currentUser.getEmail(), currentUser.getRole());
-        } else {
-            logger.warn("Şu anda giriş yapmış kullanıcı bulunamadı!");
+        if (currentUser == null) {
+            logger.error("Kimlik doğrulama hatası: Giriş yapmış kullanıcı bulunamadı");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         
-        // Kullanıcı erişim kontrolü - getEvaluation için problemli olan kısım
-        if (!userService.canAccessUser(evaluation.getUserId())) {
-            logger.warn("Yetkisiz erişim denemesi! evaluationId: {}, userId: {}", 
-                    evaluationId, evaluation.getUserId());
+        logger.debug("İstek yapan kullanıcı: id={}, email={}, role={}", 
+            currentUser.getId(), currentUser.getEmail(), currentUser.getRole());
+        
+        try {
+            // Kullanıcı ID'sine göre değerlendirmeleri getir (yetki kontrolü servis katmanında yapılır)
+            List<CVEvaluationResponse> evaluations = cvEvaluationService.getUserEvaluationsByUserId(currentUser.getId(), userId);
+            
+            // Sadece id, userId ve fullName içeren minimal yanıt oluştur
+            List<Map<String, Object>> minimalResponses = evaluations.stream()
+                .map(eval -> {
+                    Map<String, Object> minimalResponse = new HashMap<>();
+                    minimalResponse.put("id", eval.getId());
+                    minimalResponse.put("userId", eval.getUserId());
+                    minimalResponse.put("fullName", eval.getFullName());
+                    return minimalResponse;
+                })
+                .collect(Collectors.toList());
+                
+            return ResponseEntity.ok(minimalResponses);
+        } catch (Exception e) {
+            logger.error("Değerlendirme listesi getirme hatası: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    /**
+     * Belirli bir CV değerlendirmesini getirir
+     * @param id CV değerlendirme ID
+     * @return CV değerlendirme detayları
+     */
+    @GetMapping("/evaluate/{id}")
+    @Operation(summary = "CV değerlendirmesini getirir", 
+               description = "Belirtilen ID'ye sahip CV değerlendirmesini getirir. Admin kullanıcıları tüm değerlendirmeleri, normal kullanıcılar ise sadece kendi değerlendirmelerini görebilir.")
+    @ApiResponse(responseCode = "200", description = "İşlem başarılı",
+                content = @Content(schema = @Schema(implementation = CVEvaluationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Erişim reddedildi")
+    @ApiResponse(responseCode = "404", description = "Değerlendirme bulunamadı")
+    public ResponseEntity<CVEvaluationResponse> getEvaluation(
+            @Parameter(description = "CV değerlendirme ID", required = true) @PathVariable Long id) {
+        
+        logger.debug("CV değerlendirmesi isteniyor. ID: {}", id);
+        
+        // Giriş yapmış kullanıcıyı al
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            logger.error("Kimlik doğrulama hatası: Giriş yapmış kullanıcı bulunamadı");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        logger.debug("İstek yapan kullanıcı: id={}, email={}, role={}", 
+            currentUser.getId(), currentUser.getEmail(), currentUser.getRole());
+        
+        // Erişim kontrolü
+        if (!cvEvaluationService.canAccessEvaluation(id, currentUser.getId())) {
+            logger.warn("Erişim reddedildi. Kullanıcı ID: {}, Değerlendirme ID: {}", currentUser.getId(), id);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         
-        logger.info("Erişim izni var, değerlendirme sonucu döndürülüyor. evaluationId: {}", evaluationId);
-        
-        // JSON içeriğini dönüştür (eski formattan yeni formata)
-        if (evaluation != null && evaluation.getEvaluationResult() != null) {
-            try {
-                String result = evaluation.getEvaluationResult();
-                if (result.contains("kisiselBilgiler") && !result.contains("userInformation")) {
-                    logger.info("Eski format JSON tespit edildi, yeni formata dönüştürülüyor: {}", evaluationId);
-                    String convertedResult = ((CVEvaluationService)cvEvaluationService).convertToNewFormat(result);
-                    evaluation.setEvaluationResult(convertedResult);
-                }
-            } catch (Exception e) {
-                logger.error("JSON dönüştürme sırasında hata: {}", e.getMessage());
+        try {
+            CVEvaluationResponse evaluation = cvEvaluationService.getEvaluation(id);
+            if (evaluation == null) {
+                logger.warn("Değerlendirme bulunamadı. ID: {}", id);
+                return ResponseEntity.notFound().build();
             }
+            
+            return ResponseEntity.ok(evaluation);
+        } catch (Exception e) {
+            logger.error("Değerlendirme getirme hatası: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        
-        return ResponseEntity.ok(evaluation);
-    }
-    
-    /**
-     * Tüm CV değerlendirmelerini yeni formata dönüştürür.
-     * Bu endpoint sadece geçiş döneminde kullanılmalıdır.
-     * 
-     * @return Dönüştürülen kayıt sayısı
-     */
-    @PostMapping("/convert-to-new-format")
-    public ResponseEntity<Map<String, Object>> convertAllToNewFormat() {
-        // Mevcut kimlik doğrulama bilgilerini loglayalım
-        logCurrentAuthentication("convertAllToNewFormat");
-        
-        // Bu metot zaten Security Config'de tanımlanan ADMIN yetkisi kontrolünden geçmiş olmalı
-        int convertedCount = cvEvaluationService.convertAllToNewFormat();
-        
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", convertedCount + " değerlendirme yeni formata dönüştürüldü");
-        response.put("convertedCount", convertedCount);
-        
-        return ResponseEntity.ok(response);
-    }
-    
-    /**
-     * Mevcut değerlendirme kayıtlarının fullName alanlarını günceller
-     * @return Güncellenen kayıt sayısı
-     */
-    @PostMapping("/update-fullnames")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Map<String, Object>> updateAllFullNames() {
-        // Mevcut kimlik doğrulama bilgilerini loglayalım
-        logCurrentAuthentication("updateAllFullNames");
-        
-        int updatedCount = 0;
-        List<CVEvaluation> allEvaluations = evaluationRepository.findAll();
-        logger.info("Toplam {} değerlendirme bulundu", allEvaluations.size());
-        
-        for (CVEvaluation evaluation : allEvaluations) {
-            try {
-                String evaluationResult = evaluation.getEvaluationResult();
-                if (evaluationResult != null && !evaluationResult.isEmpty()) {
-                    Map<String, Object> evaluationMap = objectMapper.readValue(evaluationResult, Map.class);
-                    if (evaluationMap.containsKey("userInformation")) {
-                        Map<String, Object> userInfo = (Map<String, Object>) evaluationMap.get("userInformation");
-                        String name = (String) userInfo.getOrDefault("name", "");
-                        String surname = (String) userInfo.getOrDefault("surname", "");
-                        
-                        if (!name.equals("Belirtilmemiş") && !surname.equals("Belirtilmemiş")) {
-                            String fullName = name + " " + surname;
-                            evaluation.setFullName(fullName.trim());
-                            evaluationRepository.save(evaluation);
-                            logger.info("Değerlendirme #{} için fullName güncellendi: {}", evaluation.getId(), fullName);
-                            updatedCount++;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("ID {} güncelleme hatası: {}", evaluation.getId(), e.getMessage());
-            }
-        }
-        
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", updatedCount + " değerlendirme kaydı güncellendi");
-        response.put("updatedCount", updatedCount);
-        
-        return ResponseEntity.ok(response);
     }
     
     /**

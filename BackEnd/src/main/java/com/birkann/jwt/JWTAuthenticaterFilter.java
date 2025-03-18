@@ -28,9 +28,6 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticaterFilter.class);
 	
 	private static final List<String> PUBLIC_PATHS = Arrays.asList(
-		"/register",
-		"/authenticate",
-		"/refreshToken",
 		"/auth/v2/register",
 		"/auth/v2/authenticate",
 		"/auth/v2/refreshToken",

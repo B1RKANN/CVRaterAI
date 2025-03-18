@@ -17,7 +17,7 @@ public class SwaggerConfig {
 		return new OpenAPI()
 				.info(new Info()
 						.title("B1RKAN")
-						.description("öğreniyorum")).addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+						.description("CVRaterAI")).addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
 			            .components(new Components()
 			            .addSecuritySchemes("bearerAuth",new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")

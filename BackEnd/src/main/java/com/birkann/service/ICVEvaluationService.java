@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.birkann.dto.CVEvaluationRequest;
 import com.birkann.dto.CVEvaluationResponse;
+import com.birkann.dto.CVEvaluationSummaryResponse;
 
 public interface ICVEvaluationService {
     
@@ -49,4 +50,28 @@ public interface ICVEvaluationService {
      * @return Dönüştürülen kayıt sayısı
      */
     int convertAllToNewFormat();
+    
+    /**
+     * Verilen CV değerlendirme ID'sine ilgili kullanıcının erişim yetkisi olup olmadığını kontrol eder
+     * @param evaluationId Değerlendirme ID
+     * @param userId Kullanıcı ID
+     * @return Erişim yetkisi varsa true, yoksa false
+     */
+    boolean canAccessEvaluation(Long evaluationId, Long userId);
+    
+    /**
+     * Verilen kullanıcı ID'sine göre CV değerlendirmelerini listeler
+     * @param viewerId Görüntüleyen kullanıcının ID'si
+     * @param userId Değerlendirme sahibinin ID'si
+     * @return Değerlendirme listesi (yetki kontrolü yapılmış)
+     */
+    List<CVEvaluationResponse> getUserEvaluationsByUserId(Long viewerId, Long userId);
+    
+    /**
+     * Verilen kullanıcı ID'sine göre CV değerlendirmelerinin özet bilgilerini listeler
+     * @param viewerId Görüntüleyen kullanıcının ID'si
+     * @param userId Değerlendirme sahibinin ID'si
+     * @return Değerlendirme özet listesi (yetki kontrolü yapılmış)
+     */
+    List<CVEvaluationSummaryResponse> getUserEvaluationSummariesByUserId(Long viewerId, Long userId);
 } 
