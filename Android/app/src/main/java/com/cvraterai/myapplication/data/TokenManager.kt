@@ -27,7 +27,6 @@ class TokenManager @Inject constructor(@ApplicationContext private val context: 
     
     fun saveTokens(accessToken: String?, refreshToken: String?) {
         Log.d(TAG, "Saving tokens - Access Token: $accessToken, Refresh Token: $refreshToken")
-        println("Saving tokens - Access Token: $accessToken, Refresh Token: $refreshToken")
         
         try {
             val editor = sharedPreferences.edit()
@@ -36,59 +35,69 @@ class TokenManager @Inject constructor(@ApplicationContext private val context: 
             if (refreshToken != null) {
                 editor.putString(REFRESH_TOKEN_KEY, refreshToken)
                 Log.d(TAG, "Refresh token saved")
-                println("Refresh token saved")
             }
             
             // Access token null olabilir, bu durumda kaydetme
             if (accessToken != null) {
                 editor.putString(ACCESS_TOKEN_KEY, accessToken)
-                Log.d(TAG, "Access token saved")
-                println("Access token saved")
+                // Access token'ın son geçerlilik zamanını kaydet
+                val expirationTime = System.currentTimeMillis() + (60 * 60 * 1000) // 1 saat
+                editor.putLong(ACCESS_TOKEN_EXPIRATION_KEY, expirationTime)
+                Log.d(TAG, "Access token saved with expiration: $expirationTime")
             }
             
             // Değişiklikleri uygula
-            val result = editor.commit() // apply() yerine commit() kullanarak işlemin tamamlanmasını bekleyelim
+            val result = editor.commit()
             Log.d(TAG, "Save result: $result")
-            println("Save result: $result")
             
             // Kaydedilen değerleri kontrol et
             val savedAccessToken = sharedPreferences.getString(ACCESS_TOKEN_KEY, null)
             val savedRefreshToken = sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
             Log.d(TAG, "Verification - Saved Access Token: $savedAccessToken")
             Log.d(TAG, "Verification - Saved Refresh Token: $savedRefreshToken")
-            println("Verification - Saved Access Token: $savedAccessToken")
-            println("Verification - Saved Refresh Token: $savedRefreshToken")
         } catch (e: Exception) {
             Log.e(TAG, "Error saving tokens", e)
-            println("Error saving tokens: ${e.message}")
         }
     }
     
     fun getAccessToken(): String? {
         val token = sharedPreferences.getString(ACCESS_TOKEN_KEY, null)
+        val expirationTime = sharedPreferences.getLong(ACCESS_TOKEN_EXPIRATION_KEY, 0)
+        
+        // Token'ın süresi dolmuşsa null döndür
+        if (token != null && System.currentTimeMillis() > expirationTime) {
+            Log.d(TAG, "Access token expired")
+            return null
+        }
+        
         Log.d(TAG, "Getting access token: $token")
-        println("Getting access token: $token")
         return token
     }
     
     fun getRefreshToken(): String? {
         val token = sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
         Log.d(TAG, "Getting refresh token: $token")
-        println("Getting refresh token: $token")
         return token
     }
     
     fun clearTokens() {
         Log.d(TAG, "Clearing tokens")
-        println("Clearing tokens")
         sharedPreferences.edit()
             .remove(ACCESS_TOKEN_KEY)
             .remove(REFRESH_TOKEN_KEY)
+            .remove(ACCESS_TOKEN_EXPIRATION_KEY)
             .apply()
+    }
+    
+    fun isLoggedIn(): Boolean {
+        val refreshToken = getRefreshToken()
+        Log.d(TAG, "isLoggedIn - Refresh Token: $refreshToken")
+        return refreshToken != null
     }
     
     companion object {
         private const val ACCESS_TOKEN_KEY = "access_token"
         private const val REFRESH_TOKEN_KEY = "refresh_token"
+        private const val ACCESS_TOKEN_EXPIRATION_KEY = "access_token_expiration"
     }
 } 
