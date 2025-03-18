@@ -181,16 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Modalı kapat
                         closeSignInModal();
                         
-                        // Mevcut URL'yi kontrol et
-                        const currentPath = window.location.pathname;
-                        
-                        // Eğer anasayfadaysak, upload sayfasına yönlendir
-                        if (currentPath.includes('index.html') || currentPath.endsWith('/') || currentPath.endsWith('/Web/')) {
-                            window.location.href = 'public/pages/upload.html';
-                        } else {
-                            // Diğer sayfalarda sayfayı yenile
-                            window.location.reload();
-                        }
+                        // Sayfayı yenile
+                        window.location.reload();
                     } catch (error) {
                         console.error('Login error:', error);
                         alert('Giriş başarısız: ' + (error.message || 'Lütfen email ve şifrenizi kontrol edin.'));
@@ -253,16 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Modalı kapat
                         closeSignInModal();
                         
-                        // Mevcut URL'yi kontrol et
-                        const currentPath = window.location.pathname;
-                        
-                        // Eğer anasayfadaysak, upload sayfasına yönlendir
-                        if (currentPath.includes('index.html') || currentPath.endsWith('/') || currentPath.endsWith('/Web/')) {
-                            window.location.href = 'public/pages/upload.html';
-                        } else {
-                            // Diğer sayfalarda sayfayı yenile
-                            window.location.reload();
-                        }
+                        // Sayfayı yenile
+                        window.location.reload();
                     } catch (error) {
                         console.error('Register error:', error);
                         alert('Kayıt başarısız: ' + (error.message || 'Lütfen bilgilerinizi kontrol edin.'));
@@ -280,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Sayfa yüklendiğinde giriş durumunu kontrol et
     checkLoginStatus();
+    updateNavButtons();
 
     // Adım kartları için animasyon sınıfları
     const stepCards = document.querySelectorAll('.step-card');
@@ -312,54 +297,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Giriş durumunu kontrol et ve butonları güncelle
 function checkLoginStatus() {
-    // JWT token'ı ve localStorage'dan giriş durumunu kontrol et
-    const token = localStorage.getItem('jwt_token');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    console.log('Checking login status, isLoggedIn:', isLoggedIn, 'token exists:', !!token);
+    const currentPath = window.location.pathname;
     
-    if (isLoggedIn && token) {
-        // Token'ın geçerliliğini kontrol et (isteğe bağlı)
-        validateToken()
-            .then(isValid => {
-                if (isValid) {
-                    // Token geçerli, profil butonunu güncelle
-                    updateNavButtons();
-                    
-                    // Mobil menüde AnalyzingCV butonunun geçiş animasyonunu ayarla
-                    const navGroup = document.querySelector('.nav-links .nav-group');
-                    if (navGroup) {
-                        const analyzingBtn = navGroup.querySelector('a[data-analyzing-cv]');
-                        if (analyzingBtn) {
-                            // Mobil menüde AnalyzingCV butonu için transition delay ekle
-                            analyzingBtn.style.transitionDelay = '0.2s';
-                        }
-                    }
-                    
-                    // Aktif sayfayı kontrol et ve AnalyzingCV butonunu aktif yap
-                    const currentPath = window.location.pathname;
-                    if (currentPath.includes('upload.html')) {
-                        const navLinks = document.querySelectorAll('.nav-links a');
-                        navLinks.forEach(link => {
-                            if (link.getAttribute('data-analyzing-cv') === 'true') {
-                                link.classList.add('active');
-                            } else {
-                                link.classList.remove('active');
-                            }
-                        });
-                    }
-                } else {
-                    // Token geçersiz, çıkış yap
-                    logout();
-                }
-            })
-            .catch(error => {
-                console.error('Token validation error:', error);
-                // Hata durumunda çıkış yap
-                logout();
-            });
-    } else if (isLoggedIn) {
-        // Token yok ama isLoggedIn true ise, profil butonunu güncelle
-        // (Token cookie olarak saklanıyor olabilir)
+    // Nav-group'u güncelle
+    const navGroup = document.querySelector('.nav-links .nav-group');
+    if (navGroup) {
+        // Önce varsa eski Upload linklerini kaldır
+        const oldUploadLinks = navGroup.querySelectorAll('a[href*="upload.html"]');
+        oldUploadLinks.forEach(link => link.remove());
+        
+        // Eğer giriş yapılmışsa yeni Upload linki ekle
+        if (isLoggedIn) {
+            const uploadLink = document.createElement('a');
+            uploadLink.href = getRelativePath('public/pages/upload.html');
+            uploadLink.textContent = 'Upload';
+            const featuresLink = navGroup.querySelector('a[href*="features.html"]');
+            if (featuresLink) {
+                featuresLink.after(uploadLink);
+            }
+        }
+    }
+    
+    if (!isLoggedIn) {
+        // Sadece upload sayfasına erişmeye çalışırsa ana sayfaya yönlendir
+        if (currentPath.includes('upload.html')) {
+            window.location.href = '../index.html';
+        }
+    } else {
+        // Giriş yapmış kullanıcı için navbar'ı güncelle
         updateNavButtons();
     }
 }
@@ -378,69 +344,31 @@ async function validateToken() {
 
 // Butonları güncelle
 function updateNavButtons() {
-    const navButtons = document.querySelector('.nav-buttons');
-    if (navButtons) {
-        const signInBtn = navButtons.querySelector('.sign-in-btn');
-        if (signInBtn) {
-            // Sign In/Up butonunu Profile butonu ile değiştir
-            const profileBtn = document.createElement('button');
-            profileBtn.className = 'sign-in-btn';
-            profileBtn.textContent = 'PROFILE';
-            
-            // Mevcut URL'ye göre doğru yönlendirme yolunu belirle
-            const currentPath = window.location.pathname;
-            let profilePath = '';
-            let uploadPath = '';
-            
-            // Eğer ana sayfadaysak
-            if (currentPath.includes('index.html') || currentPath.endsWith('/') || currentPath.endsWith('/Web/')) {
-                profilePath = 'public/pages/profile.html';
-                uploadPath = 'public/pages/upload.html';
-            } 
-            // Eğer zaten pages klasöründeysek
-            else if (currentPath.includes('/pages/')) {
-                profilePath = 'profile.html';
-                uploadPath = 'upload.html';
-            }
-            // Diğer durumlar için
-            else {
-                profilePath = 'public/pages/profile.html';
-                uploadPath = 'public/pages/upload.html';
-            }
-            
-            profileBtn.onclick = function() {
-                window.location.href = profilePath;
-            };
-            
-            navButtons.replaceChild(profileBtn, signInBtn);
-            
-            // AnalyzingCV butonunu nav-group içine ekle
-            const navGroup = document.querySelector('.nav-links .nav-group');
-            if (navGroup) {
-                // Önce mevcut bir AnalyzingCV butonu var mı kontrol et
-                const existingAnalyzingBtn = navGroup.querySelector('a[data-analyzing-cv]');
-                if (!existingAnalyzingBtn) {
-                    const analyzingBtn = document.createElement('a');
-                    analyzingBtn.href = uploadPath;
-                    analyzingBtn.textContent = 'AnalyzingCV';
-                    analyzingBtn.setAttribute('data-analyzing-cv', 'true');
-                    
-                    // Aktif sayfayı kontrol et
-                    if (currentPath.includes('upload.html')) {
-                        analyzingBtn.classList.add('active');
-                        // Diğer butonlardan active sınıfını kaldır
-                        navGroup.querySelectorAll('a').forEach(link => {
-                            if (link !== analyzingBtn) {
-                                link.classList.remove('active');
-                            }
-                        });
+    const signInButtons = document.querySelectorAll('.sign-in-btn');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const currentPath = window.location.pathname;
+
+    signInButtons.forEach(button => {
+        if (isLoggedIn) {
+            if (currentPath.includes('profile.html')) {
+                button.textContent = 'LOGOUT';
+                button.onclick = logout;
+            } else {
+                button.textContent = 'PROFILE';
+                button.onclick = () => {
+                    // Eğer features veya pricing sayfasındaysa
+                    if (currentPath.includes('features.html') || currentPath.includes('pricing.html')) {
+                        window.location.href = 'profile.html';
+                    } else {
+                        window.location.href = getRelativePath('public/pages/profile.html');
                     }
-                    
-                    navGroup.appendChild(analyzingBtn);
-                }
+                };
             }
+        } else {
+            button.textContent = 'SIGN IN / SIGN UP';
+            button.onclick = openSignInModal;
         }
-    }
+    });
 }
 
 // Mobil menü kurulumu
@@ -770,4 +698,15 @@ async function apiRequest(url, method, data) {
         console.error('API request error:', error);
         throw error;
     }
+}
+
+// Relative path helper function
+function getRelativePath(targetPath) {
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('/public/pages/')) {
+        return targetPath;
+    } else if (currentPath.endsWith('/index.html') || currentPath.endsWith('/')) {
+        return targetPath;
+    }
+    return '../../' + targetPath;
 } 
