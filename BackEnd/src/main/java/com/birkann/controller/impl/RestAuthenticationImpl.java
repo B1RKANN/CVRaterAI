@@ -30,23 +30,19 @@ public class RestAuthenticationImpl extends RestBaseController implements IRestA
 	@Autowired
     private IAuthService authService;
 	
-	@PostMapping("/register")
 	@Override
 	public RootEntity<DtoUser> register(@Valid @RequestBody RegisterRequest input) {
-		return ok(authenticationService.register(input));
+		throw new UnsupportedOperationException("Bu endpoint artık kullanımda değil, lütfen /auth/v2/register endpoint'ini kullanın");
 	}
 
-	@PostMapping("/authenticate")
 	@Override
 	public RootEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest input) {
-		// TODO Auto-generated method stub
-		return ok(authenticationService.authenticate(input));
+		throw new UnsupportedOperationException("Bu endpoint artık kullanımda değil, lütfen /auth/v2/authenticate endpoint'ini kullanın");
 	}
 	
-	@PostMapping("/refreshToken")
 	@Override
 	public RootEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest input) {
-		return ok(authenticationService.refreshToken(input));
+		throw new UnsupportedOperationException("Bu endpoint artık kullanımda değil, lütfen /auth/v2/refreshToken endpoint'ini kullanın");
 	}
 	
 	@Override

@@ -23,12 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.birkann.dto.CVEvaluationResponse;
+import com.birkann.dto.CVEvaluationSummaryResponse;
 import com.birkann.enums.FileType;
 import com.birkann.exception.BaseException;
 import com.birkann.exception.ErrorMessage;
 import com.birkann.exception.MessageType;
 import com.birkann.model.CVEvaluation;
 import com.birkann.model.Credit;
+import com.birkann.model.Role;
 import com.birkann.model.User;
 import com.birkann.repository.CVEvaluationRepository;
 import com.birkann.repository.CreditRepository;
@@ -170,6 +172,7 @@ public class CVEvaluationService implements ICVEvaluationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CVEvaluationResponse getEvaluation(Long evaluationId) {
         logger.debug("değerlendirme getiriliyor. ID: {}", evaluationId);
         
@@ -180,6 +183,15 @@ public class CVEvaluationService implements ICVEvaluationService {
         }
         
         CVEvaluation evaluation = evaluationOptional.get();
+        
+        // LOB alanlarının yüklenmesini zorla
+        if (evaluation.getEvaluationResult() != null) {
+            evaluation.getEvaluationResult().length();
+        }
+        if (evaluation.getJobRequirements() != null) {
+            evaluation.getJobRequirements().length();
+        }
+        
         CVEvaluationResponse response = new CVEvaluationResponse();
         
         // Temel özellikleri kopyala
@@ -495,6 +507,140 @@ public class CVEvaluationService implements ICVEvaluationService {
         } catch (Exception e) {
             // Hata durumunda orijinal string'i döndür
             return oldFormatJson;
+        }
+    }
+
+    @Override
+    public boolean canAccessEvaluation(Long evaluationId, Long userId) {
+        logger.debug("CV değerlendirme erişim kontrolü. Değerlendirme ID: {}, Kullanıcı ID: {}", evaluationId, userId);
+        
+        // Admin kullanıcılar her zaman erişebilir
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.USER_NOT_FOUND, userId.toString())));
+        
+        if (user.getRole() == Role.ADMIN) {
+            logger.debug("Admin kullanıcısı, erişim izni verildi. Kullanıcı ID: {}", userId);
+            return true;
+        }
+        
+        // ID'si 1 olan kullanıcı özel durum kontrolü
+        if (userId == 1L) {
+            // Değerlendirmenin sahibini bul
+            Optional<CVEvaluation> evaluation = evaluationRepository.findById(evaluationId);
+            if (!evaluation.isPresent()) {
+                logger.warn("Değerlendirme bulunamadı. ID: {}", evaluationId);
+                return false;
+            }
+            
+            // Kullanıcının kendi değerlendirmesi değilse erişim yasak
+            if (!evaluation.get().getUser().getId().equals(userId)) {
+                logger.warn("ID'si 1 olan kullanıcı başka kullanıcının değerlendirmesine erişemez. Değerlendirme ID: {}", evaluationId);
+                return false;
+            }
+        }
+        
+        // Değerlendirmenin sahibi olup olmadığını kontrol et
+        Optional<CVEvaluation> evaluation = evaluationRepository.findById(evaluationId);
+        if (!evaluation.isPresent()) {
+            logger.warn("Değerlendirme bulunamadı. ID: {}", evaluationId);
+            return false;
+        }
+        
+        boolean hasAccess = evaluation.get().getUser().getId().equals(userId);
+        
+        if (!hasAccess) {
+            logger.warn("Erişim reddedildi. Kullanıcı ID: {}, Değerlendirme ID: {}, Değerlendirme sahibi: {}", 
+                userId, evaluationId, evaluation.get().getUser().getId());
+        }
+        
+        return hasAccess;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<CVEvaluationResponse> getUserEvaluationsByUserId(Long viewerId, Long userId) {
+        logger.debug("Kullanıcı değerlendirmeleri getiriliyor. Görüntüleyen ID: {}, Kullanıcı ID: {}", viewerId, userId);
+        
+        // Admin kullanıcıları her zaman tüm değerlendirmeleri görebilir
+        User viewer = userRepository.findById(viewerId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.USER_NOT_FOUND, viewerId.toString())));
+        
+        // ID'si 1 olan kullanıcı özel durum kontrolü
+        if (viewerId == 1L && !viewerId.equals(userId)) {
+            logger.warn("ID'si 1 olan kullanıcı başka kullanıcıların değerlendirmelerini görüntüleyemez.");
+            throw new BaseException(new ErrorMessage(MessageType.ACCESS_DENIED, "Bu kaynağa erişim izniniz yok."));
+        }
+        
+        // Normal kullanıcılar sadece kendi değerlendirmelerini görebilir
+        if (!viewer.getRole().equals(Role.ADMIN) && !viewerId.equals(userId)) {
+            logger.warn("Erişim reddedildi. Görüntüleyen ID: {}, Kullanıcı ID: {}", viewerId, userId);
+            throw new BaseException(new ErrorMessage(MessageType.ACCESS_DENIED, "Bu kaynağa erişim izniniz yok."));
+        }
+        
+        try {
+            // Değerlendirmeleri getir
+            List<CVEvaluation> evaluations = evaluationRepository.findByUserIdOrderByEvaluationDateDesc(userId);
+            
+            // LOB alanlarının yüklenmesini sağlamak için tüm alanları ilk etapta yükle
+            evaluations.forEach(eval -> {
+                if (eval.getEvaluationResult() != null) {
+                    eval.getEvaluationResult().length(); // LOB alanının yüklenmesini zorla
+                }
+                if (eval.getJobRequirements() != null) {
+                    eval.getJobRequirements().length(); // LOB alanının yüklenmesini zorla
+                }
+            });
+            
+            return evaluations.stream().map(evaluation -> {
+                CVEvaluationResponse response = new CVEvaluationResponse();
+                BeanUtils.copyProperties(evaluation, response);
+                response.setId(evaluation.getId());
+                response.setUserId(userId);
+                return response;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("Değerlendirme verileri alınırken hata: {}", e.getMessage(), e);
+            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Değerlendirme verileri alınırken hata: " + e.getMessage()));
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CVEvaluationSummaryResponse> getUserEvaluationSummariesByUserId(Long viewerId, Long userId) {
+        logger.debug("Kullanıcı değerlendirme özetleri getiriliyor. Görüntüleyen ID: {}, Kullanıcı ID: {}", viewerId, userId);
+        
+        // Admin kullanıcıları her zaman tüm değerlendirmeleri görebilir
+        User viewer = userRepository.findById(viewerId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.USER_NOT_FOUND, viewerId.toString())));
+        
+        // ID'si 1 olan kullanıcı özel durum kontrolü
+        if (viewerId == 1L && !viewerId.equals(userId)) {
+            logger.warn("ID'si 1 olan kullanıcı başka kullanıcıların değerlendirmelerini görüntüleyemez.");
+            throw new BaseException(new ErrorMessage(MessageType.ACCESS_DENIED, "Bu kaynağa erişim izniniz yok."));
+        }
+        
+        // Normal kullanıcılar sadece kendi değerlendirmelerini görebilir
+        if (!viewer.getRole().equals(Role.ADMIN) && !viewerId.equals(userId)) {
+            logger.warn("Erişim reddedildi. Görüntüleyen ID: {}, Kullanıcı ID: {}", viewerId, userId);
+            throw new BaseException(new ErrorMessage(MessageType.ACCESS_DENIED, "Bu kaynağa erişim izniniz yok."));
+        }
+        
+        try {
+            // Değerlendirmeleri getir
+            List<CVEvaluation> evaluations = evaluationRepository.findByUserIdOrderByEvaluationDateDesc(userId);
+            
+            return evaluations.stream().map(evaluation -> {
+                CVEvaluationSummaryResponse response = new CVEvaluationSummaryResponse();
+                response.setId(evaluation.getId());
+                response.setUserId(userId);
+                response.setFullName(evaluation.getFullName());
+                response.setEvaluationScore(evaluation.getEvaluationScore());
+                response.setEvaluationDate(evaluation.getEvaluationDate());
+                return response;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("Değerlendirme özet verileri alınırken hata: {}", e.getMessage(), e);
+            throw new BaseException(new ErrorMessage(MessageType.GENERAL_EXCEPTION, "Değerlendirme özet verileri alınırken hata: " + e.getMessage()));
         }
     }
 } 

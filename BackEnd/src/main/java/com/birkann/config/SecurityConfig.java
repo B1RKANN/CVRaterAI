@@ -26,9 +26,6 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	public static final String REGISTER = "/register";
-	public static final String AUTHENTICATE = "/authenticate";
-	public static final String REFRESH_TOKEN = "/refreshToken";
 	public static final String[] AUTH_V2_PATHS = {
 	    "/auth/v2/register",
 	    "/auth/v2/authenticate",
@@ -81,7 +78,6 @@ public class SecurityConfig {
 			.authorizeHttpRequests(request-> 
 				request
 				// Public endpoints - herkese açık
-				.requestMatchers(AUTHENTICATE, REGISTER, REFRESH_TOKEN).permitAll()
 				.requestMatchers(AUTH_V2_PATHS).permitAll()  // Auth v2 yollarını herkese açık yap
 				.requestMatchers(SWAGGER_PATH).permitAll()
 				// OPTIONS isteklerine izin ver

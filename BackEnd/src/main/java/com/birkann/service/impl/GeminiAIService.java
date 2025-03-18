@@ -67,18 +67,22 @@ public class GeminiAIService {
     private RestTemplate ocrRestTemplate;
     
     public GeminiAIService() {
-        this.restTemplate = new RestTemplate();
+        // Ana RestTemplate için timeout ayarları ekle
+        SimpleClientHttpRequestFactory mainRequestFactory = new SimpleClientHttpRequestFactory();
+        mainRequestFactory.setConnectTimeout(60000); // 60 saniye bağlantı zaman aşımı
+        mainRequestFactory.setReadTimeout(120000);   // 120 saniye okuma zaman aşımı
+        this.restTemplate = new RestTemplate(mainRequestFactory);
         
         // OCR API istekleri için özel RestTemplate oluştur (timeout ayarları ile)
         this.ocrRestTemplate = new RestTemplate();
         org.springframework.http.client.SimpleClientHttpRequestFactory requestFactory = 
             new org.springframework.http.client.SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(15000); // 15 saniye bağlantı zaman aşımı
-        requestFactory.setReadTimeout(15000);    // 15 saniye okuma zaman aşımı
+        requestFactory.setConnectTimeout(30000); // 30 saniye bağlantı zaman aşımı
+        requestFactory.setReadTimeout(30000);    // 30 saniye okuma zaman aşımı
         this.ocrRestTemplate.setRequestFactory(requestFactory);
         
         this.objectMapper = new ObjectMapper();
-        logger.info("GeminiAIService başlatıldı - OCR.space API ile bulut tabanlı OCR kullanılacak (Yeni API Anahtarı)");
+        logger.info("GeminiAIService başlatıldı - Arttırılmış timeout değerleriyle (120 saniye)");
     }
     
     /**
@@ -731,9 +735,10 @@ public class GeminiAIService {
             // API modelini konfigüre et - daha iyi CV analizi için ayarları optimize ettim
             Map<String, Object> generationConfig = new HashMap<>();
             generationConfig.put("temperature", 0.1);       // Daha da düşük sıcaklık - daha doğru ve kesin kişisel bilgiler için
-            generationConfig.put("maxOutputTokens", 4096);  // Daha uzun yanıtlar için token limitini arttırdım
-            generationConfig.put("topP", 0.95);             // Daha fazla kesinlik için topP değerini yükselttim
-            generationConfig.put("topK", 30);               // Daha odaklı yanıtlar için topK değerini düşürdüm
+            generationConfig.put("maxOutputTokens", 2048);  // Çıktı token sayısını optimize ettim
+            generationConfig.put("topP", 0.8);              // Daha fazla kesinlik için topP değerini optimize ettim
+            generationConfig.put("topK", 20);               // Daha odaklı yanıtlar için topK değerini optimize ettim
+            generationConfig.put("stopSequences", List.of()); // Durma dizileri yok, tüm yanıtı tamamla
             requestBody.put("generationConfig", generationConfig);
             
             // Güvenlik ayarları - sakıncalı içerik için alarm çalmasını engelle
@@ -741,60 +746,65 @@ public class GeminiAIService {
             List<Map<String, Object>> safetyList = new ArrayList<>();
             
             // Güvenlik kategori ayarları - CV analizi için önemli bilgileri engelleme
-            String[] categories = {
+            String[] safetyCategories = {
                 "HARM_CATEGORY_HARASSMENT", 
                 "HARM_CATEGORY_HATE_SPEECH", 
                 "HARM_CATEGORY_SEXUALLY_EXPLICIT", 
                 "HARM_CATEGORY_DANGEROUS_CONTENT"
             };
             
-            for (String category : categories) {
-                Map<String, Object> safety = new HashMap<>();
-                safety.put("category", category);
-                safety.put("threshold", "BLOCK_NONE"); // CV analizi için tüm içeriğe izin ver
-                safetyList.add(safety);
+            for (String category : safetyCategories) {
+                Map<String, Object> safetySetting = new HashMap<>();
+                safetySetting.put("category", category);
+                safetySetting.put("threshold", "BLOCK_NONE");
+                safetyList.add(safetySetting);
             }
             
             requestBody.put("safetySettings", safetyList);
             
-            // Tam URL 
-            String fullUrl = apiUrl + "?key=" + apiKey;
-            logger.info("API isteği gönderiliyor: {}", fullUrl.replace(apiKey, "API_KEY"));
+            // API'ye istek gönder ve cevabı al
+            logger.info("Gemini API isteği hazırlandı, istek gönderiliyor...");
+            long startTime = System.currentTimeMillis();
             
-            // İsteği gönder
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(fullUrl, request, String.class);
+            String url = apiUrl + "?key=" + apiKey;
             
-            logger.info("API yanıtı alındı. Durum kodu: {}", response.getStatusCode());
-            
-            // Tam yanıtı logla
-            logger.info("OCR.space API tam yanıtı: {}", response.getBody());
-            
-            // Yanıtı JSON olarak parse et
-            Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), Map.class);
-            
-            // Hata kontrolü
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return responseMap;
-            } else {
-                logger.error("API hatası: {}", responseMap);
-                Map<String, Object> errorResult = new HashMap<>();
-                errorResult.put("success", false);
-                errorResult.put("error", "API hatası: " + responseMap);
-                return errorResult;
+            try {
+                ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
+                
+                long endTime = System.currentTimeMillis();
+                long duration = endTime - startTime;
+                logger.info("Gemini API yanıtı alındı, süre: {} ms", duration);
+                
+                return response.getBody();
+            } catch (Exception e) {
+                logger.error("API isteği sırasında hata: {}", e.getMessage(), e);
+                
+                // Yeniden deneme mantığı
+                logger.info("API isteği yeniden deneniyor...");
+                Thread.sleep(2000); // 2 saniye bekle
+                
+                try {
+                    ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
+                    
+                    long endTime = System.currentTimeMillis();
+                    long duration = endTime - startTime;
+                    logger.info("(Yeniden deneme) Gemini API yanıtı alındı, süre: {} ms", duration);
+                    
+                    return response.getBody();
+                } catch (Exception retryEx) {
+                    logger.error("Yeniden deneme başarısız: {}", retryEx.getMessage(), retryEx);
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put("error", "API hatası: " + retryEx.getMessage());
+                    return errorResponse;
+                }
             }
-        } catch (JsonProcessingException e) {
-            logger.error("JSON işleme hatası: {}", e.getMessage(), e);
-            Map<String, Object> errorResult = new HashMap<>();
-            errorResult.put("success", false);
-            errorResult.put("error", "JSON işleme hatası: " + e.getMessage());
-            return errorResult;
+            
         } catch (Exception e) {
-            logger.error("API hatası: {}", e.getMessage(), e);
-            Map<String, Object> errorResult = new HashMap<>();
-            errorResult.put("success", false);
-            errorResult.put("error", "API hatası: " + e.getMessage());
-            return errorResult;
+            logger.error("API çağrısı hatası: {}", e.getMessage(), e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "API hatası: " + e.getMessage());
+            return errorResponse;
         }
     }
     

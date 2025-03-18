@@ -36,12 +36,13 @@ public class CreditSchedulerService {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Durum kontrol eden scheduler - 1 dakikada bir çalışır
+     * Durum kontrol eden günlük scheduler - Her gün saat 00:00'da çalışır
+     * cron = "saniye dakika saat günAyın ay haftanınGünü"
      */
-    @Scheduled(fixedRate = 60000) // Her 1 dakikada bir çalışır
+    @Scheduled(cron = "0 0 0 * * ?") // Her gün gece yarısı (00:00:00) çalışır
     public void logCreditStatus() {
-        logger.info("=== Kredi durum kontrolü başladı ===");
-        CreditController.addSchedulerLog("Kredi durum kontrolü başladı");
+        logger.info("=== Günlük kredi durum kontrolü başladı ===");
+        CreditController.addSchedulerLog("Günlük kredi durum kontrolü başladı");
         try {
             List<Credit> allCredits = creditRepository.findAll();
             logger.info("Toplam kredi sayısı: {}", allCredits.size());
@@ -67,18 +68,18 @@ public class CreditSchedulerService {
             logger.error("Kredi durum kontrolü hatası: {}", e.getMessage());
             CreditController.addSchedulerLog("Kredi durum kontrolü HATASI: " + e.getMessage());
         }
-        logger.info("=== Kredi durum kontrolü tamamlandı ===");
+        logger.info("=== Günlük kredi durum kontrolü tamamlandı ===");
     }
 
     /**
-     * JPA ile kredi resetleme - 1 dakikada bir çalışır
+     * JPA ile kredi resetleme - Her gün saat 00:05'te çalışır
      */
-    @Scheduled(fixedDelay = 60000) // Her 1 dakikada bir çalışır
+    @Scheduled(cron = "0 5 0 * * ?") // Her gün gece yarısından 5 dakika sonra çalışır
     @Transactional
     public void checkAndResetCredits() {
         Date currentDate = new Date();
-        logger.info("=== Kredi otomatik resetleme işlemi başladı - {} ===", currentDate);
-        CreditController.addSchedulerLog("Kredi otomatik resetleme işlemi başladı");
+        logger.info("=== Günlük kredi otomatik resetleme işlemi başladı - {} ===", currentDate);
+        CreditController.addSchedulerLog("Günlük kredi otomatik resetleme işlemi başladı");
         
         try {
             // Direkt olarak JDBC ile güncelleme
@@ -146,16 +147,16 @@ public class CreditSchedulerService {
             e.printStackTrace();
         }
         
-        logger.info("=== Kredi otomatik resetleme işlemi tamamlandı ===");
+        logger.info("=== Günlük kredi otomatik resetleme işlemi tamamlandı ===");
     }
     
     /**
-     * Direkt SQL ile güncelleme - 1 dakikada bir çalışır
+     * Direkt SQL ile güncelleme - Her gün saat 00:10'da çalışır
      */
-    @Scheduled(fixedDelay = 60000) // Her 1 dakikada bir çalışır
+    @Scheduled(cron = "0 10 0 * * ?") // Her gün gece yarısından 10 dakika sonra çalışır
     public void directDatabaseReset() {
-        logger.info("=== Direkt veritabanı güncelleme işlemi başladı ===");
-        CreditController.addSchedulerLog("Direkt veritabanı güncelleme işlemi başladı");
+        logger.info("=== Günlük direkt veritabanı güncelleme işlemi başladı ===");
+        CreditController.addSchedulerLog("Günlük direkt veritabanı güncelleme işlemi başladı");
         try {
             Date currentDate = new Date();
             Date newExpireDate = new Date(currentDate.getTime() + ONE_WEEK_IN_MS);
@@ -171,6 +172,6 @@ public class CreditSchedulerService {
             logger.error("Direkt veritabanı güncelleme hatası: {}", e.getMessage());
             CreditController.addSchedulerLog("Direkt veritabanı güncelleme HATASI: " + e.getMessage());
         }
-        logger.info("=== Direkt veritabanı güncelleme işlemi tamamlandı ===");
+        logger.info("=== Günlük direkt veritabanı güncelleme işlemi tamamlandı ===");
     }
 } 
