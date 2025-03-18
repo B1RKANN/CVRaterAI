@@ -94,7 +94,7 @@ class CvRequiredFragment : Fragment() {
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             binding.cardAnalyzeButton.isEnabled = !isLoading
             binding.cardAnalyzeButton.alpha = if (isLoading) 0.5f else 1.0f
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
         
         // Observe evaluation response

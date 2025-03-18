@@ -138,6 +138,10 @@ class LoginFragment : Fragment() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
         
+        if (!validateEmail(email)) {
+            return
+        }
+
         viewModel.login(email, password)
     }
     
@@ -146,6 +150,14 @@ class LoginFragment : Fragment() {
         btnLogin.isEnabled = !isLoading
         etEmail.isEnabled = !isLoading
         etPassword.isEnabled = !isLoading
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.com$"
+        val isValid = email.matches(emailPattern.toRegex())
+        
+        etEmail.error = if (isValid) null else "Geçerli bir e-posta adresi girin"
+        return isValid
     }
 
     companion object {

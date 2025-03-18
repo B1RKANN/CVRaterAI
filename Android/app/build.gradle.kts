@@ -78,6 +78,9 @@ dependencies {
     // Security for encrypted shared preferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     
+    // Lottie for animations
+    implementation("com.airbnb.android:lottie:6.3.0")
+    
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
