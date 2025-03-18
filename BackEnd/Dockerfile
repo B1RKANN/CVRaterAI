@@ -4,22 +4,8 @@ FROM openjdk:17-jdk-slim
 # Çalışma dizinini belirle
 WORKDIR /app
 
-# Maven bağımlılıklarını ekle
-COPY pom.xml ./
-COPY mvnw ./
-COPY .mvn .mvn
-
-# mvnw dosyasına çalıştırma izni ver
-RUN chmod +x ./mvnw
-
-# Uygulamayı kopyala
-COPY src src
-
-# Projeyi derle
-RUN ./mvnw clean package -DskipTests
-
-# Derleme sonucunda oluşan JAR dosyasını belirlenen konuma taşı
-RUN mkdir -p target && cp target/*.jar app.jar
+# Derlenen JAR dosyasını kopyala
+COPY target/cvraterai-0.0.1-SNAPSHOT.jar app.jar
 
 # Yüklenen dosyalar için bir volüm oluştur
 VOLUME /app/uploads

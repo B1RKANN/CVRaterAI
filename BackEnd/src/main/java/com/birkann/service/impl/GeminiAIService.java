@@ -124,7 +124,7 @@ public class GeminiAIService {
             logger.info("Prompt oluşturuldu, uzunluk: {} karakter", prompt.length());
             
             // API isteği gönder
-            Map<String, Object> response = callGeminiAPI(prompt);
+            String response = callGeminiApi(prompt);
             
             // Geçici dosyayı temizle
             Files.deleteIfExists(tempFile);
@@ -567,6 +567,21 @@ public class GeminiAIService {
             
             // GitHub API'den alınan veriler varsa ekle
             if (githubData != null && !githubData.isEmpty() && githubData.containsKey("success") && (boolean)githubData.get("success")) {
+                // Repository sayısını ekle
+                if (githubData.containsKey("repos")) {
+                    List<Map<String, Object>> repos = (List<Map<String, Object>>) githubData.get("repos");
+                    promptBuilder.append("GitHub Repository Sayısı: ").append(repos.size()).append("\n\n");
+                    
+                    // Repository isimlerini ekle
+                    promptBuilder.append("GitHub Repository'leri:\n");
+                    for (Map<String, Object> repo : repos) {
+                        if (repo.containsKey("name")) {
+                            promptBuilder.append("- ").append(repo.get("name")).append("\n");
+                        }
+                    }
+                    promptBuilder.append("\n");
+                }
+                
                 // Dil istatistikleri
                 if (githubData.containsKey("languages")) {
                     @SuppressWarnings("unchecked")
@@ -586,6 +601,16 @@ public class GeminiAIService {
             promptBuilder.append("### İŞ GEREKSİNİMLERİ ###\n");
             promptBuilder.append(jobRequirements).append("\n\n");
         }
+        
+        // Programlama dili değerlendirme kuralları ekle
+        promptBuilder.append("### PROGRAMLAMA DİLİ DEĞERLENDİRME KURALLARI ###\n");
+        promptBuilder.append("- Repository sayısı 1-2 ise bir dildeki MAX puan 50 olmalıdır\n");
+        promptBuilder.append("- Repository sayısı 3-5 ise bir dildeki MAX puan 70 olmalıdır\n");
+        promptBuilder.append("- Repository sayısı 6-10 ise bir dildeki MAX puan 90 olmalıdır\n");
+        promptBuilder.append("- Repository sayısı 10+ ise bir dildeki MAX puan 100 olabilir\n");
+        promptBuilder.append("- Eğer GitHub'da bir dil görünmüyorsa ama CV'de belirtilmişse, o dil için MAX puan 30 olmalıdır\n");
+        promptBuilder.append("- Proje isimleri basit/demo/tutorial içeriyorsa puan düşürülmelidir\n");
+        promptBuilder.append("- Kotlin, Java, Spring Boot gibi teknolojiler için puan verirken mutlaka GitHub verilerini dikkate al\n\n");
         
         // NET VE KESİN JSON FORMAT TALİMATLARI
         promptBuilder.append("ÖNEMLİ: SADECE ve SADECE aşağıdaki JSON formatında cevap ver. Bunun dışında HİÇBİR açıklama ekleme.\n\n");
@@ -613,8 +638,69 @@ public class GeminiAIService {
         promptBuilder.append("3. Başka hiçbir açıklama ekleme, sadece JSON döndür.\n");
         promptBuilder.append("4. JSON içinde Türkçe karakter kullanma.\n");
         promptBuilder.append("5. Cevabını MUTLAKA JSON biçiminde formatla - başka metin ekleme.\n");
+        promptBuilder.append("6. Programlama dilleri puanlamasında yukarıdaki DEĞERLENDİRME KURALLARI'na KESİNLİKLE uy.\n");
         
         return promptBuilder.toString();
+    }
+    
+    // callGeminiApi metodu - String parametre alıp String döndüren yeni yöntem
+    private String callGeminiApi(String prompt) {
+        try {
+            Map<String, Object> response = callGeminiAPI(prompt);
+            
+            // Başarı kontrolü
+            if (!response.containsKey("candidates") || response.get("candidates") == null) {
+                logger.error("API yanıtında candidates bulunamadı");
+                return "{}";
+            }
+            
+            List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
+            if (candidates.isEmpty()) {
+                logger.error("API yanıtındaki candidates listesi boş");
+                return "{}";
+            }
+            
+            Map<String, Object> candidate = candidates.get(0);
+            if (!candidate.containsKey("content") || candidate.get("content") == null) {
+                logger.error("API yanıtında content bulunamadı");
+                return "{}";
+            }
+            
+            Map<String, Object> content = (Map<String, Object>) candidate.get("content");
+            if (!content.containsKey("parts") || content.get("parts") == null) {
+                logger.error("API yanıtında parts bulunamadı");
+                return "{}";
+            }
+            
+            List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
+            if (parts.isEmpty() || !parts.get(0).containsKey("text") || parts.get(0).get("text") == null) {
+                logger.error("API yanıtında text bulunamadı");
+                return "{}";
+            }
+            
+            String text = (String) parts.get(0).get("text");
+            logger.info("Yanıt metni alındı, uzunluk: {}, ilk 100 karakter: {}", 
+                text.length(), 
+                text.substring(0, Math.min(100, text.length())));
+            
+            // Kontrol karakterlerini temizle (JSON parse hatası için)
+            StringBuilder cleaned = new StringBuilder();
+            for (int i = 0; i < text.length(); i++) {
+                char c = text.charAt(i);
+                if (c >= 32 || c == '\n' || c == '\r' || c == '\t') {
+                    cleaned.append(c);
+                }
+            }
+            String sanitizedText = cleaned.toString();
+            logger.info("Yanıt sanitize edildi. Orijinal uzunluk: {}, Yeni uzunluk: {}", 
+                       text.length(), sanitizedText.length());
+                
+            return sanitizedText;
+            
+        } catch (Exception e) {
+            logger.error("API çağrısı sırasında hata: {}", e.getMessage(), e);
+            return "{}";
+        }
     }
     
     /**
@@ -715,100 +801,41 @@ public class GeminiAIService {
     /**
      * API yanıtını işler
      */
-    private Map<String, Object> processResponse(Map<String, Object> response) {
+    private Map<String, Object> processResponse(String response) {
         Map<String, Object> result = new HashMap<>();
         
         try {
-            logger.debug("API yanıt anahtarları: {}", response.keySet());
-            
-            // Hata kontrolü
-            if (response.containsKey("error")) {
-                logger.error("API hata döndürdü: {}", response.get("error"));
-                result.put("success", false);
-                result.put("error", "API hatası: " + response.get("error"));
-                
-                // Hata durumunda da formatlanmış JSON döndür
+            // Boş yanıt kontrolü
+            if (response == null || response.isEmpty() || response.equals("{}")) {
+                logger.error("API boş yanıt döndürdü");
                 Map<String, Object> defaultResponse = getDefaultJsonResponse();
+                result.put("success", false);
+                result.put("error", "API boş yanıt döndürdü");
                 result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
                 return result;
             }
-            
-            // Gemini yanıtını işle
-            if (!response.containsKey("candidates") || response.get("candidates") == null) {
-                logger.error("API yanıtında candidates bulunamadı");
-                result.put("success", false);
-                result.put("error", "API yanıtında candidates bulunamadı");
-                
-                // Hata durumunda da formatlanmış JSON döndür
-                Map<String, Object> defaultResponse = getDefaultJsonResponse();
-                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
-                return result;
-            }
-            
-            List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
-            if (candidates.isEmpty()) {
-                logger.error("API yanıtındaki candidates listesi boş");
-                result.put("success", false);
-                result.put("error", "API yanıtındaki candidates listesi boş");
-                
-                // Hata durumunda da formatlanmış JSON döndür
-                Map<String, Object> defaultResponse = getDefaultJsonResponse();
-                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
-                return result;
-            }
-            
-            Map<String, Object> candidate = candidates.get(0);
-            if (!candidate.containsKey("content") || candidate.get("content") == null) {
-                logger.error("API yanıtında content bulunamadı");
-                result.put("success", false);
-                result.put("error", "API yanıtında content bulunamadı");
-                
-                // Hata durumunda da formatlanmış JSON döndür
-                Map<String, Object> defaultResponse = getDefaultJsonResponse();
-                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
-                return result;
-            }
-            
-            Map<String, Object> content = (Map<String, Object>) candidate.get("content");
-            if (!content.containsKey("parts") || content.get("parts") == null) {
-                logger.error("API yanıtında parts bulunamadı");
-                result.put("success", false);
-                result.put("error", "API yanıtında parts bulunamadı");
-                
-                // Hata durumunda da formatlanmış JSON döndür
-                Map<String, Object> defaultResponse = getDefaultJsonResponse();
-                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
-                return result;
-            }
-            
-            List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
-            if (parts.isEmpty() || !parts.get(0).containsKey("text") || parts.get(0).get("text") == null) {
-                logger.error("API yanıtında text bulunamadı");
-                result.put("success", false);
-                result.put("error", "API yanıtında text bulunamadı");
-                
-                // Hata durumunda da formatlanmış JSON döndür
-                Map<String, Object> defaultResponse = getDefaultJsonResponse();
-                result.put("evaluationResult", objectMapper.writeValueAsString(defaultResponse));
-                return result;
-            }
-            
-            String text = (String) parts.get(0).get("text");
-            logger.info("Yanıt metni alındı, uzunluk: {}, ilk 100 karakter: {}", 
-                text.length(), 
-                text.substring(0, Math.min(100, text.length())));
             
             // İlk olarak e-posta ve telefon bilgilerini bulmak için özel regex kullan
-            checkForContactInfo(text);
+            checkForContactInfo(response);
+            
+            // Kontrol karakterlerini temizle
+            StringBuilder cleaned = new StringBuilder();
+            for (int i = 0; i < response.length(); i++) {
+                char c = response.charAt(i);
+                if (c >= 32 || c == '\n' || c == '\r' || c == '\t') {
+                    cleaned.append(c);
+                }
+            }
+            response = cleaned.toString();
             
             // JSON formatında dönen yanıtı parse et
             try {
                 // JSON şablon karakterlerini temizle
-                String cleanedText = text;
+                String cleanedText = response;
                 
                 // Markdown JSON kod bloğunu temizle (```json ... ``` formatı)
-                if (text.contains("```json") || text.contains("```")) {
-                    cleanedText = text.replaceAll("```json\\s*", "").replaceAll("```\\s*", "");
+                if (response.contains("```json") || response.contains("```")) {
+                    cleanedText = response.replaceAll("```json\\s*", "").replaceAll("```\\s*", "");
                     logger.info("JSON bloğu temizlendi");
                 }
                 
@@ -820,11 +847,11 @@ public class GeminiAIService {
                     logger.warn("Yanıt geçerli bir JSON formatında değil, JSON bloğunu bulmaya çalışıyorum");
                     
                     // JSON bloğunu bulmaya çalış: {} arasındaki kısmı ara
-                    int startIndex = text.indexOf('{');
-                    int endIndex = text.lastIndexOf('}');
+                    int startIndex = response.indexOf('{');
+                    int endIndex = response.lastIndexOf('}');
                     
                     if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-                        cleanedText = text.substring(startIndex, endIndex + 1);
+                        cleanedText = response.substring(startIndex, endIndex + 1);
                         logger.info("JSON bloğu metinden çıkarıldı: {}", cleanedText.substring(0, Math.min(50, cleanedText.length())));
                     } else {
                         logger.warn("Metinde JSON formatında bir blok bulunamadı, varsayılan JSON formatı döndürülüyor");
@@ -861,7 +888,7 @@ public class GeminiAIService {
                     // Regexp ile { ve } arasındaki JSON'ı çıkarmaya çalış
                     String jsonPattern = "\\{[^\\{\\}]*(\\{[^\\{\\}]*\\})*[^\\{\\}]*\\}";
                     java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(jsonPattern);
-                    java.util.regex.Matcher matcher = pattern.matcher(text);
+                    java.util.regex.Matcher matcher = pattern.matcher(cleanedText);
                     
                     if (matcher.find()) {
                         String extractedJson = matcher.group(0);
