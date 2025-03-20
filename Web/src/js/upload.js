@@ -52,26 +52,60 @@ function showFileName(fileName) {
 }
 
 // Analyze butonu işlevselliği
-analyzeBtn.addEventListener('click', () => {
+analyzeBtn.addEventListener('click', async () => {
     if (file) {
-        // Dosya bilgilerini localStorage'a kaydet
-        localStorage.setItem('cvFileUploaded', 'true');
-        localStorage.setItem('cvFileName', file.name);
-        
-        // Form bilgilerini de kaydet
-        const requiredSkills = document.querySelector('.form-section textarea').value;
-        const githubLink = document.querySelector('.form-section input[type="text"]').value;
-        
-        if (requiredSkills) {
-            localStorage.setItem('requiredSkills', requiredSkills);
+        try {
+            // Token'dan user ID'yi al
+            const token = localStorage.getItem('jwt_token');
+            if (!token) {
+                alert('Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.');
+                return;
+            }
+
+            // Token'ı decode et ve user ID'yi al
+            const userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert('Kullanıcı bilgisi alınamadı. Lütfen tekrar giriş yapın.');
+                return;
+            }
+
+            // Form verilerini al
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const requiredSkills = document.querySelector('.form-section textarea').value;
+            const githubLink = document.querySelector('.form-section input[type="text"]').value;
+            
+            formData.append('jobRequirements', requiredSkills);
+            if (githubLink) {
+                formData.append('githubUrl', githubLink);
+            }
+
+            // API'ye istek gönder
+            const response = await fetch(`http://69.62.120.202:8080/api/v1/cv-evaluation/evaluate/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('API yanıtı başarısız: ' + response.status);
+            }
+
+            const result = await response.json();
+            
+            // Sonucu localStorage'a kaydet
+            localStorage.setItem('evaluationResult', JSON.stringify(result));
+            
+            // Loading sayfasına yönlendir
+            window.location.href = 'loading.html';
+            
+        } catch (error) {
+            console.error('CV değerlendirme hatası:', error);
+            alert('CV değerlendirme sırasında bir hata oluştu. Lütfen tekrar deneyin.');
         }
-        
-        if (githubLink) {
-            localStorage.setItem('githubLink', githubLink);
-        }
-        
-        // Yükleme ekranına yönlendir
-        window.location.href = 'loading.html';
     } else {
         // Dosya yüklenmemişse uyarı göster
         alert('Lütfen önce bir CV dosyası yükleyin.');
@@ -87,6 +121,23 @@ analyzeBtn.addEventListener('click', () => {
         }, 2000);
     }
 });
+
+// JWT token'dan user ID çıkarma
+function getUserIdFromToken(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        const payload = JSON.parse(jsonPayload);
+        return payload.userId || payload.user_id || payload.id || payload.sub;
+    } catch (error) {
+        console.error('Token decode hatası:', error);
+        return null;
+    }
+}
 
 // Sayfa yüklendiğinde dosya yükleme durumunu kontrol et
 document.addEventListener('DOMContentLoaded', function() {

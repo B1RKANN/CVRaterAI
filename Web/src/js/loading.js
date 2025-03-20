@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // API yanıtını kontrol et
+    const evaluationResult = localStorage.getItem('evaluationResult');
+    if (evaluationResult) {
+        // Sonuç sayfasına yönlendir
+        window.location.href = 'result.html';
+        return;
+    }
+    
     // Dosya yüklenmiş mi kontrol et
     const fileUploaded = localStorage.getItem('cvFileUploaded') === 'true';
     
@@ -50,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Simüle edilmiş yükleme süreci
     const simulateLoading = () => {
-        // 1. Adım: CV verilerini çıkarma (0-20%)
         setTimeout(() => {
             updateStep(0, 'active');
             
@@ -59,8 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateProgress(progress + 1);
                 } else {
                     clearInterval(interval1);
-                    
-                    // 2. Adım: Becerileri analiz etme (20-40%)
                     updateStep(1, 'active');
                     
                     const interval2 = setInterval(() => {
@@ -68,8 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             updateProgress(progress + 1);
                         } else {
                             clearInterval(interval2);
-                            
-                            // 3. Adım: Deneyimi değerlendirme (40-60%)
                             updateStep(2, 'active');
                             
                             const interval3 = setInterval(() => {
@@ -77,8 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     updateProgress(progress + 1);
                                 } else {
                                     clearInterval(interval3);
-                                    
-                                    // 4. Adım: Uyumluluğu hesaplama (60-80%)
                                     updateStep(3, 'active');
                                     
                                     const interval4 = setInterval(() => {
@@ -86,8 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                             updateProgress(progress + 1);
                                         } else {
                                             clearInterval(interval4);
-                                            
-                                            // 5. Adım: Rapor oluşturma (80-100%)
                                             updateStep(4, 'active');
                                             
                                             const interval5 = setInterval(() => {
@@ -95,11 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     updateProgress(progress + 1);
                                                 } else {
                                                     clearInterval(interval5);
-                                                    
-                                                    // Yükleme tamamlandı, sonuç sayfasına yönlendir
-                                                    setTimeout(() => {
-                                                        window.location.href = 'result.html';
-                                                    }, 1000);
+                                                    window.location.href = 'result.html';
                                                 }
                                             }, 100);
                                         }
