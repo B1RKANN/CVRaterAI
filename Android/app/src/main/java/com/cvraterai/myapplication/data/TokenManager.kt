@@ -67,6 +67,11 @@ class TokenManager @Inject constructor(@ApplicationContext private val context: 
         // Token'ın süresi dolmuşsa null döndür
         if (token != null && System.currentTimeMillis() > expirationTime) {
             Log.d(TAG, "Access token expired")
+            // Access token'ı sil
+            sharedPreferences.edit()
+                .remove(ACCESS_TOKEN_KEY)
+                .remove(ACCESS_TOKEN_EXPIRATION_KEY)
+                .apply()
             return null
         }
         
@@ -85,6 +90,14 @@ class TokenManager @Inject constructor(@ApplicationContext private val context: 
         sharedPreferences.edit()
             .remove(ACCESS_TOKEN_KEY)
             .remove(REFRESH_TOKEN_KEY)
+            .remove(ACCESS_TOKEN_EXPIRATION_KEY)
+            .apply()
+    }
+    
+    fun clearAccessToken() {
+        Log.d(TAG, "Clearing access token")
+        sharedPreferences.edit()
+            .remove(ACCESS_TOKEN_KEY)
             .remove(ACCESS_TOKEN_EXPIRATION_KEY)
             .apply()
     }

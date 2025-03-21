@@ -8,6 +8,8 @@ import com.cvraterai.myapplication.data.model.LoginRequest
 import com.cvraterai.myapplication.data.model.RefreshTokenRequest
 import com.cvraterai.myapplication.data.model.RegisterRequest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
@@ -152,6 +154,8 @@ class AuthRepository @Inject constructor(
                 val refreshToken = tokenManager.getRefreshToken()
                     ?: return@withContext Result.failure(Exception("No refresh token available"))
                 
+                Log.d(TAG, "Attempting to refresh token with: $refreshToken")
+                
                 val response = authApiService.refreshToken(
                     RefreshTokenRequest(refreshToken)
                 )
@@ -164,8 +168,6 @@ class AuthRepository @Inject constructor(
                         
                         Log.d(TAG, "Refresh Token - Effective Access Token: $accessToken")
                         Log.d(TAG, "Refresh Token - Effective Refresh Token: $newRefreshToken")
-                        println("Refresh Token - Effective Access Token: $accessToken")
-                        println("Refresh Token - Effective Refresh Token: $newRefreshToken")
                         
                         // Token'ları saklayalım
                         if (newRefreshToken != null) {
@@ -175,8 +177,8 @@ class AuthRepository @Inject constructor(
                             tokenManager.saveTokens(accessToken, refreshToken)
                         }
                         
-                        Result.success(authResponse)
-                    } ?: Result.failure(Exception("Empty response body"))
+                        return@withContext Result.success(authResponse)
+                    } ?: return@withContext Result.failure(Exception("Empty response body"))
                 } else {
                     // Refresh token geçersiz olabilir, kullanıcıyı çıkış yaptıralım
                     if (response.code() == 401) {
@@ -188,12 +190,11 @@ class AuthRepository @Inject constructor(
                     } catch (e: Exception) {
                         "Token yenileme başarısız"
                     }
-                    Result.failure(Exception(errorMessage))
+                    return@withContext Result.failure(Exception(errorMessage))
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Refresh token error", e)
-                println("Refresh token error: ${e.message}")
-                Result.failure(e)
+                return@withContext Result.failure(e)
             }
         }
     }
@@ -210,6 +211,24 @@ class AuthRepository @Inject constructor(
         Log.d(TAG, "isLoggedIn - Refresh Token: $refreshToken")
         println("isLoggedIn - Access Token: $accessToken")
         println("isLoggedIn - Refresh Token: $refreshToken")
+        
+        // Eğer refresh token varsa ve access token yoksa, refresh token işlemini başlat
+        if (refreshToken != null && accessToken == null) {
+            Log.d(TAG, "Access token is null but refresh token exists, initiating refresh")
+            // Coroutine scope'da refresh token işlemini başlat
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val result = refreshToken()
+                    if (result.isSuccess) {
+                        Log.d(TAG, "Token refresh successful")
+                    } else {
+                        Log.e(TAG, "Token refresh failed: ${result.exceptionOrNull()?.message}")
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Token refresh error", e)
+                }
+            }
+        }
         
         // Eğer refresh token varsa, kullanıcı giriş yapmış sayılır
         // Access token yoksa bile refresh token ile yeni bir access token alınabilir
