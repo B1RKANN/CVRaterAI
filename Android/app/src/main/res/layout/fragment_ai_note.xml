@@ -135,7 +135,8 @@
             android:overScrollMode="always"
             android:clickable="true"
             android:focusable="true"
-            android:nestedScrollingEnabled="true">
+            android:descendantFocusability="blocksDescendants"
+            android:nestedScrollingEnabled="false">
 
             <TextView
                 android:id="@+id/tvNoteContent"
@@ -147,8 +148,8 @@
                 android:text="Yunus Yeşilördek yazılım mühendisliği alanında eğitimine devam eden bazı alanlar üzerine deneyim kazanmış bir adaydır. Java, Kotlin, Android ve web teknolojilerine hakim olup, çok dilli yetkinliğiyle küresel projelere adapte olabilir. Teknik becerilerini staj ve projelerle destekleyerek kariyerine güçlü bir başlangıç yapma potansiyeline sahiptir"
                 android:textColor="@color/background_light"
                 android:textSize="20sp"
-                android:clickable="true"
-                android:focusable="true" />
+                android:clickable="false"
+                android:focusable="false" />
 
         </ScrollView>
 

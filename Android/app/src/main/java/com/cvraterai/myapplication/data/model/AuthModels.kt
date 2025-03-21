@@ -15,7 +15,7 @@ data class LoginRequest(
 )
 
 data class RefreshTokenRequest(
-    val refreshToken: String
+    @SerializedName("refreshToken") val refreshToken: String
 )
 
 // Yanıt modelleri

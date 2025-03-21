@@ -28,9 +28,9 @@
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="298dp"
-                android:layout_height="45dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:elevation="6dp"
                 android:fontFamily="@font/poppins_bold"
                 android:shadowColor="#40000000"
@@ -40,20 +40,25 @@
                 android:text="Değerlendirme Geçmişi"
                 android:textColor="@color/white"
                 android:textSize="22sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnBack"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/rounded_button_background"
                 android:contentDescription="Geri"
                 android:padding="12dp"
                 android:src="@drawable/ic_arrow_back"
                 android:tint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
