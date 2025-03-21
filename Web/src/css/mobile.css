@@ -168,8 +168,7 @@
     
     /* Mobil butonlar */
     .mobile-buttons {
-        display: none;
-        flex-direction: column;
+        display: none !important;
         position: fixed;
         bottom: 80px;
         left: 0;
@@ -179,15 +178,13 @@
         gap: 15px;
         padding: 0 20px;
         opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.4s ease, transform 0.4s ease;
     }
     
-    .nav-links.mobile-menu.active ~ .mobile-buttons,
     .mobile-buttons.active {
+        display: flex !important;
         opacity: 1;
-        transform: translateY(0);
-        display: flex;
+        animation: none !important;
+        transform: none !important;
     }
     
     .mobile-buttons button {
