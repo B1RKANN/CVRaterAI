@@ -135,6 +135,56 @@
     <script src="../../script.js"></script>
     <script src="../../src/js/upload.js"></script>
     <script src="../../src/js/animations.js"></script>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="loading-modal">
+        <div class="loading-content">
+            <h1>Analyzing Your CV</h1>
+            
+            <div class="loading-animation">
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+            </div>
+            
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">0%</div>
+            </div>
+            
+            <div class="loading-steps">
+                <div class="step" data-step="1">
+                    <div class="step-icon">1</div>
+                    <div class="step-text">Extracting CV data</div>
+                    <div class="step-status"></div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-icon">2</div>
+                    <div class="step-text">Analyzing skills</div>
+                    <div class="step-status"></div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-icon">3</div>
+                    <div class="step-text">Evaluating experience</div>
+                    <div class="step-status"></div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-icon">4</div>
+                    <div class="step-text">Calculating compatibility</div>
+                    <div class="step-status"></div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-icon">5</div>
+                    <div class="step-text">Generating report</div>
+                    <div class="step-status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         // Mobil menü kurulumu
         document.addEventListener('DOMContentLoaded', function() {
