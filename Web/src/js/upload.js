@@ -55,10 +55,28 @@ function showFileName(fileName) {
 analyzeBtn.addEventListener('click', async () => {
     if (file) {
         try {
+            // Loading modal'ı göster
+            const loadingModal = document.querySelector('#loadingModal');
+            if (loadingModal) {
+                loadingModal.style.display = 'flex';
+                
+                // İlerleme çubuğunu ve adımları sıfırla
+                const progressFill = document.querySelector('.progress-fill');
+                if (progressFill) {
+                    progressFill.style.width = '0%';
+                }
+                
+                const steps = document.querySelectorAll('.step');
+                steps.forEach(step => {
+                    step.classList.remove('active', 'completed');
+                });
+            }
+            
             // Token'dan user ID'yi al
             const token = localStorage.getItem('jwt_token');
             if (!token) {
                 alert('Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.');
+                if (loadingModal) loadingModal.style.display = 'none';
                 return;
             }
 
@@ -66,9 +84,14 @@ analyzeBtn.addEventListener('click', async () => {
             const userId = getUserIdFromToken(token);
             if (!userId) {
                 alert('Kullanıcı bilgisi alınamadı. Lütfen tekrar giriş yapın.');
+                if (loadingModal) loadingModal.style.display = 'none';
                 return;
             }
 
+            // İlerleme adımları için animasyonlu gösterim
+            // 1. Adım: CV Verilerini Çıkarma
+            updateProgress(20, 0);
+            
             // Form verilerini al
             const formData = new FormData();
             formData.append('file', file);
@@ -81,9 +104,22 @@ analyzeBtn.addEventListener('click', async () => {
                 formData.append('githubUrl', githubLink);
             }
             
-            // Form verilerinin localStorage'da kalmamasını sağla
+             // Form verilerinin localStorage'da kalmamasını sağla
             localStorage.removeItem('requiredSkills');
             localStorage.removeItem('githubLink');
+  
+            // Form verilerini localStorage'a kaydet
+            localStorage.setItem('requiredSkills', requiredSkills);
+            localStorage.setItem('githubLink', githubLink);
+
+            // 2. Adım: Beceri Analizi
+            setTimeout(() => updateProgress(40, 1), 1000);
+            
+            // 3. Adım: Deneyim Değerlendirmesi
+            setTimeout(() => updateProgress(60, 2), 2000);
+
+            // 4. Adım: Uyumluluk Hesaplama
+            setTimeout(() => updateProgress(80, 3), 3000);
 
             // API'ye istek gönder
             const response = await fetch(`http://69.62.120.202:8080/api/v1/cv-evaluation/evaluate/${userId}`, {
@@ -103,12 +139,23 @@ analyzeBtn.addEventListener('click', async () => {
             // Sonucu localStorage'a kaydet
             localStorage.setItem('evaluationResult', JSON.stringify(result));
             
-            // Loading sayfasına yönlendir
-            window.location.href = 'loading.html';
+            // 5. Adım: Rapor Oluşturma
+            updateProgress(100, 4);
+            
+            // Kısa bir gecikme sonrası sonuç sayfasına yönlendir
+            setTimeout(() => {
+                window.location.href = 'result.html';
+            }, 1000);
             
         } catch (error) {
             console.error('CV değerlendirme hatası:', error);
             alert('CV değerlendirme sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+            
+            // Hata durumunda loading modal'ı kapat
+            const loadingModal = document.querySelector('#loadingModal');
+            if (loadingModal) {
+                loadingModal.style.display = 'none';
+            }
         }
     } else {
         // Dosya yüklenmemişse uyarı göster
@@ -125,6 +172,35 @@ analyzeBtn.addEventListener('click', async () => {
         }, 2000);
     }
 });
+
+// İlerleme çubuğu ve adım güncelleme fonksiyonu
+function updateProgress(percentage, stepIndex) {
+    const progressBar = document.querySelector('.progress-fill');
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+    }
+    
+    const progressText = document.querySelector('.progress-text');
+    if (progressText) {
+        progressText.textContent = percentage + '%';
+    }
+    
+    const steps = document.querySelectorAll('.step');
+    if (steps.length > 0) {
+        // Önceki adımları tamamlandı olarak işaretle
+        for (let i = 0; i < stepIndex; i++) {
+            if (i < steps.length) {
+                steps[i].classList.remove('active');
+                steps[i].classList.add('completed');
+            }
+        }
+        
+        // Aktif adımı işaretle
+        if (stepIndex < steps.length) {
+            steps[stepIndex].classList.add('active');
+        }
+    }
+}
 
 // JWT token'dan user ID çıkarma
 function getUserIdFromToken(token) {

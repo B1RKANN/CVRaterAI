@@ -128,6 +128,7 @@ public class CVEvaluationController {
                     minimalResponse.put("id", eval.getId());
                     minimalResponse.put("userId", eval.getUserId());
                     minimalResponse.put("fullName", eval.getFullName());
+                    minimalResponse.put("date", eval.getEvaluationDate());
                     return minimalResponse;
                 })
                 .collect(Collectors.toList());

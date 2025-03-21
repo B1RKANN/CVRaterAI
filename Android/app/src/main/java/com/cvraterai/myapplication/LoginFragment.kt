@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.cvraterai.myapplication.databinding.FragmentLoginBinding
 import com.cvraterai.myapplication.ui.auth.LoginState
 import com.cvraterai.myapplication.ui.auth.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.material.snackbar.Snackbar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +39,10 @@ class LoginFragment : Fragment() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: CardView
-    private lateinit var tvRegister: TextView
     private lateinit var progressBar: ProgressBar
+    
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
     
     private val viewModel: LoginViewModel by viewModels()
 
@@ -54,20 +57,20 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+    ): View {
+        // View binding kullanarak layout inflate et
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
         // UI bileşenlerini başlat
-        etEmail = view.findViewById(R.id.etEmail)
-        etPassword = view.findViewById(R.id.etPassword)
-        btnLogin = view.findViewById(R.id.btnLogin)
-        tvRegister = view.findViewById(R.id.tvRegister)
-        progressBar = view.findViewById(R.id.progressBar)
+        etEmail = binding.etEmail
+        etPassword = binding.etPassword
+        btnLogin = binding.btnLogin
+        progressBar = binding.progressBar
         
         // Otomatik giriş kontrolü
         if (viewModel.isLoggedIn()) {
@@ -84,11 +87,11 @@ class LoginFragment : Fragment() {
         // Giriş butonuna tıklama olayını ayarla
         btnLogin.setOnClickListener {
             // Giriş işlemini gerçekleştir
-            performLogin()
+            validateAndLogin()
         }
         
         // Kayıt ol metnine tıklama olayını ayarla
-        tvRegister.setOnClickListener {
+        binding.tvRegister.setOnClickListener {
             // RegisterFragment'a geçiş yap
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
@@ -123,26 +126,102 @@ class LoginFragment : Fragment() {
                     println("Saved Access Token: ${viewModel.getAccessToken()}")
                     println("Saved Refresh Token: ${viewModel.getRefreshToken()}")
                     
-                    Toast.makeText(requireContext(), "Giriş başarılı!", Toast.LENGTH_SHORT).show()
+                    // Toast yerine navigate doğrudan yapılıyor
                     findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
                 }
                 is LoginState.Error -> {
                     showLoading(false)
-                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                    handleLoginError(state.message)
                 }
             }
         }
     }
     
-    private fun performLogin() {
+    private fun validateAndLogin() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
         
-        if (!validateEmail(email)) {
-            return
+        // Reset error states
+        etEmail.isActivated = false
+        etPassword.isActivated = false
+        binding.tvEmailError.visibility = View.GONE
+        binding.tvPasswordError.visibility = View.GONE
+        
+        var isValid = true
+        
+        // Email format doğrulama
+        if (email.isEmpty()) {
+            etEmail.isActivated = true
+            binding.tvEmailError.text = getString(R.string.email_required)
+            binding.tvEmailError.visibility = View.VISIBLE
+            isValid = false
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.isActivated = true
+            binding.tvEmailError.text = getString(R.string.email_error)
+            binding.tvEmailError.visibility = View.VISIBLE
+            isValid = false
         }
-
-        viewModel.login(email, password)
+        
+        // Şifre doğrulama
+        if (password.isEmpty()) {
+            etPassword.isActivated = true
+            binding.tvPasswordError.text = getString(R.string.password_required)
+            binding.tvPasswordError.visibility = View.VISIBLE
+            isValid = false
+        } else if (password.length < 6) {
+            etPassword.isActivated = true
+            binding.tvPasswordError.text = getString(R.string.password_error)
+            binding.tvPasswordError.visibility = View.VISIBLE
+            isValid = false
+        }
+        
+        if (isValid) {
+            // Show loading indicator
+            progressBar.visibility = View.VISIBLE
+            btnLogin.isEnabled = false
+            
+            // Attempt login
+            viewModel.login(email, password)
+        }
+    }
+    
+    private fun handleLoginError(errorMessage: String) {
+        // Hide loading indicator
+        progressBar.visibility = View.GONE
+        btnLogin.isEnabled = true
+        
+        // Reset previous errors
+        etEmail.isActivated = false
+        etPassword.isActivated = false
+        binding.tvEmailError.visibility = View.GONE
+        binding.tvPasswordError.visibility = View.GONE
+        
+        Log.d(TAG, "Login Error Message: $errorMessage") // Error mesajını log'a yazdır
+        
+        // İstenilen genel hata gösterimi: Her iki alan da kırmızı olsun ve genel bir hata mesajı gösterilsin
+        // Sadece ağ hatası durumunda farklı davranıyoruz
+        if (errorMessage.lowercase().contains("network") ||
+            errorMessage.lowercase().contains("internet") ||
+            errorMessage.lowercase().contains("connection") ||
+            errorMessage.lowercase().contains("bağlantı") ||
+            errorMessage.lowercase().contains("timeout") ||
+            errorMessage.lowercase().contains("zaman aşımı") ||
+            errorMessage.lowercase().contains("socket") ||
+            errorMessage.lowercase().contains("host")) {
+            
+            Snackbar.make(requireView(), getString(R.string.network_error), Snackbar.LENGTH_SHORT).show()
+        } else {
+            // E-posta veya şifre hatası - her iki alanı da aktifleştir
+            etEmail.isActivated = true
+            etPassword.isActivated = true
+            
+            // Her iki alandaki hata mesajı gösterilsin
+            binding.tvEmailError.text = getString(R.string.wrong_credentials_error)
+            binding.tvPasswordError.text = getString(R.string.wrong_credentials_error)
+            
+            binding.tvEmailError.visibility = View.VISIBLE
+            binding.tvPasswordError.visibility = View.VISIBLE
+        }
     }
     
     private fun showLoading(isLoading: Boolean) {
@@ -152,12 +231,9 @@ class LoginFragment : Fragment() {
         etPassword.isEnabled = !isLoading
     }
 
-    private fun validateEmail(email: String): Boolean {
-        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.com$"
-        val isValid = email.matches(emailPattern.toRegex())
-        
-        etEmail.error = if (isValid) null else "Geçerli bir e-posta adresi girin"
-        return isValid
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

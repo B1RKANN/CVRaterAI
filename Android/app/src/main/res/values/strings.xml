@@ -25,19 +25,33 @@
 
     <!-- LoginFragment -->
     <string name="login_title">Login</string>
-    <string name="login_welcome">Welcome to CVRaterAI</string>
+    <string name="login_welcome">Welcome Back</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="login_button">Login</string>
     <string name="register_prompt">Don\'t have an account?</string>
     <string name="register_action">Register</string>
+    <string name="email_error">Please enter a valid email address</string>
+    <string name="email_required">Email is required</string>
+    <string name="password_error">Password must be at least 6 characters</string>
+    <string name="password_required">Password is required</string>
+    <string name="login_success">Login successful!</string>
+    <string name="wrong_credentials_error">Invalid email or password</string>
+    <string name="account_not_found_error">Email not registered</string>
+    <string name="network_error">Network error. Please check your connection</string>
+    <string name="general_error">An error occurred. Please try again</string>
 
     <!-- RegisterFragment -->
-    <string name="register_hello">Hello, Friend!</string>
+    <string name="register_hello">Hello!</string>
+    <string name="user_name">Name</string>
     <string name="surname">Surname</string>
+    <string name="email">Email</string>
     <string name="sign_up">Sign Up</string>
-    <string name="have_account">Do you already have an account? Login</string>
-    <string name="or">or</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="or">OR</string>
+    <string name="name_error">Please enter your name</string>
+    <string name="surname_error">Please enter your surname</string>
+    <string name="register_success">Registration successful! You can now login.</string>
 
     <!-- InformationFragment -->
     <string name="user_information">User Information</string>
@@ -60,8 +74,8 @@
 
     <!-- ProfileFragment -->
     <string name="user_details">User Details</string>
-    <string name="name">Name</string>
-    <string name="email">Email</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_email">Email</string>
     <string name="credit">Credit</string>
     <string name="free">FREE</string>
 
@@ -100,4 +114,11 @@
     <!-- Analysis History -->
     <string name="analysis_history_title">Analysis History</string>
     <string name="view_history">View History</string>
+
+    <!-- History strings -->
+    <string name="evaluation_history">Evaluation History</string>
+    <string name="back">Back</string>
+    <string name="no_evaluations">No evaluations found</string>
+    <string name="view_details">Details</string>
+    <string name="candidate_name">Full Name</string>
 </resources>

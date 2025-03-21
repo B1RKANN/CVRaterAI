@@ -1,5 +1,12 @@
 // Common animations for all pages
 document.addEventListener('DOMContentLoaded', () => {
+    // Kesinlikle mobil butonların gizli olduğundan emin ol
+    const mobileButtons = document.querySelector('.mobile-buttons');
+    if (mobileButtons) {
+        mobileButtons.style.display = 'none';
+        mobileButtons.style.opacity = '0';
+    }
+    
     // Wait a short time to ensure the page is fully loaded
     setTimeout(() => {
         // Intersection Observer for fade-in animations
@@ -185,5 +192,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 300 + (index * 200));
             });
         }
-    }, 100); // Short delay to ensure DOM is fully processed
+    }, 50); // Daha kısa bir süre
 }); 

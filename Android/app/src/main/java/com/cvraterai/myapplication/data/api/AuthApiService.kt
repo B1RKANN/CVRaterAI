@@ -17,4 +17,7 @@ interface AuthApiService {
     
     @POST("auth/v2/refreshToken")
     suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Response<AuthResponse>
+    
+    @POST("auth/v2/refreshToken")
+    fun refreshTokenSync(@Body refreshTokenRequest: RefreshTokenRequest): retrofit2.Call<AuthResponse>
 } 
