@@ -104,7 +104,7 @@
     <string name="strengths">Güçlü Yönler</string>
     <string name="weaknesses">Geliştirilmesi Gereken Yönler</string>
     <string name="recommendations">Öneriler</string>
-    <string name="programming_language_analysis">Programlama dili analizi</string>
+    <string name="programming_language_analysis">Yetenek analizi</string>
     <string name="compatibility_status">Uyumluluk Durumu</string>
     <string name="logout">Çıkış Yap</string>
     
@@ -114,4 +114,13 @@
     <string name="no_evaluations">Değerlendirme bulunamadı</string>
     <string name="view_details">Detaylar</string>
     <string name="candidate_name">Ad Soyad</string>
+    
+    <!-- Date Categories -->
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+    <string name="this_week">Bu Hafta</string>
+    <string name="last_week">Geçen Hafta</string>
+    <string name="this_month">Bu Ay</string>
+    <string name="last_month">Geçen Ay</string>
+    <string name="older">Daha Eski</string>
 </resources> 

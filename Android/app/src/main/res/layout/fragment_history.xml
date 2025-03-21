@@ -63,7 +63,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Evaluations List -->
+    <!-- Evaluations List with Categories -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvaluations"
         android:layout_width="match_parent"
@@ -72,8 +72,11 @@
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerCard" />
+        app:layout_constraintTop_toBottomOf="@id/headerCard"
+        tools:listitem="@layout/item_evaluation" 
+        tools:itemCount="5"/>
 
     <!-- Empty State View -->
     <LinearLayout
