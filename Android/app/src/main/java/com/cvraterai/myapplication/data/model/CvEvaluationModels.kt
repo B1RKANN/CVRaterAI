@@ -22,7 +22,8 @@ data class CvEvaluationResponse(
     @SerializedName("evaluationScore") val evaluationScore: Int,
     @SerializedName("evaluationResult") val evaluationResult: String,
     @SerializedName("evaluationDate") val evaluationDate: String,
-    @SerializedName("fullName") val fullName: String
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("date") val date: String
 ) {
     // Değerlendirme sonucunu JSON'dan alınan veri olarak işlememizi sağlayan metod
     fun getEvaluationResultJson(): String {
@@ -32,6 +33,23 @@ data class CvEvaluationResponse(
     // Değerlendirme puanını yüzdelik değer olarak işlememizi sağlayan metod
     fun getScorePercentage(): Int {
         return evaluationScore
+    }
+    
+    // Date string'ini zaman damgasına (timestamp) çevirme
+    fun getDateTimestamp(): Long {
+        return try {
+            val formatter = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
+            formatter.parse(date)?.time ?: System.currentTimeMillis()
+        } catch (e: Exception) {
+            try {
+                // Alternatif format denemesi (ISO 8601)
+                val formatter = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault())
+                formatter.timeZone = java.util.TimeZone.getTimeZone("UTC")
+                formatter.parse(date)?.time ?: System.currentTimeMillis()
+            } catch (e: Exception) {
+                System.currentTimeMillis() // Çözümlenemezse şu anki zaman
+            }
+        }
     }
 }
 

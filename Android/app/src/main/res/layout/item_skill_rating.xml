@@ -18,10 +18,11 @@
         android:text="Programming Language"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:gravity="start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tvRatingPercentage"
-        app:layout_constraintWidth_percent="0.6"
+        android:layout_marginEnd="16dp"
         tools:text="Programming Language" />
 
     <LinearLayout

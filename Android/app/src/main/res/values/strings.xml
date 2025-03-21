@@ -101,7 +101,7 @@
     <string name="strengths">Strengths</string>
     <string name="weaknesses">Areas for Improvement</string>
     <string name="recommendations">Recommendations</string>
-    <string name="programming_language_analysis">Programming language analysis</string>
+    <string name="programming_language_analysis">Talent analysis</string>
     <string name="compatibility_status">Compatibility Status</string>
     <string name="logout">Logout</string>
 
@@ -121,4 +121,14 @@
     <string name="no_evaluations">No evaluations found</string>
     <string name="view_details">Details</string>
     <string name="candidate_name">Full Name</string>
+    
+    <!-- Date Categories -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This Week</string>
+    <string name="last_week">Last Week</string>
+    <string name="this_month">This Month</string>
+    <string name="last_month">Last Month</string>
+    <string name="older">Older</string>
+
 </resources>

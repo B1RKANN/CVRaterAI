@@ -93,6 +93,9 @@ class InformationFragment : Fragment(), GestureDetector.OnGestureListener {
         
         // Anasayfaya dön butonuna tıklama olayını ayarla
         view.findViewById<Button>(R.id.btnBackToHomepage)?.setOnClickListener {
+            // Animasyonları resetle - history sayfasından tekrar bakılırsa animasyonlar görünsün
+            AnalysisFragment.animationsPlayed = false
+            
             if (fromHistory) {
                 // Geçmişten geldiysek, geçmiş ekranına geri dön
                 findNavController().navigateUp()

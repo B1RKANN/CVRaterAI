@@ -5,18 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.LinearLayout
 import android.widget.ImageButton
 import androidx.core.os.bundleOf
-import androidx.core.view.GestureDetectorCompat
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.cvraterai.myapplication.adapter.SkillRatingAdapter
 import com.cvraterai.myapplication.databinding.FragmentAnalysisBinding
 import com.cvraterai.myapplication.model.SkillRating
 import org.json.JSONObject
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import android.widget.ProgressBar
+import android.animation.ValueAnimator
+import android.view.animation.DecelerateInterpolator
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,16 +33,26 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AnalysisFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
+class AnalysisFragment : Fragment() {
     private var _binding: FragmentAnalysisBinding? = null
     private val binding get() = _binding!!
-    
-    private lateinit var gestureDetector: GestureDetectorCompat
     
     private var evaluationResponse: String? = null
     private var evaluationResultJson: String? = null
     private var evaluationId: Long = -1L
     private val skillRatings = mutableListOf<SkillRating>()
+    
+    // Animasyonlar için static kontrol
+    companion object {
+        var animationsPlayed = false
+        
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         */
+        @JvmStatic
+        fun newInstance() = AnalysisFragment()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +61,9 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
             evaluationResultJson = it.getString("evaluationResultJson")
             evaluationId = it.getLong("evaluationId", -1L)
         }
+        
+        // Yeni bir fragment oluştuğunda, animasyon durumunu kontrol et ve log'la
+        android.util.Log.d("AnalysisFragment", "onCreate: animationsPlayed = $animationsPlayed")
     }
 
     override fun onCreateView(
@@ -64,105 +82,110 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
         android.util.Log.d("AnalysisFragment", "evaluationResponse var mı: ${evaluationResponse != null}")
         android.util.Log.d("AnalysisFragment", "evaluationResultJson var mı: ${evaluationResultJson != null}")
         android.util.Log.d("AnalysisFragment", "evaluationId: $evaluationId")
+        android.util.Log.d("AnalysisFragment", "Animasyonlar daha önce oynatıldı mı: $animationsPlayed")
+        
+        // NestedScrollView'ın dikey kaydırma davranışını ayarlayalım
+        configureNestedScrollView()
+        
+        // Force animationsPlayed to false to ensure animations play at least once in this session
+        // This ensures animations will play when new fragment is opened
+        if (!animationsPlayed) {
+            android.util.Log.d("AnalysisFragment", "Animasyonlar ilk kez oynatılacak")
+        }
         
         // RecyclerView'ı ayarla
         setupRecyclerView()
         
-        // Test için direkt olarak evaluate API yanıtındaki değeri kontrol et
-        try {
-            if (evaluationResponse != null) {
-                val rawResponse = JSONObject(evaluationResponse!!)
-                if (rawResponse.has("evaluationScore")) {
-                    val directScore = rawResponse.getInt("evaluationScore")
-                    android.util.Log.d("AnalysisFragment", "⭐⭐⭐ DOĞRUDAN API YANITI - evaluationScore: $directScore")
-                    
-                    // Değerleri hemen UI'a ayarla
-                    binding.tvScorePercent.text = "%$directScore"
-                    updateProgressBar(directScore)
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("AnalysisFragment", "Doğrudan yanıt değeri alınamadı: ${e.message}")
-        }
-        
         // Verileri yükle
         loadSkillRatingsFromJson()
         
-        // Uyumluluk çubuğunu güncelle
+        // Uyumluluk çubuğunu API'den gelen verilere göre güncelle
         updateCompatibilityStatus()
         
-        // Gesture detector'ı başlat
-        gestureDetector = GestureDetectorCompat(requireContext(), this)
+        // Dokunma olayı dinleyicilerini ayarla
+        setupNavigationControls()
         
-        // Ana layout'a dokunma olaylarını dinle
-        view.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
-        
-        // RecyclerView için özel dokunma olayı ekle
-        binding.recyclerViewSkills.setOnTouchListener(object : View.OnTouchListener {
-            // Yatay kaydırma algılandığında bu değişkeni true yapacağız
-            var isHorizontalSwipe = false
-            // İlk dokunuş koordinatı
-            var startX = 0f
-            var startY = 0f
+        // Geri ve ileri butonlarını ayarla
+        setupNavigationButtons()
+    }
+    
+    private fun configureNestedScrollView() {
+        try {
+            // NestedScrollView'ı bulalım
+            val nestedScrollView = binding.root as NestedScrollView
             
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
+            // NestedScrollView için özel dokunma dinleyicisi
+            nestedScrollView.setOnTouchListener { v, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        // İlk dokunuşta koordinatları kaydet
-                        startX = event.x
-                        startY = event.y
-                        isHorizontalSwipe = false
-                        // RecyclerView'ın normal dikey kaydırmasını engelleme
-                        return false
+                        // Başlangıç noktası
+                        v.tag = Pair(event.x, event.y)
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        // Yatay hareket dikey hareketten daha fazla ise
-                        val deltaX = Math.abs(event.x - startX)
-                        val deltaY = Math.abs(event.y - startY)
+                        val (startX, startY) = v.tag as? Pair<Float, Float> ?: Pair(0f, 0f)
+                        val diffX = event.x - startX
+                        val diffY = event.y - startY
                         
-                        if (deltaX > deltaY && deltaX > 50) {
-                            isHorizontalSwipe = true
-                            // RecyclerView'ın normal dikey kaydırmasını engelle
-                            return true
+                        // Eğer yatay kaydırma dikey kaydırmadan belirgin şekilde fazlaysa
+                        // (Bu durumda yatay kaydırmayı algılamak istiyoruz)
+                        if (Math.abs(diffX) > Math.abs(diffY) * 1.8 && Math.abs(diffX) > 50) {
+                            // Yatay kaydırma algılama olayını ebeveyn View'a geçirelim
+                            v.parent.requestDisallowInterceptTouchEvent(false)
+                        } 
+                        // Eğer dikey kaydırma yatay kaydırmadan fazlaysa
+                        else if (Math.abs(diffY) > Math.abs(diffX) * 1.2 && Math.abs(diffY) > 30) {
+                            // NestedScrollView dikey kaydırmayı kendi yönetsin
+                            v.parent.requestDisallowInterceptTouchEvent(true)
                         }
-                        
-                        // Yatay kaydırma yoksa RecyclerView'ın normal davranışını sürdür
-                        return isHorizontalSwipe
                     }
-                    MotionEvent.ACTION_UP -> {
-                        if (isHorizontalSwipe) {
-                            // Yatay kaydırma miktarı
-                            val deltaX = event.x - startX
-                            
-                            // Sola kaydırma (sonraki sayfa)
-                            if (deltaX < -100) {
-                                navigateToAiNote()
-                                return true
-                            }
-                            // Sağa kaydırma (önceki sayfa)
-                            else if (deltaX > 100) {
-                                findNavController().navigateUp()
-                                return true
-                            }
-                        }
-                        return isHorizontalSwipe
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        // Dokunma bittiğinde
+                        v.parent.requestDisallowInterceptTouchEvent(false)
                     }
                 }
-                return false
+                // Olayı tüketmeyelim ki dokunma diğer dinleyicilere de gitsin
+                false
             }
-        })
-        
-        // Geri butonu 
-        view.findViewById<ImageButton>(R.id.btnBack)?.setOnClickListener {
-            findNavController().navigateUp()
+            
+            // NestedScrollView kaydırma değişikliklerini dinle
+            nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                // Eğer dikey kaydırma oluyorsa, yatay kaydırma algılanmasın
+                if (Math.abs(scrollY - oldScrollY) > 10) {
+                    nestedScrollView.requestDisallowInterceptTouchEvent(true)
+                }
+            })
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "NestedScrollView yapılandırma hatası: ${e.message}")
         }
-        
-        // İleri butonu
-        view.findViewById<ImageButton>(R.id.btnNext)?.setOnClickListener {
-            navigateToAiNote()
+    }
+    
+    private fun setupNavigationButtons() {
+        try {
+            // Geri butonu 
+            binding.root.findViewById<ImageButton>(R.id.btnBack)?.apply { 
+                setOnClickListener {
+                    findNavController().navigateUp()
+                }
+                // Dokunma olayı davranışını düzeltmek için 
+                isSoundEffectsEnabled = true
+            }
+            
+            // İleri butonu
+            binding.root.findViewById<ImageButton>(R.id.btnNext)?.apply {
+                setOnClickListener {
+                    navigateToAiNote()
+                }
+                // Dokunma olayı davranışını düzeltmek için
+                isSoundEffectsEnabled = true
+            }
+            
+            // Sayfa göstergelerini tıklanabilir yap
+            binding.pageIndicators.setOnClickListener {
+                navigateToAiNote()
+            }
+            
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "Navigation buttons setup error: ${e.message}")
         }
     }
     
@@ -178,205 +201,203 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
     }
     
     private fun setupRecyclerView() {
-        binding.recyclerViewSkills.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewSkills.adapter = SkillRatingAdapter(skillRatings)
+        try {
+            binding.recyclerViewSkills.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerViewSkills.adapter = SkillRatingAdapter(skillRatings).apply {
+                // Eğer animasyonlar daha önce oynatıldıysa, adapter'da da animasyonları kapat
+                if (animationsPlayed) {
+                    android.util.Log.d("AnalysisFragment", "setupRecyclerView: Animasyonlar devre dışı bırakılıyor")
+                    disableAnimations()
+                } else {
+                    android.util.Log.d("AnalysisFragment", "setupRecyclerView: Animasyonlar etkin")
+                }
+            }
+            
+            // RecyclerView için daha hassas swipe algılama
+            binding.recyclerViewSkills.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                private val SWIPE_THRESHOLD = 50
+                private var startX = 0f
+                private var startY = 0f
+                private var isSwiping = false
+                
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    when (e.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            startX = e.x
+                            startY = e.y
+                            isSwiping = false
+                            return false
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            val diffX = e.x - startX
+                            val diffY = e.y - startY
+                            
+                            // Eğer yatay kaydırma belirginse ve henüz işlenmemişse
+                            if (!isSwiping && Math.abs(diffX) > Math.abs(diffY) * 1.5 && Math.abs(diffX) > SWIPE_THRESHOLD) {
+                                isSwiping = true
+                                
+                                if (diffX > 0) {
+                                    // Sağa kaydırma - önceki sayfaya git
+                                    android.util.Log.d("AnalysisFragment", "⭐ RecyclerView sağa kaydırma algılandı")
+                                    findNavController().navigateUp()
+                                } else {
+                                    // Sola kaydırma - sonraki sayfaya git
+                                    android.util.Log.d("AnalysisFragment", "⭐ RecyclerView sola kaydırma algılandı")
+                                    navigateToAiNote()
+                                }
+                                
+                                return true
+                            }
+                            
+                            return false
+                        }
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            isSwiping = false
+                            return false
+                        }
+                    }
+                    return false
+                }
+                
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+                    // Touch event'i işlemek istemiyoruz
+                }
+                
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                    // Parent view'ın intercept etmesini engellemiyoruz
+                }
+            })
+            
+            // Click olaylarını etkinleştir
+            binding.recyclerViewSkills.isClickable = true
+            binding.recyclerViewSkills.setOnClickListener {
+                android.util.Log.d("AnalysisFragment", "RecyclerView tıklandı")
+            }
+            
+            // Kaydırma sırasında item tekrar çizildiğinde animasyonlar oynatılmasın
+            binding.recyclerViewSkills.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    // Herhangi bir kaydırma olduğunda, animasyonları devre dışı bırak
+                    if (newState != RecyclerView.SCROLL_STATE_IDLE) {
+                        (recyclerView.adapter as? SkillRatingAdapter)?.disableAnimations()
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "RecyclerView ayarlanırken hata: ${e.message}")
+        }
     }
     
     private fun loadSkillRatingsFromJson() {
-        if (evaluationResultJson != null) {
-            try {
-                android.util.Log.d("AnalysisFragment", "evaluationResultJson: $evaluationResultJson")
-                val resultJson = JSONObject(evaluationResultJson!!)
-                
-                // skillRatings null kontrolü
-                if (resultJson.has("skillRatings") && !resultJson.isNull("skillRatings")) {
-                    val skillsArray = resultJson.getJSONArray("skillRatings")
+        try {
+            // API'dan gelen veriler boş değilse devam et
+            if (evaluationResponse == null && evaluationResultJson == null) {
+                android.util.Log.e("AnalysisFragment", "Yüklenecek veri yok - API yanıtı ve JSON null")
+                return
+            }
+
+            // Önce RecyclerView'ı temizle
+            skillRatings.clear()
+            
+            // JSON verisini skill ratings listesine dönüştür
+            if (evaluationResultJson != null) {
+                try {
+                    val resultJson = JSONObject(evaluationResultJson!!)
                     
-                    skillRatings.clear()
-                    
-                    // Beceri derecelendirmelerini ekle
-                    for (i in 0 until skillsArray.length()) {
-                        val skillObj = skillsArray.getJSONObject(i)
-                        val skillName = skillObj.getString("language")
-                        val skillRating = skillObj.getInt("percentage")
+                    // skillRatings null kontrolü
+                    if (resultJson.has("skillRatings") && !resultJson.isNull("skillRatings")) {
+                        val skillsArray = resultJson.getJSONArray("skillRatings")
                         
-                        skillRatings.add(SkillRating(skillName, skillRating))
-                    }
-                    
-                    // Adapter'ı güncelle
-                    binding.recyclerViewSkills.adapter?.notifyDataSetChanged()
-                } else {
-                    android.util.Log.d("AnalysisFragment", "skillRatings null veya mevcut değil")
-                    
-                    // Skills kısmını userInformation içindeki skills string'inden almaya çalış
-                    if (resultJson.has("userInformation") && !resultJson.isNull("userInformation")) {
-                        val userInfo = resultJson.getJSONObject("userInformation")
-                        if (userInfo.has("skills") && !userInfo.isNull("skills")) {
-                            val skillsString = userInfo.getString("skills")
-                            android.util.Log.d("AnalysisFragment", "userInformation.skills: $skillsString")
+                        // Beceri derecelendirmelerini ekle
+                        for (i in 0 until skillsArray.length()) {
+                            val skillObj = skillsArray.getJSONObject(i)
+                            val skillName = skillObj.getString("language")
+                            val skillRating = skillObj.getInt("percentage")
                             
-                            // Virgülle ayrılmış becerileri ayrıştır
-                            val skillsList = skillsString.split(",", ", ")
-                            
-                            skillRatings.clear()
-                            
-                            // Her beceri için varsayılan bir oran ata (örn. 50)
-                            for (skill in skillsList) {
-                                val trimmedSkill = skill.trim()
-                                if (trimmedSkill.isNotEmpty()) {
-                                    skillRatings.add(SkillRating(trimmedSkill, 50))
+                            skillRatings.add(SkillRating(skillName, skillRating))
+                        }
+                    } else {
+                        android.util.Log.d("AnalysisFragment", "skillRatings null veya mevcut değil")
+                        
+                        // Skills kısmını userInformation içindeki skills string'inden almaya çalış
+                        if (resultJson.has("userInformation") && !resultJson.isNull("userInformation")) {
+                            val userInfo = resultJson.getJSONObject("userInformation")
+                            if (userInfo.has("skills") && !userInfo.isNull("skills")) {
+                                val skillsString = userInfo.getString("skills")
+                                
+                                // Virgülle ayrılmış becerileri ayrıştır
+                                val skillsList = skillsString.split(",", ", ")
+                                
+                                // Her beceri için varsayılan bir oran ata (örn. 50)
+                                for (skill in skillsList) {
+                                    val trimmedSkill = skill.trim()
+                                    if (trimmedSkill.isNotEmpty()) {
+                                        skillRatings.add(SkillRating(trimmedSkill, 50))
+                                    }
                                 }
                             }
-                            
-                            // Adapter'ı güncelle
-                            binding.recyclerViewSkills.adapter?.notifyDataSetChanged()
                         }
                     }
+                } catch (e: Exception) {
+                    android.util.Log.e("AnalysisFragment", "JSON işleme hatası: ${e.message}")
+                    e.printStackTrace()
                 }
-                
-                // Uyumluluk çubuğunu güncelle
-                updateCompatibilityStatus()
-                
-            } catch (e: Exception) {
-                android.util.Log.e("AnalysisFragment", "JSON işleme hatası: ${e.message}")
-                e.printStackTrace()
             }
+            
+            // Başarıyla verileri yükleyebildiğimizi logla
+            android.util.Log.d("AnalysisFragment", "💥 Skill ratings yüklendi, eleman sayısı: ${skillRatings.size}")
+            
+            // Adapter'ı güncelle
+            binding.recyclerViewSkills.adapter?.notifyDataSetChanged()
+
+            // İlk kez açıldığında animasyonları oynat, daha önce oynatıldıysa devre dışı bırak
+            if (!animationsPlayed) {
+                android.util.Log.d("AnalysisFragment", "💥 Animasyonlar ilk kez oynatılıyor")
+                // Adapter'da default olarak animasyonlar zaten aktif
+                
+                // animationsPlayed değerini en sonda, animasyon başlarken değiştirme
+                // Böylece hem SkillRating hem de Compatibility barlarının animasyonu tamamlanır
+            } else {
+                android.util.Log.d("AnalysisFragment", "💥 Animasyonlar daha önce oynatıldı")
+                
+                // Adapter'a animasyonları devre dışı bırak komutu ver
+                (binding.recyclerViewSkills.adapter as? SkillRatingAdapter)?.disableAnimations()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "Veri yüklenirken hata: ${e.message}")
+            e.printStackTrace()
         }
     }
     
     private fun updateCompatibilityStatus() {
         try {
-            // 0 gelmemesi için UI bileşenini hemen ayarla (varsayılan)
-            binding.tvScorePercent.text = "%75"
-            updateProgressBar(75)
-            
             // Debug için JSON içeriğini logla
             android.util.Log.d("AnalysisFragment", "Evaluation Response: $evaluationResponse")
             android.util.Log.d("AnalysisFragment", "Evaluation Result JSON: $evaluationResultJson")
             
-            // Önce direkt olarak evaluationResponse'tan score'u çıkarmayı dene
-            try {
-                val evalResponseObj = JSONObject(evaluationResponse ?: "{}")
-                if (evalResponseObj.has("evaluationScore")) {
-                    val score = evalResponseObj.getInt("evaluationScore")
-                    android.util.Log.d("AnalysisFragment", "⭐ Direkt JSON'dan evaluationScore: $score")
-                    
-                    if (score > 0) {
-                        // Yüzdelik değeri TextView'e ayarla
-                        binding.tvScorePercent.text = "%$score"
-                        
-                        // Progress bar'ın weight değerlerini güncelle
-                        updateProgressBar(score)
-                        return
-                    }
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("AnalysisFragment", "Direkt JSON çözümleme hatası: ${e.message}")
-            }
+            // Son skor değerini bulmak için en güncel değeri kullanalım
+            var finalScore = 75 // Varsayılan değer
             
-            // Önce evaluationResultJson içinden compatibilityStatus değerini almayı deneyelim
-            if (evaluationResultJson != null) {
-                try {
+            // Veri kaynaklarından skor değerini almaya çalış
+            try {
+                if (evaluationResultJson != null) {
                     val resultJson = JSONObject(evaluationResultJson)
                     if (resultJson.has("compatibilityStatus")) {
-                        val compatibilityScore = resultJson.getInt("compatibilityStatus")
-                        android.util.Log.d("AnalysisFragment", "⭐ compatibilityStatus from resultJson: $compatibilityScore")
-                        
-                        // Değeri direkt olarak kullan
-                        binding.tvScorePercent.text = "%$compatibilityScore"
-                        updateProgressBar(compatibilityScore)
-                        return
+                        finalScore = resultJson.getInt("compatibilityStatus")
                     }
-                } catch (e: Exception) {
-                    android.util.Log.e("AnalysisFragment", "ResultJson çözümlenirken hata: ${e.message}")
-                }
-            }
-            
-            // Gson kullanarak evaluationResponse nesnesini çözümlemeyi dene
-            val gson = com.google.gson.Gson()
-            
-            // İlk olarak CvEvaluationResponse olarak çözümle
-            try {
-                val evalResponse = gson.fromJson(evaluationResponse, com.cvraterai.myapplication.data.model.CvEvaluationResponse::class.java)
-                if (evalResponse != null) {
-                    var score = evalResponse.evaluationScore
-                    android.util.Log.d("AnalysisFragment", "⭐ CvEvaluationResponse'dan orijinal evaluationScore: $score")
-                    
-                    // 1073741824 değerini kontrol et (hatalı değer olabilir)
-                    if (score == 1073741824) {
-                        // EvaluationResult içinden gerçek değeri almayı dene
-                        try {
-                            val resultObj = JSONObject(evalResponse.evaluationResult)
-                            if (resultObj.has("compatibilityStatus")) {
-                                score = resultObj.getInt("compatibilityStatus")
-                                android.util.Log.d("AnalysisFragment", "⭐ compatibilityStatus'tan düzeltilen score: $score")
-                            }
-                        } catch (e: Exception) {
-                            android.util.Log.e("AnalysisFragment", "evaluationResult çözümlenirken hata: ${e.message}")
-                            score = 75 // varsayılan değer
-                        }
+                } else if (evaluationResponse != null) {
+                    val evalResponseObj = JSONObject(evaluationResponse)
+                    if (evalResponseObj.has("evaluationScore")) {
+                        finalScore = evalResponseObj.getInt("evaluationScore")
                     }
-                    
-                    android.util.Log.d("AnalysisFragment", "⭐ CvEvaluationResponse'dan Score değeri: $score")
-                    
-                    // Yüzdelik değeri TextView'e ayarla
-                    if (score > 0) {
-                        binding.tvScorePercent.text = "%$score"
-                        
-                        // Progress bar'ın weight değerlerini güncelle
-                        updateProgressBar(score)
-                    }
-                    return
                 }
             } catch (e: Exception) {
-                android.util.Log.e("AnalysisFragment", "CvEvaluationResponse çözümlenirken hata: ${e.message}")
+                android.util.Log.e("AnalysisFragment", "Son skor değerini alma hatası: ${e.message}")
             }
             
-            // JSON olarak çözümlemeyi dene
-            try {
-                val responseJson = JSONObject(evaluationResponse ?: return)
-                
-                // evaluationScore değerini al
-                var score = if (responseJson.has("evaluationScore")) {
-                    responseJson.getInt("evaluationScore")
-                } else if (responseJson.has("evaluation_score")) {
-                    responseJson.getInt("evaluation_score")
-                } else if (responseJson.has("score")) {
-                    responseJson.getInt("score")
-                } else {
-                    android.util.Log.e("AnalysisFragment", "⭐ evaluationScore anahtarı bulunamadı")
-                    0 // Varsayılan değer
-                }
-                
-                // 1073741824 değerini kontrol et
-                if (score == 1073741824) {
-                    // EvaluationResult içinden gerçek değeri almayı dene
-                    try {
-                        if (responseJson.has("evaluationResult")) {
-                            val resultObj = JSONObject(responseJson.getString("evaluationResult"))
-                            if (resultObj.has("compatibilityStatus")) {
-                                score = resultObj.getInt("compatibilityStatus")
-                                android.util.Log.d("AnalysisFragment", "⭐ JSON compatibilityStatus'tan düzeltilen score: $score")
-                            }
-                        }
-                    } catch (e: Exception) {
-                        android.util.Log.e("AnalysisFragment", "JSON evaluationResult çözümlenirken hata: ${e.message}")
-                        score = 75 // varsayılan değer
-                    }
-                }
-                
-                android.util.Log.d("AnalysisFragment", "⭐ JSONObject'ten Score değeri: $score")
-                
-                // Yüzdelik değeri TextView'e ayarla
-                if (score > 0) {
-                    binding.tvScorePercent.text = "%$score"
-                    
-                    // Progress bar'ın weight değerlerini güncelle
-                    updateProgressBar(score)
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("AnalysisFragment", "JSON çözümlenirken hata: ${e.message}")
-            }
+            // Uyumluluk kartı için animasyonu ayarla
+            updateCompatibilityCard(finalScore)
             
         } catch (e: Exception) {
             android.util.Log.e("AnalysisFragment", "Genel hata: ${e.message}", e)
@@ -384,78 +405,295 @@ class AnalysisFragment : Fragment(), GestureDetector.OnGestureListener {
         }
     }
     
-    private fun updateProgressBar(score: Int) {
+    // CardCompatibility için özel animasyon
+    private fun updateCompatibilityCard(score: Int) {
         try {
-            android.util.Log.d("AnalysisFragment", "⭐ updateProgressBar çağrıldı, score: $score")
             // Score değerini 0-100 arasına sınırla
             val boundedScore = score.coerceIn(0, 100)
-            android.util.Log.d("AnalysisFragment", "⭐ boundedScore: $boundedScore")
+            android.util.Log.d("AnalysisFragment", "💥 updateCompatibilityCard yeni: score=$boundedScore")
             
-            // Progress bar'ın weight değerlerini güncelle
-            val filledLayoutParams = binding.compatibilityStatusBar.layoutParams as LinearLayout.LayoutParams
-            filledLayoutParams.weight = boundedScore.toFloat()
-            binding.compatibilityStatusBar.layoutParams = filledLayoutParams
-            android.util.Log.d("AnalysisFragment", "⭐ filledLayoutParams.weight: ${filledLayoutParams.weight}")
-            
-            // Boş alanın weight değerini güncelle
-            val remainingWeight = 100 - boundedScore
-            android.util.Log.d("AnalysisFragment", "⭐ remainingWeight: $remainingWeight")
-            
-            // Doğrudan ID ile erişim
-            val emptyLayoutParams = binding.emptyStatusBar.layoutParams as LinearLayout.LayoutParams
-            emptyLayoutParams.weight = remainingWeight.toFloat()
-            binding.emptyStatusBar.layoutParams = emptyLayoutParams
-            android.util.Log.d("AnalysisFragment", "⭐ emptyLayoutParams.weight: ${emptyLayoutParams.weight}")
-            
-            // Force refresh - container adı progressCompatibility
-            binding.progressCompatibility.requestLayout()
+            if (!animationsPlayed) {
+                android.util.Log.d("AnalysisFragment", "💥 Animasyonlar ilk kez oynatılacak")
+                
+                // Önce ilk durumu ayarla
+                binding.cardCompatibility.alpha = 0f
+                binding.cardCompatibility.translationY = 50f
+                
+                // ProgressBar'ı başlangıç durumuna getir - genişlik 0
+                binding.progressCompatibility.post {
+                    // Genişliği reset et
+                    val progressBar = binding.compatibilityStatusBar
+                    val params = progressBar.layoutParams
+                    params.width = 0
+                    progressBar.layoutParams = params
+                    progressBar.requestLayout()
+                    
+                    // Yüzde göstergesini gizle
+                    binding.tvScorePercent.text = "%0"
+                    
+                    if (_binding != null && binding.tvProgressPercent != null) {
+                        binding.tvProgressPercent.text = "%0"
+                        binding.tvProgressPercent.alpha = 0f
+                    }
+                    
+                    // Kart animasyonunu başlat - sabit süre
+                    binding.cardCompatibility.animate()
+                        .alpha(1f)
+                        .translationY(0f)
+                        .setDuration(400) // 0.4 saniye
+                        .setInterpolator(DecelerateInterpolator())
+                        .withEndAction {
+                            // Kart animasyonu tamamlandığında progress bar animasyonunu başlat
+                            android.util.Log.d("AnalysisFragment", "💥 Kart animasyonu tamamlandı, bar animasyonu başlıyor")
+                            updateProgressBarWithAnimation(boundedScore)
+                        }
+                        .start()
+                }
+            } else {
+                // Animasyon daha önce oynatıldıysa, kart zaten görünür olmalı
+                binding.cardCompatibility.alpha = 1f
+                binding.cardCompatibility.translationY = 0f
+                
+                // Bar'ı direkt olarak güncelle
+                updateProgressBarWithoutAnimation(boundedScore)
+            }
         } catch (e: Exception) {
-            android.util.Log.e("AnalysisFragment", "Progress bar güncellenirken hata: ${e.message}", e)
+            android.util.Log.e("AnalysisFragment", "💥 updateCompatibilityCard hatası: ${e.message}")
+        }
+    }
+    
+    // Animasyonlu progress bar güncelleme - ilk kez gösterildiğinde kullanılır
+    private fun updateProgressBarWithAnimation(score: Int) {
+        try {
+            android.util.Log.d("AnalysisFragment", "💥 updateProgressBarWithAnimation yeni: score=$score")
+            val boundedScore = score.coerceIn(0, 100)
+            
+            // Container genişliğini al
+            val containerWidth = binding.progressCompatibility.width
+            if (containerWidth <= 0) {
+                android.util.Log.e("AnalysisFragment", "💥 Container genişliği 0 veya negatif")
+                return
+            }
+            
+            // İlk durumu ayarla - 0 göster
+            binding.tvScorePercent.text = "%0"
+            
+            // Progress barı sıfırla
+            val progressBar = binding.compatibilityStatusBar
+            val params = progressBar.layoutParams
+            params.width = 0
+            progressBar.layoutParams = params
+            progressBar.requestLayout()
+            
+            // Göstergeyi hazırla ve gizle
+            if (_binding != null && binding.tvProgressPercent != null) {
+                binding.tvProgressPercent.text = "%0"
+                binding.tvProgressPercent.alpha = 0f
+            }
+            
+            // Gecikme ile başlat (daha görünür animasyon için)
+            progressBar.postDelayed({
+                // SkillRatingAdapter'daki gibi ValueAnimator kullan
+                val animator = ValueAnimator.ofInt(0, boundedScore)
+                animator.duration = 1000 // 1 saniye
+                animator.interpolator = DecelerateInterpolator()
+                
+                animator.addUpdateListener { animation ->
+                    val animatedValue = animation.animatedValue as Int
+                    
+                    try {
+                        // Ana yüzde metnini güncelle
+                        binding.tvScorePercent.text = "%$animatedValue"
+                        
+                        // Bar genişliğini animasyonlu olarak arttır
+                        val newWidth = (containerWidth * animatedValue) / 100
+                        val layoutParams = progressBar.layoutParams
+                        layoutParams.width = newWidth
+                        progressBar.layoutParams = layoutParams
+                        
+                        // Yüzde göstergesini güncelle
+                        if (_binding != null && binding.tvProgressPercent != null) {
+                            // Göstergeyi belirli bir eşikten sonra göster
+                            if (animatedValue >= 20) {
+                                if (binding.tvProgressPercent.alpha == 0f) {
+                                    // İlk kez görünür olacak
+                                    binding.tvProgressPercent.alpha = 1f
+                                }
+                                
+                                // Text'i güncelle
+                                binding.tvProgressPercent.text = "%$animatedValue"
+                                
+                                // Göstergeyi doğru konumda göster
+                                if (newWidth > 0) {
+                                    // Göstergeyi barın ucuna konumlandır
+                                    val xPosition = newWidth - binding.tvProgressPercent.width
+                                    binding.tvProgressPercent.translationX = Math.max(xPosition, 0).toFloat()
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("AnalysisFragment", "💥 Animasyon update hatası: ${e.message}")
+                    }
+                }
+                
+                // Animasyon bittiğinde animationsPlayed'i true yap
+                animator.addListener(object : android.animation.AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: android.animation.Animator) {
+                        animationsPlayed = true
+                        android.util.Log.d("AnalysisFragment", "💥 Animasyon tamamlandı - animationsPlayed = true olarak işaretlendi")
+                    }
+                })
+                
+                // Animasyonu başlat
+                animator.start()
+                android.util.Log.d("AnalysisFragment", "💥 Bar animasyonu başlatıldı - width=$containerWidth")
+            }, 200) // 200ms gecikme ile başlat (kart animasyonundan sonra)
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "💥 updateProgressBarWithAnimation hatası: ${e.message}")
+            updateProgressBarWithoutAnimation(score)
+        }
+    }
+    
+    // Animasyonsuz progress bar güncelleme - zaten animasyon oynatılmışsa kullanılır
+    private fun updateProgressBarWithoutAnimation(score: Int) {
+        try {
+            android.util.Log.d("AnalysisFragment", "Animasyonsuz bar güncellemesi: score=$score")
+            val boundedScore = score.coerceIn(0, 100)
+            binding.tvScorePercent.text = "%$boundedScore"
+            
+            // Progress bar'ı güncelle
+            binding.progressCompatibility.post {
+                val progressBar = binding.compatibilityStatusBar
+                val containerWidth = binding.progressCompatibility.width
+                if (containerWidth > 0) {
+                    val layoutParams = progressBar.layoutParams
+                    layoutParams.width = (containerWidth * boundedScore) / 100
+                    progressBar.layoutParams = layoutParams
+                    progressBar.requestLayout()
+                    
+                    // Göstergeyi doğru konumlandır ve görünür yap
+                    if (_binding != null && binding.tvProgressPercent != null) {
+                        binding.tvProgressPercent.text = "%$boundedScore"
+                        binding.tvProgressPercent.alpha = 1f
+                        
+                        // Bar'ın genişliğine göre göstergeyi konumlandır
+                        val finalWidth = (containerWidth * boundedScore) / 100
+                        val position = Math.max(finalWidth - binding.tvProgressPercent.width, 0)
+                        binding.tvProgressPercent.translationX = position.toFloat()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "Animasyonsuz bar hatası: ${e.message}")
+        }
+    }
+    
+    private fun updateProgressBar(score: Int) {
+        if (!animationsPlayed) {
+            updateProgressBarWithAnimation(score)
+        } else {
+            updateProgressBarWithoutAnimation(score)
         }
     }
 
-    // GestureDetector.OnGestureListener metodları
-    override fun onDown(e: MotionEvent): Boolean = false
-    
-    override fun onShowPress(e: MotionEvent) {}
-    
-    override fun onSingleTapUp(e: MotionEvent): Boolean = false
-    
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = false
-    
-    override fun onLongPress(e: MotionEvent) {}
-    
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        // Sola kaydırma hareketi algılandığında
-        if (e1 != null && e2.x < e1.x && Math.abs(e1.x - e2.x) > 100 && Math.abs(velocityX) > 100) {
-            navigateToAiNote()
-            return true
+    // Daha güvenli bir şekilde kaydırma algılamasını yönet
+    private fun setupNavigationControls() {
+        try {
+            val gestureDetector = android.view.GestureDetector(requireContext(), object : android.view.GestureDetector.SimpleOnGestureListener() {
+                // Dikey kaydırmaya göre yatay kaydırmanın daha kolay algılanması için değerler
+                private val SWIPE_THRESHOLD = 80
+                private val SWIPE_VELOCITY_THRESHOLD = 80
+
+                override fun onDown(e: MotionEvent): Boolean {
+                    // onDown'da true döndürerek tüm hareketlerin algılanmasını sağla
+                    return true
+                }
+
+                override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                    val diffX = e2.x - (e1?.x ?: 0f)
+                    val diffY = e2.y - (e1?.y ?: 0f)
+
+                    try {
+                        // Yatay kaydırma önemli ölçüde dikey kaydırmadan fazlaysa
+                        if (Math.abs(diffX) > Math.abs(diffY) * 1.5 && 
+                            Math.abs(diffX) > SWIPE_THRESHOLD && 
+                            Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            
+                            if (diffX > 0) {
+                                // Sağa kaydırma - önceki sayfaya git
+                                android.util.Log.d("AnalysisFragment", "Sağa kaydırma algılandı - Önceki sayfa")
+                                findNavController().navigateUp()
+                                return true
+                            } else {
+                                // Sola kaydırma - sonraki sayfaya git
+                                android.util.Log.d("AnalysisFragment", "Sola kaydırma algılandı - Sonraki sayfa")
+                                navigateToAiNote()
+                                return true
+                            }
+                        }
+                    } catch (exception: Exception) {
+                        android.util.Log.e("AnalysisFragment", "Kaydırma hatası: ${exception.message}")
+                    }
+                    return false
+                }
+            })
+
+            // Root view'a touch listener ekle
+            val rootView = binding.root
+            rootView.setOnTouchListener { v, event ->
+                // Gesture detector'a olayları ilet
+                val consumed = gestureDetector.onTouchEvent(event)
+                
+                // Eğer dokunma olayı tüketilmediyse, normal davranışı devam ettir
+                if (!consumed) {
+                    v.performClick()
+                }
+                false
+            }
+            
+            // CardCompatibility özel kaydırma algılama kaldırıldı
+            
+            // Ayrıca doğrudan CardCompatibility için hassas kaydırma algılama kaldırıldı
+            
+            // Kart tıklaması kaldırıldı
+            
+            // Tüm alt view'lara da touch listenerleri ekle, ama özel durumları ele al
+            addSwipeDetectionToSpecificChildren()
+            
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "setupNavigationControls hatası: ${e.message}")
         }
-        // Sağa kaydırma hareketi algılandığında
-        else if (e1 != null && e2.x > e1.x && Math.abs(e1.x - e2.x) > 100 && Math.abs(velocityX) > 100) {
-            // InformationFragment'a geri dön
-            findNavController().navigateUp()
-            return true
-        }
-        return false
     }
     
+    // CardCompatibility'ye hassas kaydırma algılama ekle - iptal edildi
+    private fun addSwipeToCard() {
+        // Bu fonksiyon artık kullanılmıyor
+    }
+    
+    // RecyclerView ve CardCompatibility hariç diğer view'lara kaydırma algılama ekle
+    private fun addSwipeDetectionToSpecificChildren() {
+        try {
+            // ConstraintLayout gibi önemli gruplar için kaydırma algıla
+            val layoutGroups = listOf(
+                binding.root.findViewById<ViewGroup>(R.id.navigationButtons),
+                binding.pageIndicators
+            )
+            
+            // Her bir gruba kaydırma algılamayı ekle
+            layoutGroups.forEach { viewGroup ->
+                viewGroup?.setOnTouchListener { _, event ->
+                    // Olayı ana activite'ye ilet, ama tüketme
+                    activity?.dispatchTouchEvent(event)
+                    false
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "addSwipeDetectionToSpecificChildren hatası: ${e.message}")
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AnalysisFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() = AnalysisFragment()
     }
 }
