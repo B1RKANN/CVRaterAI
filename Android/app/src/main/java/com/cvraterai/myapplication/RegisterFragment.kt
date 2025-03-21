@@ -12,9 +12,11 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.cvraterai.myapplication.databinding.FragmentRegisterBinding
 import com.cvraterai.myapplication.ui.auth.RegisterState
 import com.cvraterai.myapplication.ui.auth.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.material.snackbar.Snackbar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,8 +39,10 @@ class RegisterFragment : Fragment() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var cardSignUp: CardView
-    private lateinit var tvLogin: TextView
     private lateinit var progressBar: ProgressBar
+    
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
     
     private val viewModel: RegisterViewModel by viewModels()
 
@@ -54,34 +58,38 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false)
+        // View binding kullanarak layout inflate et
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // UI bileşenlerini başlat
-        etName = view.findViewById(R.id.etName)
-        etSurname = view.findViewById(R.id.etSurname)
-        etEmail = view.findViewById(R.id.etEmail)
-        etPassword = view.findViewById(R.id.etPassword)
-        cardSignUp = view.findViewById(R.id.cardSignUp)
-        tvLogin = view.findViewById(R.id.tvLogin)
-        progressBar = view.findViewById(R.id.progressBar)
-        
-        // Giriş Yap metnine tıklama olayını ayarla
-        tvLogin.setOnClickListener {
-            // LoginFragment'a geçiş yap
-            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-        }
+        // View'lara erişim
+        etName = binding.etName
+        etSurname = binding.etSurname
+        etEmail = binding.etEmail
+        etPassword = binding.etPassword
+        cardSignUp = binding.cardSignUp
+        progressBar = binding.progressBar
         
         // Kayıt Ol butonuna tıklama olayını ayarla
         cardSignUp.setOnClickListener {
-            performRegister()
+            validateAndRegister()
         }
         
-        // ViewModel'dan gelen durumu gözlemle
+        // Google ile kayıt
+        binding.flGoogle.setOnClickListener {
+            // TODO: Google ile kayıt işlemleri
+        }
+        
+        // Giriş Yap butonuna tıklama olayını ayarla
+        binding.tvLogin.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+        
+        // RegisterViewModel'i dinle
         observeRegisterState()
     }
     
@@ -93,49 +101,119 @@ class RegisterFragment : Fragment() {
                 }
                 is RegisterState.Success -> {
                     showLoading(false)
-                    Toast.makeText(requireContext(), "Kayıt başarılı! Giriş yapabilirsiniz.", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-
                 }
                 is RegisterState.Error -> {
                     showLoading(false)
-                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                    handleRegistrationError(state.message)
                 }
             }
         }
     }
     
-    private fun performRegister() {
+    private fun validateAndRegister() {
         val name = etName.text.toString().trim()
         val surname = etSurname.text.toString().trim()
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
         
-        if (!validateEmail(email)) {
-            return
+        // Reset error states
+        etName.isActivated = false
+        etSurname.isActivated = false
+        etEmail.isActivated = false
+        etPassword.isActivated = false
+        binding.tvNameError.visibility = View.GONE
+        binding.tvSurnameError.visibility = View.GONE
+        binding.tvEmailError.visibility = View.GONE
+        binding.tvPasswordError.visibility = View.GONE
+        
+        var isValid = true
+        
+        // Validate name
+        if (name.isEmpty()) {
+            etName.isActivated = true
+            binding.tvNameError.visibility = View.VISIBLE
+            isValid = false
         }
         
-        viewModel.register(name, surname, email, password)
+        // Validate surname
+        if (surname.isEmpty()) {
+            etSurname.isActivated = true
+            binding.tvSurnameError.visibility = View.VISIBLE
+            isValid = false
+        }
+        
+        // Validate email
+        if (email.isEmpty() || !validateEmail(email)) {
+            etEmail.isActivated = true
+            binding.tvEmailError.visibility = View.VISIBLE
+            isValid = false
+        }
+        
+        // Validate password
+        if (password.isEmpty() || password.length < 6) {
+            etPassword.isActivated = true
+            binding.tvPasswordError.visibility = View.VISIBLE
+            isValid = false
+        }
+        
+        if (isValid) {
+            // Show loading indicator
+            progressBar.visibility = View.VISIBLE
+            cardSignUp.isEnabled = false
+            
+            // Attempt registration
+            viewModel.register(name, surname, email, password)
+        }
+    }
+    
+    private fun handleRegistrationError(errorMessage: String) {
+        // Hide loading indicator
+        progressBar.visibility = View.GONE
+        cardSignUp.isEnabled = true
+        
+        // Reset previous errors
+        etEmail.isActivated = false
+        etPassword.isActivated = false
+        binding.tvEmailError.visibility = View.GONE
+        binding.tvPasswordError.visibility = View.GONE
+        
+        // Show appropriate error based on the error message
+        when {
+            errorMessage.contains("email", ignoreCase = true) -> {
+                etEmail.isActivated = true
+                binding.tvEmailError.visibility = View.VISIBLE
+            }
+            errorMessage.contains("password", ignoreCase = true) -> {
+                etPassword.isActivated = true
+                binding.tvPasswordError.visibility = View.VISIBLE
+            }
+            errorMessage.contains("network", ignoreCase = true) || 
+            errorMessage.contains("connection", ignoreCase = true) -> {
+                Snackbar.make(requireView(), getString(R.string.network_error), Snackbar.LENGTH_SHORT).show()
+            }
+            else -> {
+                // For general errors use a snackbar
+                Snackbar.make(requireView(), getString(R.string.general_error), Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun showLoading(isLoading: Boolean) {
         progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         cardSignUp.isEnabled = !isLoading
-        etName.isEnabled = !isLoading
-        etSurname.isEnabled = !isLoading
-        etEmail.isEnabled = !isLoading
-        etPassword.isEnabled = !isLoading
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun validateEmail(email: String): Boolean {
+        // Özel regex paterni ile daha katı kontrol
+        // @ işareti zorunlu ve sonunda .com olmalı
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.com$"
-        val isValid = email.matches(emailPattern.toRegex())
-        
-        if (!isValid) {
-            Toast.makeText(requireContext(), "Lütfen geçerli bir e-posta adresi giriniz", Toast.LENGTH_SHORT).show()
-        }
-        
-        return isValid
+        return email.matches(emailPattern.toRegex())
     }
 
     companion object {

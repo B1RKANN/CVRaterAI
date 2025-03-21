@@ -37,7 +37,7 @@
                 android:shadowDx="0"
                 android:shadowDy="4"
                 android:shadowRadius="6"
-                android:text="Değerlendirme Geçmişi"
+                android:text="@string/evaluation_history"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:maxLines="2"
@@ -52,7 +52,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/rounded_button_background"
-                android:contentDescription="Geri"
+                android:contentDescription="@string/back"
                 android:padding="12dp"
                 android:src="@drawable/ic_arrow_back"
                 android:tint="@color/white"
@@ -91,6 +91,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/analysis"
+            android:contentDescription="@string/no_evaluations"
             app:tint="@color/box_blue" />
 
         <TextView
@@ -98,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="Henüz değerlendirme yapılmamış"
+            android:text="@string/no_evaluations"
             android:textAlignment="center"
             android:textColor="@color/text_dark"
             android:textSize="18sp" />
