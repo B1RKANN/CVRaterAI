@@ -70,14 +70,16 @@
 
             <TextView
                 android:id="@+id/tvEmailError"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Lütfen geçerli bir e-posta adresi giriniz"
-                android:textColor="#FF0000"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/email_error"
+                android:textColor="#FF3B30"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:drawablePadding="4dp"
+                app:drawableStartCompat="@drawable/ic_error" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,6 +102,19 @@
                 android:textColor="@color/black"
                 android:textColorHint="#99000000"
                 android:textSize="16sp" />
+                
+            <TextView
+                android:id="@+id/tvPasswordError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/password_error"
+                android:textColor="#FF3B30"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:drawablePadding="4dp" 
+                app:drawableStartCompat="@drawable/ic_error" />
 
             <FrameLayout
                 android:layout_width="match_parent"
