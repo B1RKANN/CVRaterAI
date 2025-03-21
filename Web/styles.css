@@ -532,6 +532,17 @@ nav.scrolled {
     }
 }
 
+@keyframes titleFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes floatSlow {
     0% {
         transform: translate(0, 0) scale(1) rotate(0deg);
@@ -995,4 +1006,21 @@ body::before {
         font-size: 16px;
         border-radius: 30px;
     }
+}
+
+/* Pricing, Features ve Profile sayfası başlıkları için animasyonlar */
+.pricing-container h1,
+.pricing-container .subtitle,
+.features-section h1,
+.features-section .subtitle,
+.profile-section h1,
+.profile-section h2,
+.user-info h2 {
+    animation: titleFadeIn 0.7s ease forwards;
+}
+
+/* Card animasyonları için ek stiller */
+.feature-card.fade-in-card,
+.pricing-card.fade-in-card {
+    animation: fadeInUp 0.6s ease forwards;
 } 

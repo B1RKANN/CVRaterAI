@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVRaterAI - Upload Your Resume</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="icon" href="../images/cv-icon.png" type="image/png">
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">CVRaterAI</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="upload.html" class="download-btn active">
+                    <img src="../images/download-icon.png" alt="Download" class="btn-icon"> Try Now
+                </a>
+                <a href="sign-in.html" class="sign-in-btn">Sign In</a>
+            </div>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+
+        <div class="mobile-links">
+            <a href="index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <div class="mobile-buttons">
+                <a href="upload.html" class="download-btn active">
+                    <img src="../images/download-icon.png" alt="Download" class="btn-icon"> Try Now
+                </a>
+                <a href="sign-in.html" class="sign-in-btn">Sign In</a>
+            </div>
+        </div>
+
+        <div class="upload-card">
+            <h2>Upload Your Resume</h2>
+            <p>Our AI will analyze your resume and provide personalized feedback.</p>
+            <div class="upload-area" id="uploadArea">
+                <img src="../images/upload-icon.png" alt="Upload" class="upload-icon">
+                <p>Drag & drop your resume here or <span class="browse-text">browse</span></p>
+                <p class="file-formats">Supported formats: PDF, DOCX, TXT (Max size: 5MB)</p>
+                <input type="file" id="fileInput" accept=".pdf,.docx,.txt" hidden>
+            </div>
+            <div class="file-info hidden" id="fileInfo">
+                <div class="file-preview">
+                    <img src="../images/file-icon.png" alt="File" class="file-icon">
+                    <div class="file-details">
+                        <p class="file-name" id="fileName">filename.pdf</p>
+                        <p class="file-size" id="fileSize">1.2 MB</p>
+                    </div>
+                </div>
+                <button class="remove-file" id="removeFile">✕</button>
+            </div>
+            <button class="secondary-btn analyze-btn" id="analyzeBtn">
+                <img src="../images/analyze-icon.png" alt="Analyze" class="analyze-icon"> Analyze Resume
+            </button>
+            <div class="upload-notes">
+                <p><strong>Note:</strong> By uploading your resume, you agree to our <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+            </div>
+        </div>
+
+        <div class="upload-features">
+            <h3>Why Use CVRaterAI?</h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <img src="../images/ai-icon.png" alt="AI Analysis" class="feature-icon">
+                    <h4>AI-Powered Analysis</h4>
+                    <p>Our advanced AI provides detailed feedback tailored to your resume.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="../images/speed-icon.png" alt="Fast Results" class="feature-icon">
+                    <h4>Fast Results</h4>
+                    <p>Get comprehensive analysis and feedback in less than 60 seconds.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="../images/secure-icon.png" alt="Secure" class="feature-icon">
+                    <h4>100% Secure</h4>
+                    <p>Your information is encrypted and never shared with third parties.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="../images/improve-icon.png" alt="Improve" class="feature-icon">
+                    <h4>Continuous Improvement</h4>
+                    <p>Track your progress and make iterative improvements to your resume.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">CVRaterAI</div>
+                <div class="footer-links">
+                    <a href="about.html">About Us</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><img src="../images/facebook-icon.png" alt="Facebook"></a>
+                    <a href="#"><img src="../images/twitter-icon.png" alt="Twitter"></a>
+                    <a href="#"><img src="../images/linkedin-icon.png" alt="LinkedIn"></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CVRaterAI. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../js/mobile-menu.js"></script>
+    <script src="../js/upload.js"></script>
+</body>
+
+</html> 
