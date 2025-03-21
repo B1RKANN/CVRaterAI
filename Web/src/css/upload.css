@@ -76,14 +76,25 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 80px;
-    background-color: transparent;
-    position: relative;
-    z-index: 10;
+    padding: 1rem 2rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+nav.scrolled {
+    background: #187CFF;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 24px 24px;
+    backdrop-filter: blur(8px);
 }
 
 .logo {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 700;
     color: #F5F7FA;
     cursor: pointer;
@@ -203,7 +214,7 @@ nav {
     align-items: flex-start;
     gap: 60px;
     padding: 0;
-    margin: 0 auto;
+    margin: 80px auto 0;
     max-width: 1200px;
 }
 
@@ -332,10 +343,15 @@ textarea {
 
 /* Responsive tasarım */
 @media (max-width: 992px) {
+    main {
+        margin-top: 70px;
+    }
+    
     .content {
         flex-direction: column;
         align-items: center;
         gap: 30px;
+        margin-top: 20px;
     }
     
     .upload-section, .form-section {
@@ -345,6 +361,14 @@ textarea {
 }
 
 @media (max-width: 768px) {
+    nav {
+        padding: 1rem;
+    }
+    
+    main {
+        margin-top: 60px;
+    }
+    
     .upload-box {
         padding: 40px 20px;
     }

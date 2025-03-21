@@ -7,7 +7,7 @@
         top: 1.5rem;
         right: 1.5rem;
         cursor: pointer;
-        z-index: 1002;
+        z-index: 1010;
         width: 30px;
         height: 25px;
     }
@@ -44,7 +44,7 @@
     .logo {
         margin-bottom: 0;
         font-size: 28px;
-        z-index: 1002;
+        z-index: 1010;
     }
     
     /* Mobil menü */
@@ -63,7 +63,7 @@
         width: 100%;
         height: 100vh;
         background-color: #187CFF;
-        z-index: 1001;
+        z-index: 1009;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -106,17 +106,17 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
-        max-width: 250px;
+        max-width: 280px;
         background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
+        padding: 20px;
         border-radius: 15px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
-        gap: 0;
+        gap: 10px;
     }
     
     .nav-links.mobile-menu .nav-group a {
-        font-size: 24px;
+        font-size: 22px;
         margin: 5px 0;
         opacity: 0;
         color: #F5F7FA;
@@ -124,9 +124,9 @@
         transform: translateY(-20px);
         transition: opacity 0.3s ease, transform 0.3s ease;
         transition-delay: 0.1s;
-        padding: 8px 20px;
+        padding: 10px 20px;
         border-radius: 30px;
-        width: 200px;
+        width: 100%;
         text-align: center;
     }
     
@@ -145,6 +145,10 @@
     
     .nav-links.mobile-menu.active .nav-group a:nth-child(3) {
         transition-delay: 0.15s;
+    }
+    
+    .nav-links.mobile-menu.active .nav-group a:nth-child(4) {
+        transition-delay: 0.2s;
     }
     
     .nav-links.mobile-menu .nav-group a:hover {
@@ -170,7 +174,7 @@
         bottom: 80px;
         left: 0;
         width: 100%;
-        z-index: 1002;
+        z-index: 1009;
         align-items: center;
         gap: 15px;
         padding: 0 20px;
@@ -187,8 +191,8 @@
     }
     
     .mobile-buttons button {
-        width: 80%;
-        max-width: 250px;
+        width: 85%;
+        max-width: 280px;
         padding: 12px;
         font-size: 16px;
         border-radius: 30px;
@@ -267,6 +271,25 @@
         width: 100%;
         margin-top: 15px;
     }
+    
+    /* User details card düzenlemeleri */
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        margin: 15px 0;
+    }
+    
+    .label {
+        min-width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .value {
+        width: 100%;
+        word-break: break-word;
+        padding-left: 10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -318,5 +341,23 @@
     
     main {
         margin-top: 60px;
+    }
+    
+    /* User details card düzenlemeleri */
+    .detail-row {
+        padding: 0 10px;
+        margin: 12px 0;
+    }
+    
+    .label {
+        font-size: 15px;
+    }
+    
+    .value {
+        font-size: 14px;
+    }
+    
+    .details-card, .credit-card {
+        padding: 20px 10px;
     }
 } 

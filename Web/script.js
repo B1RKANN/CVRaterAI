@@ -442,6 +442,24 @@ function setupMobileMenu() {
                     }, 400);
                 });
             }
+            
+            // Mobil download butonuna tıklama olayı ekle
+            const mobileDownloadBtn = mobileButtons.querySelector('.download-btn');
+            if (mobileDownloadBtn) {
+                mobileDownloadBtn.addEventListener('click', () => {
+                    // Web görünümündeki download butonunun yaptığı işi yap
+                    window.open('https://play.google.com/store/apps', '_blank');
+                    
+                    // Mobil menüyü kapat
+                    navLinks.classList.remove('active');
+                    menuIcon.classList.remove('active');
+                    document.body.style.overflow = '';
+                    mobileButtons.classList.remove('active');
+                    setTimeout(() => {
+                        mobileButtons.style.display = 'none';
+                    }, 400);
+                });
+            }
         }
         
         // Nav grup stillerini ayarla
@@ -703,10 +721,19 @@ async function apiRequest(url, method, data) {
 // Relative path helper function
 function getRelativePath(targetPath) {
     const currentPath = window.location.pathname;
+    
+    // Özel durum: pricing veya features sayfasından upload sayfasına yönlendirme
     if (currentPath.includes('/public/pages/')) {
+        // public/pages dizini içinde bir sayfadayız
+        if (targetPath === 'public/pages/upload.html') {
+            return 'upload.html';
+        }
         return targetPath;
     } else if (currentPath.endsWith('/index.html') || currentPath.endsWith('/')) {
+        // Ana sayfadayız
         return targetPath;
     }
+    
+    // Diğer durumlarda
     return '../../' + targetPath;
 } 

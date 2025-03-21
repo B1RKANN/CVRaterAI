@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVRaterAI - User Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
+    <title>CVRaterAI - Profile</title>
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../src/css/profile.css">
     <link rel="stylesheet" href="../../src/css/mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Arka plan balonları -->
@@ -26,15 +26,22 @@
     
     <nav>
         <div class="logo">CVRaterAI</div>
+        <!-- Hamburger menü butonu -->
+        <div class="menu-icon">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </div>
         <div class="nav-links">
             <div class="nav-group">
                 <a href="../../index.html">Home</a>
                 <a href="pricing.html">Pricing</a>
                 <a href="features.html">Features</a>
+                <a href="upload.html">Upload</a>
             </div>
         </div>
         <div class="nav-buttons">
-            <button class="sign-in-btn" id="logoutBtn" onclick="logout()">LOGOUT</button>
+            <button class="sign-in-btn" onclick="openSignInModal()">SIGN IN / SIGN UP</button>
             <button class="download-btn">
                 <img src="../../Web-images/google_play_logo.png" alt="Google Play">
                 <span>Download</span>
@@ -42,8 +49,17 @@
         </div>
     </nav>
 
-    <!-- Sidebar hamburger butonu - Yeniden tasarlandı -->
-    <button class="hamburger-btn">
+    <!-- Mobil menü butonları -->
+    <div class="mobile-buttons">
+        <button class="sign-in-btn" onclick="openSignInModal()">SIGN IN / SIGN UP</button>
+        <button class="download-btn">
+            <img src="../../Web-images/google_play_logo.png" alt="Google Play">
+            <span>Download</span>
+        </button>
+    </div>
+
+    <!-- Hamburger butonu -->
+    <button class="hamburger-btn" aria-label="Toggle sidebar">
         <div class="hamburger-lines">
             <span class="line line1"></span>
             <span class="line line2"></span>
@@ -76,7 +92,7 @@
         </div>
 
         <div class="container">
-            <section class="user-details">
+            <section class="user-details profile-section">
                 <h2>User Details</h2>
                 <div class="details-card">
                     <div class="detail-row">
@@ -90,7 +106,7 @@
                 </div>
             </section>
 
-            <section class="credit-section">
+            <section class="credit-section profile-section">
                 <h2>Credit</h2>
                 <div class="credit-card">
                     <div class="credit-info">

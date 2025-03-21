@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVRaterAI - Resume Analysis Results</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/result.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="icon" href="../images/cv-icon.png" type="image/png">
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">CVRaterAI</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="upload.html" class="download-btn">
+                    <img src="../images/download-icon.png" alt="Download" class="btn-icon"> Try Now
+                </a>
+                <a href="sign-in.html" class="sign-in-btn">Sign In</a>
+            </div>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+
+        <div class="mobile-links">
+            <a href="index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <div class="mobile-buttons">
+                <a href="upload.html" class="download-btn">
+                    <img src="../images/download-icon.png" alt="Download" class="btn-icon"> Try Now
+                </a>
+                <a href="sign-in.html" class="sign-in-btn">Sign In</a>
+            </div>
+        </div>
+
+        <div class="result-container">
+            <div class="result-header">
+                <h1>Your Resume Analysis</h1>
+                <p class="file-name">John-Smith-Resume.pdf</p>
+                <div class="score-container">
+                    <div class="overall-score">
+                        <div class="score-circle">
+                            <div class="score-number">85</div>
+                            <div class="score-label">Overall Score</div>
+                        </div>
+                    </div>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <div class="score-label">Content</div>
+                            <div class="score-bar">
+                                <div class="score-progress" style="width: 85%;"></div>
+                            </div>
+                            <div class="score-value">85%</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-label">Format</div>
+                            <div class="score-bar">
+                                <div class="score-progress" style="width: 90%;"></div>
+                            </div>
+                            <div class="score-value">90%</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-label">Keywords</div>
+                            <div class="score-bar">
+                                <div class="score-progress" style="width: 80%;"></div>
+                            </div>
+                            <div class="score-value">80%</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-label">Impact</div>
+                            <div class="score-bar">
+                                <div class="score-progress" style="width: 75%;"></div>
+                            </div>
+                            <div class="score-value">75%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-tabs">
+                <div class="tab active" data-tab="summary">Summary</div>
+                <div class="tab" data-tab="strengths">Strengths</div>
+                <div class="tab" data-tab="improvements">Improvements</div>
+                <div class="tab" data-tab="keywords">Keywords</div>
+            </div>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="summary">
+                    <h2>Analysis Summary</h2>
+                    <p>Your resume shows strong qualifications and experience in your field. The layout is clear and professional, making it easy for recruiters to scan. Here's a breakdown of how your resume performed:</p>
+                    <div class="summary-points">
+                        <div class="summary-point">
+                            <div class="point-icon good"></div>
+                            <p>Strong work experience with clear accomplishments</p>
+                        </div>
+                        <div class="summary-point">
+                            <div class="point-icon good"></div>
+                            <p>Well-organized sections with consistent formatting</p>
+                        </div>
+                        <div class="summary-point">
+                            <div class="point-icon average"></div>
+                            <p>Some industry keywords present, but could be improved</p>
+                        </div>
+                        <div class="summary-point">
+                            <div class="point-icon poor"></div>
+                            <p>Impact statements could be strengthened with more metrics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="strengths">
+                    <h2>Resume Strengths</h2>
+                    <div class="strength-list">
+                        <div class="strength-item">
+                            <h3>Clear Professional Summary</h3>
+                            <p>Your resume begins with a concise and powerful professional summary that highlights your expertise and career focus.</p>
+                        </div>
+                        <div class="strength-item">
+                            <h3>Relevant Experience</h3>
+                            <p>You've effectively showcased relevant experience and tailored it to match potential job requirements.</p>
+                        </div>
+                        <div class="strength-item">
+                            <h3>Consistent Formatting</h3>
+                            <p>The consistent formatting throughout your resume creates a professional appearance that's easy to read.</p>
+                        </div>
+                        <div class="strength-item">
+                            <h3>Skills Section</h3>
+                            <p>Your skills section clearly outlines your technical and soft skills, providing a quick overview of your capabilities.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="improvements">
+                    <h2>Suggested Improvements</h2>
+                    <div class="improvement-list">
+                        <div class="improvement-item">
+                            <h3>Quantify Achievements</h3>
+                            <p>Add more specific metrics and numbers to demonstrate the impact of your work. For example, "Increased sales by 25%" rather than "Increased sales significantly."</p>
+                            <div class="example-box">
+                                <p class="before"><span>Before:</span> "Led a team that improved customer satisfaction."</p>
+                                <p class="after"><span>After:</span> "Led a 5-person team that improved customer satisfaction by 40% over 6 months."</p>
+                            </div>
+                        </div>
+                        <div class="improvement-item">
+                            <h3>Enhance Keyword Optimization</h3>
+                            <p>Include more industry-specific keywords to pass through Applicant Tracking Systems (ATS) and match job descriptions.</p>
+                            <div class="example-box">
+                                <p class="before"><span>Before:</span> "Managed projects from start to finish."</p>
+                                <p class="after"><span>After:</span> "Managed cross-functional projects utilizing agile methodology, JIRA, and Scrum frameworks."</p>
+                            </div>
+                        </div>
+                        <div class="improvement-item">
+                            <h3>Streamline Content</h3>
+                            <p>Remove outdated or irrelevant information to keep your resume focused and concise.</p>
+                            <div class="example-box">
+                                <p class="suggestion">Consider removing positions older than 10-15 years unless they're particularly relevant to your target role.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="keywords">
+                    <h2>Keyword Analysis</h2>
+                    <p>Keywords play a crucial role in getting your resume past ATS systems and into the hands of recruiters. Below are the keywords found in your resume and suggestions for improvement.</p>
+                    <div class="keyword-analysis">
+                        <div class="keyword-section">
+                            <h3>Keywords Present</h3>
+                            <div class="keyword-tags">
+                                <span class="keyword-tag">Project Management</span>
+                                <span class="keyword-tag">Team Leadership</span>
+                                <span class="keyword-tag">Strategic Planning</span>
+                                <span class="keyword-tag">Data Analysis</span>
+                                <span class="keyword-tag">Budget Management</span>
+                                <span class="keyword-tag">Client Relations</span>
+                                <span class="keyword-tag">Problem Solving</span>
+                                <span class="keyword-tag">Microsoft Office</span>
+                            </div>
+                        </div>
+                        <div class="keyword-section">
+                            <h3>Suggested Keywords</h3>
+                            <div class="keyword-tags suggested">
+                                <span class="keyword-tag">Process Improvement</span>
+                                <span class="keyword-tag">Cross-functional Collaboration</span>
+                                <span class="keyword-tag">Performance Metrics</span>
+                                <span class="keyword-tag">Stakeholder Management</span>
+                                <span class="keyword-tag">Resource Allocation</span>
+                                <span class="keyword-tag">Risk Management</span>
+                                <span class="keyword-tag">Business Development</span>
+                                <span class="keyword-tag">ROI Optimization</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-actions">
+                <a href="download-report.html" class="primary-btn">
+                    <img src="../images/download-report-icon.png" alt="Download" class="btn-icon"> Download Report
+                </a>
+                <a href="upload.html" class="secondary-btn">
+                    <img src="../images/upload-new-icon.png" alt="Upload" class="btn-icon"> Upload New Resume
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">CVRaterAI</div>
+                <div class="footer-links">
+                    <a href="about.html">About Us</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><img src="../images/facebook-icon.png" alt="Facebook"></a>
+                    <a href="#"><img src="../images/twitter-icon.png" alt="Twitter"></a>
+                    <a href="#"><img src="../images/linkedin-icon.png" alt="LinkedIn"></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CVRaterAI. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../js/mobile-menu.js"></script>
+    <script src="../js/result-tabs.js"></script>
+</body>
+
+</html> 

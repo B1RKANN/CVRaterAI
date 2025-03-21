@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVRaterAI - Upload CV</title>
+    <title>CVRaterAI - Upload</title>
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../src/css/upload.css">
     <link rel="stylesheet" href="../../src/css/mobile.css">
@@ -139,6 +139,33 @@
         // Mobil menü kurulumu
         document.addEventListener('DOMContentLoaded', function() {
             setupMobileMenu();
+        });
+
+        // Header scroll kontrolü
+        const nav = document.querySelector('nav');
+        
+        // Sayfa yüklendiğinde kontrol et
+        if (window.scrollY > 0) {
+            nav.classList.add('scrolled');
+        }
+        
+        // Scroll olayını dinle
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 0) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobil menü için
+        const menuIcon = document.querySelector('.menu-icon');
+        const navLinks = document.querySelector('.nav-links');
+        const mobileButtons = document.querySelector('.mobile-buttons');
+        
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileButtons.classList.toggle('active');
         });
     </script>
 </body>
