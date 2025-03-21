@@ -376,7 +376,13 @@ function setupMobileMenu() {
     const menuIcon = document.querySelector('.menu-icon');
     const navLinks = document.querySelector('.nav-links');
     const mobileButtons = document.querySelector('.mobile-buttons');
-    const navGroup = document.querySelector('.nav-links .nav-group');
+    
+    // Sayfa yüklendiğinde mobil butonların görünmediğinden emin ol
+    if (mobileButtons) {
+        mobileButtons.style.display = 'none';
+        mobileButtons.style.opacity = '0';
+        mobileButtons.classList.remove('active');
+    }
     
     if (menuIcon && navLinks) {
         // Mobil menü sınıfını ekle
@@ -387,84 +393,70 @@ function setupMobileMenu() {
             menuIcon.classList.toggle('active');
             navLinks.classList.toggle('active');
             
-            // Mobil butonları göster/gizle
-            if (mobileButtons) {
-                if (navLinks.classList.contains('active')) {
-                    mobileButtons.classList.add('active');
-                    setTimeout(() => {
-                        mobileButtons.style.display = 'flex';
-                    }, 100);
-                } else {
-                    mobileButtons.classList.remove('active');
-                    setTimeout(() => {
-                        mobileButtons.style.display = 'none';
-                    }, 400);
-                }
-            }
-            
-            // Nav grup animasyonu
-            if (navGroup) {
-                if (navLinks.classList.contains('active')) {
-                    navGroup.style.opacity = '0';
-                    navGroup.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        navGroup.style.opacity = '1';
-                        navGroup.style.transform = 'scale(1)';
-                    }, 100);
-                }
-            }
-            
-            // Sayfa kaydırmayı engelle/serbest bırak
+            // Menü açıksa mobil butonları göster, aksi halde gizle
             if (navLinks.classList.contains('active')) {
                 document.body.style.overflow = 'hidden';
+                
+                if (mobileButtons) {
+                    mobileButtons.classList.add('active');
+                    mobileButtons.style.display = 'flex';
+                    mobileButtons.style.flexDirection = 'column';
+                    mobileButtons.style.opacity = '1';
+                }
             } else {
                 document.body.style.overflow = '';
+                
+                if (mobileButtons) {
+                    mobileButtons.classList.remove('active');
+                    mobileButtons.style.opacity = '0';
+                    
+                    // Animasyon tamamlandıktan sonra display'i none yap
+                    setTimeout(() => {
+                        mobileButtons.style.display = 'none';
+                    }, 100);
+                }
             }
         });
         
-        // Sayfa yüklendiğinde mobil butonları gizle
+        // Mobil butonlar için tıklama olayları
         if (mobileButtons) {
-            mobileButtons.style.display = 'none';
-            mobileButtons.classList.remove('active');
-            
-            // Mobil butonlara tıklama olayları ekle
             const mobileSignInBtn = mobileButtons.querySelector('.sign-in-btn');
             if (mobileSignInBtn) {
                 mobileSignInBtn.addEventListener('click', () => {
                     openSignInModal();
+                    
                     // Mobil menüyü kapat
                     navLinks.classList.remove('active');
                     menuIcon.classList.remove('active');
                     document.body.style.overflow = '';
+                    
+                    // Mobil butonları gizle
                     mobileButtons.classList.remove('active');
+                    mobileButtons.style.opacity = '0';
                     setTimeout(() => {
                         mobileButtons.style.display = 'none';
-                    }, 400);
+                    }, 100);
                 });
             }
             
-            // Mobil download butonuna tıklama olayı ekle
             const mobileDownloadBtn = mobileButtons.querySelector('.download-btn');
             if (mobileDownloadBtn) {
                 mobileDownloadBtn.addEventListener('click', () => {
-                    // Web görünümündeki download butonunun yaptığı işi yap
                     window.open('https://play.google.com/store/apps', '_blank');
                     
                     // Mobil menüyü kapat
                     navLinks.classList.remove('active');
                     menuIcon.classList.remove('active');
                     document.body.style.overflow = '';
+                    
+                    // Mobil butonları gizle
                     mobileButtons.classList.remove('active');
+                    mobileButtons.style.opacity = '0';
                     setTimeout(() => {
                         mobileButtons.style.display = 'none';
-                    }, 400);
+                    }, 100);
                 });
             }
-        }
-        
-        // Nav grup stillerini ayarla
-        if (navGroup) {
-            navGroup.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
         }
         
         // Menü linklerine tıklandığında menüyü kapat
@@ -477,33 +469,13 @@ function setupMobileMenu() {
                 
                 if (mobileButtons) {
                     mobileButtons.classList.remove('active');
+                    mobileButtons.style.opacity = '0';
                     setTimeout(() => {
                         mobileButtons.style.display = 'none';
-                    }, 400);
+                    }, 100);
                 }
             });
         });
-        
-        // Kullanıcı giriş yapmışsa AnalyzingCV butonunun animasyonunu ayarla
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        if (isLoggedIn) {
-            const analyzingBtn = navGroup.querySelector('a[data-analyzing-cv]');
-            if (analyzingBtn) {
-                // Mobil menü animasyonlarını AnalyzingCV butonu için de ayarla
-                analyzingBtn.style.opacity = '0';
-                analyzingBtn.style.transform = 'translateY(-20px)';
-                
-                // Aktif sınıfı ekle
-                navLinks.addEventListener('transitionend', () => {
-                    if (navLinks.classList.contains('active')) {
-                        setTimeout(() => {
-                            analyzingBtn.style.opacity = '0.9';
-                            analyzingBtn.style.transform = 'translateY(0)';
-                        }, 200);
-                    }
-                });
-            }
-        }
     }
 }
 
@@ -736,4 +708,32 @@ function getRelativePath(targetPath) {
     
     // Diğer durumlarda
     return '../../' + targetPath;
-} 
+}
+
+// Sayfa yüklendiğinde mobil butonları gizle
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileButtons = document.querySelector('.mobile-buttons');
+    if (mobileButtons) {
+        mobileButtons.style.display = 'none';
+        mobileButtons.style.opacity = '0';
+        mobileButtons.classList.remove('active');
+    }
+});
+
+// Sayfa geçişleri için
+window.addEventListener('pageshow', function(event) {
+    const mobileButtons = document.querySelector('.mobile-buttons');
+    if (mobileButtons) {
+        mobileButtons.style.display = 'none';
+        mobileButtons.style.opacity = '0';
+        mobileButtons.classList.remove('active');
+    }
+    
+    const menuIcon = document.querySelector('.menu-icon');
+    const navLinks = document.querySelector('.nav-links');
+    if (menuIcon && navLinks) {
+        navLinks.classList.remove('active');
+        menuIcon.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}); 
