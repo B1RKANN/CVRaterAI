@@ -104,6 +104,10 @@ analyzeBtn.addEventListener('click', async () => {
                 formData.append('githubUrl', githubLink);
             }
             
+             // Form verilerinin localStorage'da kalmamasını sağla
+            localStorage.removeItem('requiredSkills');
+            localStorage.removeItem('githubLink');
+  
             // Form verilerini localStorage'a kaydet
             localStorage.setItem('requiredSkills', requiredSkills);
             localStorage.setItem('githubLink', githubLink);
@@ -220,26 +224,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Giriş durumunu kontrol et
     checkLoginStatus();
     
-    // Daha önce dosya yüklenmiş mi kontrol et
-    const fileUploaded = localStorage.getItem('cvFileUploaded') === 'true';
-    const fileName = localStorage.getItem('cvFileName');
+    // Sayfayı temiz başlatmak için localStorage'daki CV ile ilgili bilgileri temizle
+    localStorage.removeItem('cvFileUploaded');
+    localStorage.removeItem('cvFileName');
     
-    if (fileUploaded && fileName) {
-        // Dosya adını göster
-        showFileName(fileName);
+    // Dosya yükleme alanını sıfırla
+    const h2 = uploadBox.querySelector('h2');
+    if (h2) {
+        h2.textContent = 'Drag And Drop CV';
     }
+    uploadBox.classList.remove('file-selected');
+    analyzeBtn.classList.remove('active');
     
-    // Form bilgilerini doldur
-    const requiredSkills = localStorage.getItem('requiredSkills');
-    const githubLink = localStorage.getItem('githubLink');
+    // Form alanlarındaki default değerleri sıfırla
+    document.querySelector('.form-section textarea').value = '';
+    document.querySelector('.form-section input[type="text"]').value = '';
     
-    if (requiredSkills) {
-        document.querySelector('.form-section textarea').value = requiredSkills;
-    }
-    
-    if (githubLink) {
-        document.querySelector('.form-section input[type="text"]').value = githubLink;
-    }
+    // LocalStorage'daki ilgili değerleri temizle
+    localStorage.removeItem('requiredSkills');
+    localStorage.removeItem('githubLink');
 });
 
 // Scroll effect for balloons
