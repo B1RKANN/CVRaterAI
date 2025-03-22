@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.cvraterai.myapplication.databinding.FragmentProfileBinding
 import com.cvraterai.myapplication.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +57,12 @@ class ProfileFragment : Fragment() {
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                
+                // Oturum süresi dolmuşsa login ekranına yönlendir
+                if (it.contains("Oturum süresi dolmuş") || it.contains("Login")) {
+                    // Kullanıcıyı login sayfasına yönlendir
+                    findNavController().navigate(R.id.loginFragment)
+                }
             }
         }
     }

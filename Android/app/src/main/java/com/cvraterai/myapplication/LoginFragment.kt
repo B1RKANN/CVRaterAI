@@ -74,14 +74,21 @@ class LoginFragment : Fragment() {
         
         // Otomatik giriş kontrolü
         if (viewModel.isLoggedIn()) {
+            // Önce token'ların geçerli olduğundan emin ol
+            val hasValidToken = viewModel.ensureValidAccessToken()
+            
             // Otomatik giriş durumunda token'ları logcat'te göster
             Log.d(TAG, "Auto Login - Access Token: ${viewModel.getAccessToken()}")
             Log.d(TAG, "Auto Login - Refresh Token: ${viewModel.getRefreshToken()}")
+            Log.d(TAG, "Auto Login - Has Valid Token: $hasValidToken")
             println("Auto Login - Access Token: ${viewModel.getAccessToken()}")
             println("Auto Login - Refresh Token: ${viewModel.getRefreshToken()}")
+            println("Auto Login - Has Valid Token: $hasValidToken")
             
-            findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
-            return
+            if (hasValidToken) {
+                findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
+                return
+            }
         }
         
         // Giriş butonuna tıklama olayını ayarla

@@ -11,15 +11,19 @@ import com.cvraterai.myapplication.data.api.AuthApiService
 import com.cvraterai.myapplication.data.api.ProfileApiService
 import com.cvraterai.myapplication.data.model.ProfileResponse
 import com.cvraterai.myapplication.data.model.RefreshTokenRequest
+import com.cvraterai.myapplication.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileApiService: ProfileApiService,
     private val authApiService: AuthApiService,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     
     private val TAG = "ProfileViewModel"
@@ -33,11 +37,27 @@ class ProfileViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
     
+    // Token yenileme testi sonuçları için LiveData
+    private val _tokenTestResult = MutableLiveData<TokenTestResult>()
+    val tokenTestResult: LiveData<TokenTestResult> = _tokenTestResult
+    
     fun fetchProfileData() {
         viewModelScope.launch {
             try {
                 _loading.value = true
                 _error.value = null
+                
+                // Önce token durumunu kontrol et ve gerekirse yenile
+                val hasValidToken = withContext(Dispatchers.IO) {
+                    authRepository.ensureValidAccessTokenSync()
+                }
+                
+                if (!hasValidToken) {
+                    Log.e(TAG, "Could not get a valid token, fetch profile aborted")
+                    _error.value = "Oturum süresi dolmuş. Lütfen tekrar giriş yapın."
+                    _loading.value = false
+                    return@launch
+                }
                 
                 // Access token'dan user ID'yi almaya çalış
                 val accessToken = tokenManager.getAccessToken()
@@ -52,15 +72,10 @@ class ProfileViewModel @Inject constructor(
                         1 // Default değer
                     }
                 } else {
-                    // Access token yoksa ve refresh token varsa, default olarak 1 kullan
-                    // Bu durumda Authenticator token yenilemeyi halledecek
-                    if (tokenManager.getRefreshToken() != null) {
-                        Log.d(TAG, "No access token but refresh token exists, using default user ID")
-                        1
-                    } else {
-                        Log.e(TAG, "No tokens available")
-                        throw Exception("No tokens available")
-                    }
+                    // Bu noktada access token olmalıydı çünkü yukarıda kontrol ettik ve yeniledik
+                    // Eğer hala yoksa bir sorun var
+                    Log.e(TAG, "No access token despite token validation")
+                    throw Exception("No access token available")
                 }
                 
                 Log.d(TAG, "Fetching profile data for user ID: $userId")
@@ -78,8 +93,18 @@ class ProfileViewModel @Inject constructor(
                     }
                 } else {
                     if (response.code() == 401) {
-                        Log.d(TAG, "Received 401, token will be refreshed automatically")
-                        // 401 aldık, Authenticator token yenilemeyi otomatik halledecek
+                        Log.d(TAG, "Received 401, token should be refreshed automatically")
+                        // 401 aldık, token yenilemeyi tekrar deneyelim
+                        val refreshed = withContext(Dispatchers.IO) {
+                            authRepository.ensureValidAccessTokenSync()
+                        }
+                        
+                        if (refreshed) {
+                            // Token yenilendi, isteği tekrar deneyelim
+                            _error.value = "Token yenilendi, lütfen tekrar deneyin."
+                        } else {
+                            _error.value = "Oturum süresi dolmuş. Lütfen tekrar giriş yapın."
+                        }
                     } else {
                         _error.value = "Failed to load profile: ${response.code()}"
                         Log.e(TAG, "Failed to load profile: ${response.code()}")
@@ -92,5 +117,79 @@ class ProfileViewModel @Inject constructor(
                 _loading.value = false
             }
         }
+    }
+    
+    // Token yenileme testi
+    fun testTokenRefresh() {
+        viewModelScope.launch {
+            _tokenTestResult.value = TokenTestResult.Loading
+            
+            try {
+                // Mevcut token durumlarını log'a yaz
+                val accessTokenBefore = tokenManager.getAccessToken()
+                val refreshTokenBefore = tokenManager.getRefreshToken()
+                
+                Log.d(TAG, "TEST - Before refresh - Access Token: ${accessTokenBefore?.take(10) ?: "null"}...")
+                Log.d(TAG, "TEST - Before refresh - Refresh Token: ${refreshTokenBefore?.take(10) ?: "null"}...")
+                
+                // Refresh token yoksa testi sonlandır
+                if (refreshTokenBefore == null) {
+                    _tokenTestResult.value = TokenTestResult.Error("Refresh token bulunamadı. Lütfen tekrar giriş yapın.")
+                    return@launch
+                }
+                
+                // Access token'ı manuel olarak temizle (test için)
+                if (accessTokenBefore != null) {
+                    tokenManager.clearAccessToken()
+                    Log.d(TAG, "TEST - Access token cleared for testing")
+                } else {
+                    Log.d(TAG, "TEST - Access token already null, no need to clear")
+                }
+                
+                // Senkron olarak token yenileme işlemini çağır
+                // withContext kullanarak IO dispatcher'da çalıştır
+                val refreshResult = withContext(Dispatchers.IO) {
+                    authRepository.ensureValidAccessTokenSync()
+                }
+                
+                // Yenileme sonrası token durumlarını kontrol et
+                val accessTokenAfter = tokenManager.getAccessToken()
+                val refreshTokenAfter = tokenManager.getRefreshToken()
+                
+                Log.d(TAG, "TEST - After refresh - Access Token: ${accessTokenAfter?.take(10) ?: "null"}...")
+                Log.d(TAG, "TEST - After refresh - Refresh Token: ${refreshTokenAfter?.take(10) ?: "null"}...")
+                Log.d(TAG, "TEST - Token refresh result: $refreshResult")
+                
+                if (refreshResult && accessTokenAfter != null) {
+                    // Token yenileme başarılı
+                    _tokenTestResult.value = TokenTestResult.Success(
+                        "Token yenileme başarılı!\n\n" +
+                        "Önceki Access Token: ${if (accessTokenBefore == null) "Yok" else accessTokenBefore.take(10) + "..."}\n" +
+                        "Yeni Access Token: ${accessTokenAfter.take(10)}...\n\n" +
+                        "Refresh Token: ${refreshTokenAfter?.take(10)}..."
+                    )
+                    
+                    // Profil verilerini yeniden yükleyelim
+                    fetchProfileData()
+                } else {
+                    // Token yenileme başarısız
+                    _tokenTestResult.value = TokenTestResult.Error(
+                        "Token yenileme başarısız!\n\n" +
+                        "Refresh Token: ${refreshTokenBefore.take(10)}...\n" +
+                        "Access Token: ${accessTokenAfter ?: "Alınamadı"}"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "TEST - Error during token refresh test", e)
+                _tokenTestResult.value = TokenTestResult.Error("Test sırasında hata: ${e.message}")
+            }
+        }
+    }
+    
+    // Token testi sonuç sınıfları
+    sealed class TokenTestResult {
+        object Loading : TokenTestResult()
+        data class Success(val message: String) : TokenTestResult()
+        data class Error(val message: String) : TokenTestResult()
     }
 } 
