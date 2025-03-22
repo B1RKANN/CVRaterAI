@@ -66,6 +66,10 @@ class LoginViewModel @Inject constructor(
         return authRepository.isLoggedIn()
     }
     
+    fun ensureValidAccessToken(): Boolean {
+        return authRepository.ensureValidAccessTokenSync()
+    }
+    
     // TokenManager'dan token'ları almak için yardımcı metodlar
     fun getAccessToken(): String? {
         return authRepository.getAccessToken()

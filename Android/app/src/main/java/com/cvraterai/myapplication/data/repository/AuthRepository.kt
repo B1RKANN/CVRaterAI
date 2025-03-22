@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -212,27 +213,87 @@ class AuthRepository @Inject constructor(
         println("isLoggedIn - Access Token: $accessToken")
         println("isLoggedIn - Refresh Token: $refreshToken")
         
-        // Eğer refresh token varsa ve access token yoksa, refresh token işlemini başlat
-        if (refreshToken != null && accessToken == null) {
-            Log.d(TAG, "Access token is null but refresh token exists, initiating refresh")
-            // Coroutine scope'da refresh token işlemini başlat
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val result = refreshToken()
-                    if (result.isSuccess) {
-                        Log.d(TAG, "Token refresh successful")
-                    } else {
-                        Log.e(TAG, "Token refresh failed: ${result.exceptionOrNull()?.message}")
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Token refresh error", e)
-                }
+        // Refresh token yoksa kullanıcı giriş yapmamış demektir
+        if (refreshToken == null) {
+            return false
+        }
+        
+        // Eğer refresh token varsa ve access token yoksa, senkron olarak refresh token işlemini başlat
+        if (accessToken == null) {
+            Log.d(TAG, "Access token is null but refresh token exists, initiating refresh synchronously")
+            // Senkron olarak refresh token işlemini gerçekleştir
+            val result = ensureValidAccessTokenSync()
+            
+            // Yenileme başarılı olduysa true döndür, değilse (refresh token geçersiz olabilir) false döndür
+            if (!result) {
+                Log.e(TAG, "Token refresh failed during isLoggedIn check")
+                return false
             }
         }
         
-        // Eğer refresh token varsa, kullanıcı giriş yapmış sayılır
-        // Access token yoksa bile refresh token ile yeni bir access token alınabilir
-        return refreshToken != null
+        // Bu noktada ya geçerli bir access token vardı ya da refresh token ile yeni bir token alındı
+        return true
+    }
+    
+    // Senkron olarak erişim belirtecinin geçerli olduğunu garantileme
+    fun ensureValidAccessTokenSync(): Boolean {
+        val accessToken = tokenManager.getAccessToken()
+        val refreshToken = tokenManager.getRefreshToken()
+        
+        // Eğer zaten geçerli bir access token varsa, true döndür
+        if (accessToken != null) {
+            Log.d(TAG, "Access token already valid")
+            return true
+        }
+        
+        // Eğer refresh token yoksa, false döndür
+        if (refreshToken == null) {
+            Log.e(TAG, "No refresh token available")
+            return false
+        }
+        
+        // Access token yoksa, refresh token kullanarak yeni bir access token al
+        return runBlocking(Dispatchers.IO) {
+            try {
+                Log.d(TAG, "Synchronously refreshing access token")
+                val request = RefreshTokenRequest(refreshToken)
+                val response = authApiService.refreshTokenSync(request).execute()
+                
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        val newAccessToken = body.getEffectiveAccessToken()
+                        val newRefreshToken = body.getEffectiveRefreshToken()
+                        
+                        if (newAccessToken != null && newRefreshToken != null) {
+                            tokenManager.saveTokens(newAccessToken, newRefreshToken)
+                            Log.d(TAG, "Successfully refreshed tokens synchronously")
+                            return@runBlocking true
+                        } else {
+                            Log.e(TAG, "Refreshed tokens are null after successful response")
+                        }
+                    } else {
+                        Log.e(TAG, "Response body is null after successful response")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e(TAG, "Token refresh failed: ${response.code()}, Error: $errorBody")
+                    
+                    // 401 veya 500 hata kodu gelirse ve "token is not in database" mesajı varsa
+                    // refresh token geçersiz demektir, token'ları temizle
+                    val errorMessage = errorBody ?: ""
+                    if (response.code() == 401 || (response.code() == 500 && errorMessage.contains("token is not in database", true))) {
+                        Log.d(TAG, "Clearing tokens due to invalid refresh token")
+                        tokenManager.clearTokens()
+                    }
+                }
+                
+                false
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during token refresh", e)
+                false
+            }
+        }
     }
     
     // TokenManager'dan token'ları almak için metodlar
