@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.birkann.model.User;
+import com.birkann.oauth2.UserPrincipal;
 import com.birkann.service.IJWTService;
 
 import io.jsonwebtoken.Claims;
@@ -27,13 +28,37 @@ public class JWTService implements IJWTService {
 
 	@Override
 	public String generateToken(UserDetails userDetails) {
-		// UserDetails'i User sınıfına cast ediyoruz
-		User user = (User) userDetails;
+		if (userDetails instanceof UserPrincipal) {
+			return generateToken((UserPrincipal) userDetails);
+		} else if (userDetails instanceof User) {
+			// UserDetails'i User sınıfına cast ediyoruz
+			User user = (User) userDetails;
+			
+			return Jwts.builder()
+			.setSubject(userDetails.getUsername())
+			.claim("userId", user.getId()) // Kullanıcı ID'sini claim olarak ekliyoruz
+			.claim("role", user.getRole().name()) // Kullanıcı rolünü de ekleyebiliriz
+			.setIssuedAt(new Date())
+			.setExpiration(new Date(System.currentTimeMillis()+1000*60*60*2))
+			.signWith(getKey(), SignatureAlgorithm.HS256)
+			.compact();
+		}
 		
+		// Fallback for other UserDetails implementations
 		return Jwts.builder()
 		.setSubject(userDetails.getUsername())
-		.claim("userId", user.getId()) // Kullanıcı ID'sini claim olarak ekliyoruz
-		.claim("role", user.getRole().name()) // Kullanıcı rolünü de ekleyebiliriz
+		.setIssuedAt(new Date())
+		.setExpiration(new Date(System.currentTimeMillis()+1000*60*60*2))
+		.signWith(getKey(), SignatureAlgorithm.HS256)
+		.compact();
+	}
+	
+	public String generateToken(UserPrincipal userPrincipal) {
+		return Jwts.builder()
+		.setSubject(userPrincipal.getUsername())
+		.claim("userId", userPrincipal.getId()) // Kullanıcı ID'sini claim olarak ekliyoruz
+		.claim("name", userPrincipal.getName())
+		.claim("role", userPrincipal.getAuthorities().iterator().next().getAuthority()) // İlk yetkiyi rol olarak kullan
 		.setIssuedAt(new Date())
 		.setExpiration(new Date(System.currentTimeMillis()+1000*60*60*2))
 		.signWith(getKey(), SignatureAlgorithm.HS256)
@@ -120,5 +145,20 @@ public class JWTService implements IJWTService {
 		cookie.setPath("/");
 		cookie.setMaxAge(0); // Cookie'yi hemen sil
 		response.addCookie(cookie);
+	}
+
+	// DefaultOidcUser'dan JWT token oluşturma metodu
+	public String generateTokenFromOidcUser(org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser oidcUser) {
+		return Jwts.builder()
+		.setSubject(oidcUser.getEmail())
+		.claim("userId", oidcUser.getSubject()) // Subject değerini kullanıcı ID'si olarak kullan (Google'ın unique ID'si)
+		.claim("name", oidcUser.getFullName())
+		.claim("email", oidcUser.getEmail())
+		.claim("picture", oidcUser.getPicture())
+		.claim("role", "USER") // Varsayılan rol
+		.setIssuedAt(new Date())
+		.setExpiration(new Date(System.currentTimeMillis()+1000*60*60*2)) // 2 saat
+		.signWith(getKey(), SignatureAlgorithm.HS256)
+		.compact();
 	}
 }
