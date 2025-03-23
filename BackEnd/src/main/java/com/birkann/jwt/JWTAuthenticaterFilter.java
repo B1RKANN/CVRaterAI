@@ -37,6 +37,19 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 		"/auth/v2/logout"
 	);
 	
+	// Swagger UI ve API dokümanları için yollar
+	private static final List<String> SWAGGER_PATHS = Arrays.asList(
+		"/api-docs",
+		"/swagger-ui.html",
+		"/swagger-ui/",
+		"/swagger-resources",
+		"/configuration/ui",
+		"/configuration/security",
+		"/webjars",
+		"/v3/api-docs",
+		"/api/emails"
+	);
+	
 	@Autowired
 	private IJWTService jwtService;
 	
@@ -45,7 +58,7 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 	
 	/**
 	 * Bu metot filtre uygulanmaması gereken URL'leri belirler
-	 * Kayıt, giriş ve token yenileme işlemleri için filtre uygulanmamalıdır
+	 * Kayıt, giriş, token yenileme işlemleri ve Swagger UI için filtre uygulanmamalıdır
 	 */
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -63,8 +76,12 @@ public class JWTAuthenticaterFilter extends OncePerRequestFilter {
 		boolean isPublicEndpoint = PUBLIC_PATHS.stream()
 			.anyMatch(publicPath -> path.equals(publicPath) || path.equals("/auth" + publicPath));
 		
-		logger.info("JWT Filter - URL: {}, Public Endpoint: {}", path, isPublicEndpoint);
-		return isPublicEndpoint;
+		// Swagger UI ve API dokümanları için kontrol
+		boolean isSwaggerPath = SWAGGER_PATHS.stream()
+			.anyMatch(swaggerPath -> path.startsWith(swaggerPath));
+		
+		logger.info("JWT Filter - URL: {}, Public Endpoint: {}, Swagger Path: {}", path, isPublicEndpoint, isSwaggerPath);
+		return isPublicEndpoint || isSwaggerPath;
 	}
 
 	@Override
