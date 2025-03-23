@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Attempting login with email:', email);
                         
                         // Giriş için authenticate-with-cookie endpoint'ine istek gönder
-                        const responseData = await apiRequest('http://69.62.120.202:8080/auth/v2/authenticate-with-cookie', 'POST', {
+                        const responseData = await apiRequest('/auth/v2/authenticate-with-cookie', 'POST', {
                             email: email,
                             password: password
                         });
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Attempting registration with email:', email);
                         
                         // Kayıt için register-with-cookie endpoint'ine istek gönder
-                        const responseData = await apiRequest('http://69.62.120.202:8080/auth/register-with-cookie', 'POST', {
+                        const responseData = await apiRequest('/auth/register-with-cookie', 'POST', {
                             name: name,
                             email: email,
                             password: password
@@ -334,7 +334,7 @@ function checkLoginStatus() {
 async function validateToken() {
     try {
         // Token doğrulama endpoint'ine istek gönder
-        const response = await apiRequest('http://69.62.120.202:8080/auth/validate', 'GET');
+        const response = await apiRequest('/auth/validate', 'GET');
         return true; // Başarılı yanıt alındıysa token geçerli
     } catch (error) {
         console.error('Token validation error:', error);
@@ -571,7 +571,7 @@ async function logout() {
         
         // Backend'e çıkış isteği gönder
         try {
-            await apiRequest('http://69.62.120.202:8080/auth/logout', 'POST');
+            await apiRequest('/auth/logout', 'POST');
             console.log('Logout request successful');
         } catch (error) {
             console.error('Logout request error:', error);
