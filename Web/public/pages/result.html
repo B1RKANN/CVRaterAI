@@ -8,6 +8,37 @@
     <link rel="stylesheet" href="../../src/css/result.css">
     <link rel="stylesheet" href="../../src/css/mobile.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Sansita&family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
+    <style>
+        .ai-note {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .ai-note h2 {
+            color: #e63946;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .ai-note-container {
+            border: 3px solid #e63946;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 90%;
+            background-color: white;
+        }
+        
+        .ai-note-content {
+            text-align: left;
+            line-height: 1.6;
+            font-size: 16px;
+            color: #333;
+            min-height: 100px;
+        }
+    </style>
 </head>
 <body>
     <!-- Arka plan balonları -->
@@ -37,6 +68,7 @@
                 <a href="../../index.html">Home</a>
                 <a href="pricing.html">Pricing</a>
                 <a href="features.html">Features</a>
+                <a href="upload.html">Upload</a>
             </div>
         </div>
         <div class="nav-buttons">
@@ -60,83 +92,40 @@
     <main>
         <div class="container">
             <div class="results-flex-container">
-                <div class="skills-container">
-                    <div class="skill-item">
-                        <span class="skill-name">java</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="java-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="java-percent">%0</span>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">html</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="html-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="html-percent">%0</span>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">css</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="css-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="css-percent">%0</span>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">python</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="python-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="python-percent">%0</span>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">C++</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="cpp-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="cpp-percent">%0</span>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">C#</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="csharp-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="csharp-percent">%0</span>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">PHP</span>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" id="php-bar" data-percent="0"></div>
-                        </div>
-                        <span class="skill-percent" id="php-percent">%0</span>
+                <div class="skills-section">
+                    <h2>Talent Analysis</h2>
+                    <div class="skills-container">
+                        <!-- Beceri çubukları result.js tarafından dinamik olarak buraya eklenecek -->
                     </div>
                 </div>
 
                 <div class="user-info">
                     <h2>User information</h2>
-                    <div class="info-item">
-                        <span class="info-label">Name :</span>
-                        <span class="info-value">Arda</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Surname :</span>
-                        <span class="info-value">Yeşilçayır</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email :</span>
-                        <span class="info-value">ardayesilcayir7@gmail.com</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Phone Number :</span>
-                        <span class="info-value">0538 436 43 89</span>
-                    </div>
-                    <div class="info-item skills-info">
-                        <span class="info-label">Skills :</span>
-                        <div class="info-value">
-                            <p>B1 level English,</p>
-                            <p>2 years senior developer,</p>
-                            <p>intermediate level Java programming language,</p>
-                            <p>advanced level frontend knowledge</p>
+                    <div class="info-container">
+                        <div class="info-item">
+                            <span class="info-label">Name :</span>
+                            <span class="info-value">Arda</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Surname :</span>
+                            <span class="info-value">Yeşilçayır</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email :</span>
+                            <span class="info-value">ardayesilcayir7@gmail.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number :</span>
+                            <span class="info-value">0538 436 43 89</span>
+                        </div>
+                        <div class="info-item skills-info">
+                            <span class="info-label">Skills :</span>
+                            <div class="info-value">
+                                <p>B1 level English,</p>
+                                <p>2 years senior developer,</p>
+                                <p>intermediate level Java programming language,</p>
+                                <p>advanced level frontend knowledge</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,12 +134,22 @@
             <div class="compatibility">
                 <h2>Compatibility Status</h2>
                 <div class="compatibility-container">
-                    <span class="compatibility-min">%0</span>
+                    <span class="compatibility-min">0%</span>
                     <div class="compatibility-bar-container">
                         <div class="compatibility-bar" id="compatibility-bar" data-percent="0"></div>
                         <div class="compatibility-marker" id="compatibility-marker"></div>
                     </div>
-                    <span class="compatibility-max">%100</span>
+                    <span class="compatibility-max">100%</span>
+                </div>
+            </div>
+            
+            <!-- AI Note Bölümü -->
+            <div class="ai-note">
+                <h2>AI Note</h2>
+                <div class="ai-note-container">
+                    <div class="ai-note-content" id="ai-note-content">
+                        <!-- AI Note içeriği burada gösterilecek -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,5 +203,34 @@
     <script src="../../script.js"></script>
     <script src="../../src/js/result.js"></script>
     <script src="../../src/js/animations.js"></script>
+    
+    <!-- AI Note için script -->
+    <script>
+        // Sayfa tamamen yüklendiğinde çalışır
+        document.addEventListener('DOMContentLoaded', function() {
+            // AI Note içeriğini doldur
+            const aiNoteContent = document.getElementById('ai-note-content');
+            const evaluationResultStr = localStorage.getItem('evaluationResult');
+            
+            if (evaluationResultStr && aiNoteContent) {
+                try {
+                    const evaluationResult = JSON.parse(evaluationResultStr);
+                    const resultData = JSON.parse(evaluationResult.evaluationResult);
+                    
+                    // API'den gelen explanation alanını kullan
+                    if (resultData.explanation) {
+                        aiNoteContent.textContent = resultData.explanation;
+                    } else {
+                        aiNoteContent.textContent = "Bu CV için AI değerlendirme notu bulunmamaktadır.";
+                    }
+                } catch (error) {
+                    console.error('AI Note verisi işlenirken hata oluştu:', error);
+                    aiNoteContent.textContent = "Değerlendirme notu yüklenirken bir hata oluştu.";
+                }
+            } else if (aiNoteContent) {
+                aiNoteContent.textContent = "Değerlendirme sonucu bulunamadı.";
+            }
+        });
+    </script>
 </body>
 </html>

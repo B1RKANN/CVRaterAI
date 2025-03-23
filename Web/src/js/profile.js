@@ -126,7 +126,7 @@ async function fetchUserProfile() {
         console.log('Kullanıcı ID:', userId);
         
         // API'ye istek gönder
-        const response = await fetch(`http://69.62.120.202:8080/api/v1/profile/${userId}`, {
+        const response = await fetch(`http://69.62.120/api/v1/profile/${userId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -252,7 +252,7 @@ async function fetchCVEvaluationHistory() {
         }
         
         // API'ye istek gönder
-        const response = await fetch(`http://69.62.120.202:8080/api/v1/cv-evaluation/user/${userId}`, {
+        const response = await fetch(`/api/v1/cv-evaluation/user/${userId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
