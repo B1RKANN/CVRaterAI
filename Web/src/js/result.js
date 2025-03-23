@@ -59,13 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const compatibilityScore = evaluationResult.evaluationScore;
             compatibilityBar.style.width = `${compatibilityScore}%`;
             
-            // Compatibility yüzdesini göster
+            // Compatibility yüzdesini başlık ile bar arasına göster
             const percentageDisplay = document.createElement('div');
-            percentageDisplay.className = 'compatibility-percentage';
-            percentageDisplay.textContent = `%${compatibilityScore}`;
-            const parentElement = compatibilityBar.parentElement;
-            if (parentElement) {
-                parentElement.appendChild(percentageDisplay);
+            percentageDisplay.className = 'compatibility-percentage-header';
+            percentageDisplay.textContent = `${compatibilityScore}%`;
+            
+            const compatibilitySection = document.querySelector('.compatibility');
+            const compatibilityContainer = document.querySelector('.compatibility-container');
+            
+            if (compatibilitySection && compatibilityContainer) {
+                compatibilitySection.insertBefore(percentageDisplay, compatibilityContainer);
             }
         }
 

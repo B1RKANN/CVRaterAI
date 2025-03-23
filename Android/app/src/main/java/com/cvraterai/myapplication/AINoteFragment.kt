@@ -174,6 +174,9 @@ class AINoteFragment : Fragment(), GestureDetector.OnGestureListener {
         
         // Anasayfaya dön butonuna tıklama olayını ayarla
         view.findViewById<Button>(R.id.btnBackToHomepage)?.setOnClickListener {
+            // Animasyonları resetle - history sayfasından tekrar bakılırsa animasyonlar görünsün
+            AnalysisFragment.animationsPlayed = false
+            
             // Ana sayfaya dön (geriye giderek)
             if (evaluationId != -1L) {
                 // Eğer geçmiş değerlendirmeden gelindiyse, geçmiş sayfasına git

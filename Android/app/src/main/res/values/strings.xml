@@ -92,6 +92,16 @@
     <string name="analyze_cv">Analyze CV</string>
     <string name="required_features_example">B1 level English, Java, Spring Boot, C++ and C# knowledge, ability to work well in a team</string>
     <string name="github_link_example">https://github.com/username</string>
+    <string name="file_not_found">File not found</string>
+    <string name="file_not_found_tr">Dosya bulunamadı</string>
+    <string name="selected_file">Selected File: %s</string>
+    <string name="selected_file_tr">Seçili Dosya: %s</string>
+    <string name="process_canceled">Process canceled</string>
+    <string name="process_canceled_tr">İşlem iptal edildi</string>
+    <string name="cancel_analysis">Cancel Analysis</string>
+    <string name="cancel_analysis_tr">İşlemi İptal Et</string>
+    <string name="required_features_hint">Job requirements (optional)</string>
+    <string name="github_link_hint">GitHub link (optional)</string>
 
     <!-- AnalysisFragment -->
     <string name="analysis_title">CV Analysis</string>
@@ -101,7 +111,7 @@
     <string name="strengths">Strengths</string>
     <string name="weaknesses">Areas for Improvement</string>
     <string name="recommendations">Recommendations</string>
-    <string name="programming_language_analysis">Programming language analysis</string>
+    <string name="programming_language_analysis">Talent analysis</string>
     <string name="compatibility_status">Compatibility Status</string>
     <string name="logout">Logout</string>
 
@@ -110,6 +120,24 @@
     <string name="loading_subtitle">Lütfen bekleyiniz</string>
     <string name="loading_title_en">Analyzing CV...</string>
     <string name="loading_subtitle_en">Please wait</string>
+    
+    <!-- Loading Process Steps -->
+    <string name="process_step_initializing">Initializing...</string>
+    <string name="process_step_initializing_tr">Başlatılıyor...</string>
+    <string name="process_step_uploading">Uploading File</string>
+    <string name="process_step_uploading_tr">Dosya Yükleniyor</string>
+    <string name="process_step_parsing">Extracting CV Information</string>
+    <string name="process_step_parsing_tr">CV Bilgileri Çıkarılıyor</string>
+    <string name="process_step_analyzing">Analyzing CV</string>
+    <string name="process_step_analyzing_tr">CV Analiz Ediliyor</string>
+    <string name="process_step_scoring">Calculating Score</string>
+    <string name="process_step_scoring_tr">Puanlama Yapılıyor</string>
+    <string name="process_step_finalizing">Preparing Results</string>
+    <string name="process_step_finalizing_tr">Sonuçlar Hazırlanıyor</string>
+    <string name="progress">Progress</string>
+    <string name="progress_tr">İlerleme</string>
+    <string name="completed">Completed</string>
+    <string name="completed_tr">Tamamlandı</string>
 
     <!-- Analysis History -->
     <string name="analysis_history_title">Analysis History</string>
@@ -121,4 +149,14 @@
     <string name="no_evaluations">No evaluations found</string>
     <string name="view_details">Details</string>
     <string name="candidate_name">Full Name</string>
+    
+    <!-- Date Categories -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This Week</string>
+    <string name="last_week">Last Week</string>
+    <string name="this_month">This Month</string>
+    <string name="last_month">Last Month</string>
+    <string name="older">Older</string>
+
 </resources>

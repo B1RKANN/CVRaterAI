@@ -667,16 +667,16 @@ body::before {
     position: absolute;
     right: 10px;
     top: 10px;
-    color: white;
-    font-size: 35px;
+    color: #000000;
+    font-size: 40px;
     font-weight: bold;
     cursor: pointer;
     z-index: 9999;
     transition: all 0.3s ease;
+    opacity: 1;
 }
 
 .close-modal:hover {
-    color: #187CFF;
     transform: scale(1.1);
 }
 
@@ -807,6 +807,11 @@ body::before {
     padding: 0 50px;
     height: 100%;
     text-align: center;
+}
+
+.modal form h1 {
+    color: #000;
+    margin-bottom: 20px;
 }
 
 .modal input {

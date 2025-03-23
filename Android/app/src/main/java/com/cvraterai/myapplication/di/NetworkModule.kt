@@ -68,11 +68,18 @@ object NetworkModule {
                     .header("Authorization", "Bearer $accessToken")
                     .build()
             } else {
-                Log.d("NetworkModule", "No access token, adding dummy token to trigger 401")
-                // Access token yoksa dummy token ekle, Authenticator 401'i yakalayacak
-                request.newBuilder()
-                    .header("Authorization", "Bearer dummy-token")
-                    .build()
+                // Access token yoksa ve refresh token varsa, isteği normal gönder ve Authenticator'ın
+                // refresh token kullanarak yeni token almasını sağla
+                val refreshToken = tokenManager.getRefreshToken()
+                if (refreshToken != null) {
+                    Log.d("NetworkModule", "No access token but refresh token exists, proceeding without token")
+                    request
+                } else {
+                    // Hem access token hem refresh token yoksa isteği normal şekilde gönder,
+                    // muhtemelen 401 hatası alınacak ve kullanıcı login sayfasına yönlendirilecek
+                    Log.d("NetworkModule", "No tokens available, proceeding without authentication")
+                    request
+                }
             }
             
             Log.d("NetworkModule", "Proceeding with authenticated request: ${authenticatedRequest.url}")
@@ -236,82 +243,86 @@ object NetworkModule {
                 return@Authenticator null
             }
 
-            // Senkron bir şekilde refresh token isteği yap
-            runBlocking {
-                try {
-                    Log.d("NetworkModule", "║ Making refresh token request...")
-                    val request = RefreshTokenRequest(refreshToken)
-                    Log.d("NetworkModule", "║ Refresh token request body: $request")
-                    Log.d("NetworkModule", "║ Refresh token request body raw: refresh_token=${refreshToken.take(10)}...")
+            // Değişken oluştur
+            var newRequest: Request? = null
+            
+            // Senkron olarak refresh token işlemi yap
+            try {
+                Log.d("NetworkModule", "║ Making refresh token request...")
+                val request = RefreshTokenRequest(refreshToken)
+                Log.d("NetworkModule", "║ Refresh token request body: $request")
+                Log.d("NetworkModule", "║ Refresh token request body raw: refresh_token=${refreshToken.take(10)}...")
+                
+                val refreshTokenResponse = authApiService.refreshTokenSync(request).execute()
+                Log.d("NetworkModule", "║ Refresh token response code: ${refreshTokenResponse.code()}")
+                Log.d("NetworkModule", "║ Refresh token response message: ${refreshTokenResponse.message()}")
+                Log.d("NetworkModule", "║ Refresh token response headers: ${refreshTokenResponse.headers()}")
+                
+                if (refreshTokenResponse.isSuccessful) {
+                    val body = refreshTokenResponse.body()
+                    Log.d("NetworkModule", "║ Refresh token response body: $body")
                     
-                    val refreshTokenResponse = authApiService.refreshTokenSync(request).execute()
-                    Log.d("NetworkModule", "║ Refresh token response code: ${refreshTokenResponse.code()}")
-                    Log.d("NetworkModule", "║ Refresh token response message: ${refreshTokenResponse.message()}")
-                    Log.d("NetworkModule", "║ Refresh token response headers: ${refreshTokenResponse.headers()}")
-                    
-                    if (refreshTokenResponse.isSuccessful) {
-                        val body = refreshTokenResponse.body()
-                        Log.d("NetworkModule", "║ Refresh token response body: $body")
+                    if (body != null) {
+                        val newAccessToken = body.getEffectiveAccessToken()
+                        val newRefreshToken = body.getEffectiveRefreshToken()
                         
-                        if (body != null) {
-                            val newAccessToken = body.getEffectiveAccessToken()
-                            val newRefreshToken = body.getEffectiveRefreshToken()
+                        // API yanıtını daha detaylı logla
+                        Log.d("NetworkModule", "║ Raw access token: ${body.accessToken}")
+                        Log.d("NetworkModule", "║ Raw refresh token: ${body.refreshToken}")
+                        Log.d("NetworkModule", "║ Raw token: ${body.token}")
+                        Log.d("NetworkModule", "║ Raw access_token: ${body.access_token}")
+                        Log.d("NetworkModule", "║ Raw refresh_token: ${body.refresh_token}")
+                        
+                        Log.d("NetworkModule", "║ New access token: ${newAccessToken?.take(20) ?: "null"}...")
+                        Log.d("NetworkModule", "║ New refresh token: ${newRefreshToken?.take(10) ?: "null"}...")
+                        
+                        if (newAccessToken != null && newRefreshToken != null) {
+                            tokenManager.saveTokens(newAccessToken, newRefreshToken)
+                            Log.d("NetworkModule", "║ Successfully saved new tokens")
                             
-                            // API yanıtını daha detaylı logla
-                            Log.d("NetworkModule", "║ Raw access token: ${body.accessToken}")
-                            Log.d("NetworkModule", "║ Raw refresh token: ${body.refreshToken}")
-                            Log.d("NetworkModule", "║ Raw token: ${body.token}")
-                            Log.d("NetworkModule", "║ Raw access_token: ${body.access_token}")
-                            Log.d("NetworkModule", "║ Raw refresh_token: ${body.refresh_token}")
-                            
-                            Log.d("NetworkModule", "║ New access token: ${newAccessToken?.take(20) ?: "null"}...")
-                            Log.d("NetworkModule", "║ New refresh token: ${newRefreshToken?.take(10) ?: "null"}...")
-                            
-                            if (newAccessToken != null && newRefreshToken != null) {
-                                tokenManager.saveTokens(newAccessToken, newRefreshToken)
-                                Log.d("NetworkModule", "║ Successfully saved new tokens")
-                                
-                                // Yeni token ile orijinal isteği tekrarla
-                                val newRequest = response.request.newBuilder()
-                                    .removeHeader("Authorization")
-                                    .addHeader("Authorization", "Bearer $newAccessToken")
-                                    .build()
-                                Log.d("NetworkModule", "║ Created new request with updated token")
-                                Log.d("NetworkModule", "║ New request headers: ${newRequest.headers}")
-                                Log.d("NetworkModule", "║ AUTHENTICATOR END (SUCCESS)")
-                                Log.d("NetworkModule", "╚═══════════════════════════════════════════")
-                                return@runBlocking newRequest
-                            } else {
-                                Log.e("NetworkModule", "║ ERROR: New tokens are null after successful response")
-                            }
+                            // Yeni token ile orijinal isteği tekrarla
+                            newRequest = response.request.newBuilder()
+                                .removeHeader("Authorization")
+                                .addHeader("Authorization", "Bearer $newAccessToken")
+                                .build()
+                            Log.d("NetworkModule", "║ Created new request with updated token")
+                            Log.d("NetworkModule", "║ New request headers: ${newRequest.headers}")
+                            Log.d("NetworkModule", "║ AUTHENTICATOR END (SUCCESS)")
                         } else {
-                            Log.e("NetworkModule", "║ ERROR: Response body is null after successful response")
+                            Log.e("NetworkModule", "║ ERROR: New tokens are null after successful response")
                         }
                     } else {
-                        val errorBody = try {
-                            refreshTokenResponse.errorBody()?.string() ?: "No error body"
-                        } catch (e: Exception) {
-                            "Error reading error body: ${e.message}"
-                        }
-                        
-                        Log.e("NetworkModule", "║ ERROR: Token refresh failed")
-                        Log.e("NetworkModule", "║ Response Code: ${refreshTokenResponse.code()}")
-                        Log.e("NetworkModule", "║ Request URL: ${refreshTokenResponse.raw().request.url}")
-                        Log.e("NetworkModule", "║ Request Headers: ${refreshTokenResponse.raw().request.headers}")
-                        Log.e("NetworkModule", "║ Error Body: $errorBody")
+                        Log.e("NetworkModule", "║ ERROR: Response body is null after successful response")
                     }
-                    Log.d("NetworkModule", "║ AUTHENTICATOR END (FAILED)")
-                    Log.d("NetworkModule", "╚═══════════════════════════════════════════")
-                    null
-                } catch (e: Exception) {
-                    Log.e("NetworkModule", "║ ERROR: Exception during token refresh", e)
-                    Log.e("NetworkModule", "║ Exception message: ${e.message}")
-                    Log.e("NetworkModule", "║ Stack trace: ${e.stackTraceToString()}")
-                    Log.d("NetworkModule", "║ AUTHENTICATOR END (ERROR)")
-                    Log.d("NetworkModule", "╚═══════════════════════════════════════════")
-                    null
+                } else {
+                    val errorBody = try {
+                        refreshTokenResponse.errorBody()?.string() ?: "No error body"
+                    } catch (e: Exception) {
+                        "Error reading error body: ${e.message}"
+                    }
+                    
+                    Log.e("NetworkModule", "║ ERROR: Token refresh failed")
+                    Log.e("NetworkModule", "║ Response Code: ${refreshTokenResponse.code()}")
+                    Log.e("NetworkModule", "║ Request URL: ${refreshTokenResponse.raw().request.url}")
+                    Log.e("NetworkModule", "║ Request Headers: ${refreshTokenResponse.raw().request.headers}")
+                    Log.e("NetworkModule", "║ Error Body: $errorBody")
+                    
+                    // Refresh token geçersiz olabilir, token'ları temizleyelim
+                    if (refreshTokenResponse.code() == 401) {
+                        tokenManager.clearTokens()
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e("NetworkModule", "║ ERROR: Exception during token refresh", e)
+                Log.e("NetworkModule", "║ Exception message: ${e.message}")
+                Log.e("NetworkModule", "║ Stack trace: ${e.stackTraceToString()}")
             }
+            
+            Log.d("NetworkModule", "║ AUTHENTICATOR END")
+            Log.d("NetworkModule", "╚═══════════════════════════════════════════")
+            
+            // Oluşturulan yeni isteği dön (null ise orijinal istek 401 hatası ile sonlanacak)
+            return@Authenticator newRequest
         }
     }
 } 

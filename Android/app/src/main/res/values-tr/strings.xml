@@ -93,8 +93,18 @@
     <string name="required_features">Gerekli Özellikler</string>
     <string name="github_link">GitHub Linki (Opsiyonel)</string>
     <string name="analyze_cv">CV\'yi Analiz Et</string>
-    <string name="required_features_example">B1 seviye ingilizce java spring boot c++ ve c# bilgisi olsun ekip ile uyumlu çalışsın</string>
+    <string name="required_features_example">B1 seviye İngilizce, Java, Spring Boot, C++ ve C# bilgisi, takım çalışmasına yatkınlık</string>
     <string name="github_link_example">https://github.com/kullaniciadi</string>
+    <string name="file_not_found">Dosya bulunamadı</string>
+    <string name="file_not_found_tr">Dosya bulunamadı</string>
+    <string name="selected_file">Seçili Dosya: %s</string>
+    <string name="selected_file_tr">Seçili Dosya: %s</string>
+    <string name="process_canceled">İşlem iptal edildi</string>
+    <string name="process_canceled_tr">İşlem iptal edildi</string>
+    <string name="cancel_analysis">İşlemi İptal Et</string>
+    <string name="cancel_analysis_tr">İşlemi İptal Et</string>
+    <string name="required_features_hint">İş gereksinimleri (opsiyonel)</string>
+    <string name="github_link_hint">GitHub linki (opsiyonel)</string>
     
     <!-- AnalysisFragment -->
     <string name="analysis_title">Özgeçmiş Analizi</string>
@@ -104,7 +114,7 @@
     <string name="strengths">Güçlü Yönler</string>
     <string name="weaknesses">Geliştirilmesi Gereken Yönler</string>
     <string name="recommendations">Öneriler</string>
-    <string name="programming_language_analysis">Programlama dili analizi</string>
+    <string name="programming_language_analysis">Yetenek analizi</string>
     <string name="compatibility_status">Uyumluluk Durumu</string>
     <string name="logout">Çıkış Yap</string>
     
@@ -114,4 +124,13 @@
     <string name="no_evaluations">Değerlendirme bulunamadı</string>
     <string name="view_details">Detaylar</string>
     <string name="candidate_name">Ad Soyad</string>
+    
+    <!-- Date Categories -->
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+    <string name="this_week">Bu Hafta</string>
+    <string name="last_week">Geçen Hafta</string>
+    <string name="this_month">Bu Ay</string>
+    <string name="last_month">Geçen Ay</string>
+    <string name="older">Daha Eski</string>
 </resources> 
