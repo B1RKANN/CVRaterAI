@@ -122,7 +122,7 @@ analyzeBtn.addEventListener('click', async () => {
             setTimeout(() => updateProgress(80, 3), 3000);
 
             // API'ye istek gönder
-            const response = await fetch(`http://69.62.120.202:8080/api/v1/cv-evaluation/evaluate/${userId}`, {
+            const response = await fetch(`/api/v1/cv-evaluation/evaluate/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

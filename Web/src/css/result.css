@@ -190,17 +190,57 @@ main {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    margin-top: 120px; /* Header'ın altına taşımak için margin-top ekliyorum */
+    margin-top: 120px;
     margin-bottom: 40px;
 }
 
-/* Skills Section */
-.skills-container {
+/* Ortak bölüm stilleri */
+.skills-section, .user-info {
     flex: 1;
     background-color: #0366E8;
     border-radius: 20px;
     padding: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 450px;
+}
+
+/* Bölüm başlıkları */
+.skills-section h2, .user-info h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: white;
+}
+
+/* İçerik konteynerleri */
+.skills-container, .info-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.skills-heading {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.no-skills-message {
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
 }
 
 .skill-item {
@@ -213,6 +253,7 @@ main {
     width: 100px;
     font-size: 18px;
     font-weight: bold;
+    color: white;
 }
 
 .skill-bar-container {
@@ -239,20 +280,6 @@ main {
 }
 
 /* User Info Section */
-.user-info {
-    flex: 1;
-    background-color: #0366E8;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.user-info h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
 .info-item {
     margin-bottom: 15px;
     display: flex;
@@ -284,6 +311,14 @@ main {
     text-align: center;
     margin-bottom: 20px;
     font-size: 28px;
+}
+
+.compatibility-percentage-header {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
 }
 
 .compatibility-container {
@@ -326,7 +361,7 @@ main {
     top: 0;
     width: 4px;
     height: 100%;
-    background-color: #FF5722;
+    background-color: transparent;
     z-index: 2;
 }
 
@@ -426,6 +461,16 @@ main {
         flex-direction: column;
     }
     
+    .skills-section, .user-info {
+        width: 100%;
+        min-height: 350px;
+        margin-bottom: 20px;
+    }
+    
+    .skills-container, .info-container {
+        max-height: 300px;
+    }
+    
     .skill-name {
         width: 80px;
     }
@@ -471,6 +516,11 @@ main {
     
     .compatibility-bar-container {
         height: 15px;
+    }
+    
+    .compatibility-percentage-header {
+        font-size: 26px;
+        margin-bottom: 10px;
     }
     
     .skills-container, .user-info {
@@ -555,6 +605,11 @@ main {
     
     .compatibility-bar-container {
         height: 12px;
+    }
+    
+    .compatibility-percentage-header {
+        font-size: 22px;
+        margin-bottom: 8px;
     }
     
     .skills-container, .user-info {
