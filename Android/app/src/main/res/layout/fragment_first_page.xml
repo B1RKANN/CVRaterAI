@@ -4,160 +4,498 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/box_blue"
+    android:background="@drawable/background_gradient"
     tools:context=".FirstPageFragment">
 
-    <!-- Background Bubbles -->
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/btnContinueInEnglish"
-        android:layout_width="194dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="24dp"
-        app:cardBackgroundColor="#1E3A8A"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <!-- Floating Bubbles -->
+    <ImageView
+        android:id="@+id/bubble1"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnTurkceDevamEt">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center"
-            android:text="@string/continue_in_english"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/btnTurkceDevamEt"
-        android:layout_width="194dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="120dp"
-        app:cardBackgroundColor="#1E3A8A"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp"
+    <ImageView
+        android:id="@+id/bubble2"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble3"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGetStarted">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="200dp" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center"
-            android:text="@string/continue_in_turkish"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+    <ImageView
+        android:id="@+id/bubble4"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="120dp" />
 
-    </androidx.cardview.widget.CardView>
+    <ImageView
+        android:id="@+id/bubble5"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="300dp" />
 
-    <View
-        android:layout_width="236dp"
-        android:layout_height="232dp"
-        android:layout_marginStart="-80dp"
-        android:layout_marginTop="-80dp"
-        android:background="@drawable/circle_bubblee"
+    <ImageView
+        android:id="@+id/bubble6"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="150dp"
+        android:layout_marginTop="250dp" />
+
+    <ImageView
+        android:id="@+id/bubble7"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="180dp" />
+
+    <ImageView
+        android:id="@+id/bubble8"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="280dp" />
+
+    <ImageView
+        android:id="@+id/bubble9"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="180dp"
+        android:layout_marginBottom="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble10"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="400dp" />
+
+    <ImageView
+        android:id="@+id/bubble11"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="70dp"
+        android:layout_marginBottom="350dp" />
+
+    <ImageView
+        android:id="@+id/bubble12"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.55"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="50dp" />
+
+    <ImageView
+        android:id="@+id/bubble13"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="30dp" />
+
+    <ImageView
+        android:id="@+id/bubble14"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="80dp" />
+
+    <ImageView
+        android:id="@+id/bubble15"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="220dp"
+        android:layout_marginTop="320dp" />
+
+    <ImageView
+        android:id="@+id/bubble16"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="320dp"
+        android:layout_marginTop="50dp" />
+
+    <ImageView
+        android:id="@+id/bubble17"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="250dp"
+        android:layout_marginBottom="100dp" />
+
+    <ImageView
+        android:id="@+id/bubble18"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.55"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="220dp" />
+
+    <ImageView
+        android:id="@+id/bubble19"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="180dp"
+        android:layout_marginTop="120dp" />
+
+    <ImageView
+        android:id="@+id/bubble20"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="240dp"
+        android:layout_marginBottom="230dp" />
+
+    <ImageView
+        android:id="@+id/bubble21"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="300dp"
+        android:layout_marginBottom="320dp" />
+
+    <ImageView
+        android:id="@+id/bubble22"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="270dp" />
+
+    <ImageView
+        android:id="@+id/bubble23"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="200dp" />
+
+    <ImageView
+        android:id="@+id/bubble24"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="150dp"
+        android:layout_marginBottom="380dp" />
+
+    <ImageView
+        android:id="@+id/bubble25"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="200dp" />
+
+    <ImageView
+        android:id="@+id/bubble26"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="80dp" />
+
+    <ImageView
+        android:id="@+id/bubble27"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="50dp" />
+
+    <ImageView
+        android:id="@+id/bubble28"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="350dp" />
+
+    <ImageView
+        android:id="@+id/bubble29"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.35"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="300dp" />
+
+    <ImageView
+        android:id="@+id/bubble30"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="80dp"
+        android:layout_marginBottom="120dp" />
+
+    <!-- Chatbot Image -->
+
+    <!-- Content -->
+
+    <!-- Buttons Container -->
+
+    <ImageView
+        android:id="@+id/ivChatbot"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/chatbot"
+        app:layout_constraintBottom_toTopOf="@+id/bubble8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginEnd="-90dp"
-        android:background="@drawable/circle_bubblee"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
-
-    <View
-        android:id="@+id/view6"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        android:layout_marginStart="-100dp"
-        android:layout_marginBottom="-120dp"
-        android:background="@drawable/circle_bubblee"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Content -->
     <LinearLayout
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="4dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3">
+        app:layout_constraintTop_toBottomOf="@id/ivChatbot">
 
         <TextView
+            android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_regular"
+            android:elevation="20dp"
+            android:fontFamily="@font/poppins_bold"
+            android:letterSpacing="0.035"
+            android:paddingHorizontal="6dp"
+            android:shadowColor="#BB000000"
+            android:shadowDx="0"
+            android:shadowDy="10"
+            android:shadowRadius="16"
             android:text="@string/app_title"
-            android:textColor="@color/white"
-            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:textSize="52sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/subtitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:fontFamily="@font/poppins_black"
-            android:gravity="center"
-            android:text="@string/app_subtitle"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:elevation="12dp"
-            android:shadowColor="#AA000000"
-            android:shadowDx="0"
-            android:shadowDy="8"
-            android:shadowRadius="12" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
+            android:elevation="16dp"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center"
-            android:text="@string/app_description"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:letterSpacing="0.02"
+            android:shadowColor="#AA000000"
+            android:shadowDx="0"
+            android:shadowDy="5"
+            android:shadowRadius="8"
+            android:text="@string/app_subtitle"
+            android:textColor="#F5FFFFFF"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/btnGetStarted"
-        android:layout_width="194dp"
-        android:layout_height="63dp"
-        android:layout_marginBottom="75dp"
-        app:cardBackgroundColor="#1E3A8A"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/view6"
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="383dp"
+        android:layout_height="238dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contentLayout">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center"
-            android:paddingHorizontal="48dp"
-            android:paddingVertical="16dp"
-            android:text="@string/get_started"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnGetStarted"
+            android:layout_width="194dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="8dp">
 
-    </androidx.cardview.widget.CardView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_gradient">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/get_started"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnTurkceDevamEt"
+            android:layout_width="194dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_gradient">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/continue_in_turkish"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnContinueInEnglish"
+            android:layout_width="194dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_gradient">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/continue_in_english"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,13 @@ import com.cvraterai.myapplication.data.repository.AuthRepository
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
+import android.view.animation.AnimationUtils
+import com.cvraterai.myapplication.databinding.FragmentFirstPageBinding
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
+import android.view.animation.TranslateAnimation
+import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +41,9 @@ class FirstPageFragment : Fragment() {
     @Inject
     lateinit var authRepository: AuthRepository
 
+    private var _binding: FragmentFirstPageBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -46,18 +56,290 @@ class FirstPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first_page, container, false)
+        _binding = FragmentFirstPageBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Mevcut dil ayarını kontrol et ve butonları göster/gizle
-        setupLanguageButtons(view)
+        // Start floating animation for robot with scale
+        val robotAnimation = AnimationSet(true).apply {
+            val float = AnimationUtils.loadAnimation(requireContext(), R.anim.floating_animation)
+            val scale = ScaleAnimation(
+                1f, 1.05f, 1f, 1.05f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+            ).apply {
+                duration = 2000
+                repeatCount = Animation.INFINITE
+                repeatMode = Animation.REVERSE
+            }
+            addAnimation(float)
+            addAnimation(scale)
+        }
+        binding.ivChatbot.startAnimation(robotAnimation)
         
+        // Add fade in and slide up animation for title and subtitle
+        val titleAnim = AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_in).apply {
+            duration = 1000
+        }
+        binding.titleText.startAnimation(titleAnim)
+        
+        val subtitleAnim = AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_in).apply {
+            duration = 1000
+            startOffset = 500
+        }
+        binding.subtitleText.startAnimation(subtitleAnim)
+
+        // Start bubble animations
+        startBubbleAnimations()
+        
+        // Setup language buttons and click listeners
+        setupLanguageButtons(view)
+        setupClickListeners()
+    }
+
+    private fun startBubbleAnimations() {
+        val bubbles = listOf(
+            binding.bubble1, binding.bubble2, binding.bubble3, binding.bubble4, binding.bubble5,
+            binding.bubble6, binding.bubble7, binding.bubble8, binding.bubble9, binding.bubble10,
+            binding.bubble11, binding.bubble12, binding.bubble13, binding.bubble14, binding.bubble15,
+            binding.bubble16, binding.bubble17, binding.bubble18, binding.bubble19, binding.bubble20,
+            binding.bubble21, binding.bubble22, binding.bubble23, binding.bubble24, binding.bubble25,
+            binding.bubble26, binding.bubble27, binding.bubble28, binding.bubble29, binding.bubble30
+        )
+
+        // Tüm baloncukları animasyonlarla hareketlendirme
+        bubbles.forEachIndexed { index, bubble ->
+            // Her baloncuk için özel ve random değerler hesapla - mesafeleri arttırdım
+            val baseDistance = 1.0f + (Math.random() * 1.2f).toFloat() // 1.0 ile 2.2 arası (önceki 0.5-1.2 yerine)
+            val baseDuration = 4000 + (Math.random() * 3000).toLong()  // 4-7 saniye arası
+            val startDelay = (index * 100).toLong()  // Baloncukların kademeli başlaması için gecikme
+            
+            // Animasyon stili: Çeşitli kombinasyonlar
+            val animationType = index % 5
+            
+            when (animationType) {
+                0 -> {
+                    // Diagonal hareket - hem x hem y'de haraket - daha belirgin
+                    val diagonalAnim = TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, baseDistance * (if (index % 2 == 0) 1 else -1),
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, -baseDistance * 1.2f
+                    ).apply {
+                        duration = baseDuration
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    // Aynı zamanda saydamlık ve daha büyük boyut değişimi
+                    val alphaAnim = AlphaAnimation(1.0f, 0.4f).apply {
+                        duration = baseDuration - 500
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val scaleAnim = ScaleAnimation(
+                        1f, 1.5f, 1f, 1.5f, // Daha büyük boyut değişimi
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF, 0.5f
+                    ).apply {
+                        duration = baseDuration + 500
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val animSet = AnimationSet(false).apply {
+                        addAnimation(diagonalAnim)
+                        addAnimation(alphaAnim)
+                        addAnimation(scaleAnim)
+                    }
+                    
+                    bubble.startAnimation(animSet)
+                }
+                1 -> {
+                    // Sadece yatay hareket - daha uzağa
+                    val horizontalAnim = TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, baseDistance * 1.3f * (if (index % 2 == 0) 1 else -1),
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f
+                    ).apply {
+                        duration = baseDuration
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val alphaAnim = AlphaAnimation(1.0f, 0.3f).apply {
+                        duration = baseDuration - 800
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    // Hafif boyut değişimi ekle
+                    val scaleAnim = ScaleAnimation(
+                        1f, 1.3f, 1f, 1.3f,
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF, 0.5f
+                    ).apply {
+                        duration = baseDuration - 300
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay + 200
+                    }
+                    
+                    val animSet = AnimationSet(false).apply {
+                        addAnimation(horizontalAnim)
+                        addAnimation(alphaAnim)
+                        addAnimation(scaleAnim)
+                    }
+                    
+                    bubble.startAnimation(animSet)
+                }
+                2 -> {
+                    // Sadece dikey hareket (daha uzun)
+                    val verticalAnim = TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, -baseDistance * 2.0f // İki kat daha uzağa hareket
+                    ).apply {
+                        duration = baseDuration + 1000
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    // Daha dramatik boyut değişimi
+                    val scaleAnim = ScaleAnimation(
+                        1f, 0.7f, 1f, 0.7f,
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF, 0.5f
+                    ).apply {
+                        duration = baseDuration - 200
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val animSet = AnimationSet(false).apply {
+                        addAnimation(verticalAnim)
+                        addAnimation(scaleAnim)
+                    }
+                    
+                    bubble.startAnimation(animSet)
+                }
+                3 -> {
+                    // Daire benzeri hareket (iki ayrı animasyon kombinasyonu)
+                    val horizontalAnim = TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, baseDistance * 1.5f * (if (index % 2 == 0) 1 else -1),
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f
+                    ).apply {
+                        duration = baseDuration - 1000
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val verticalAnim = TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, -baseDistance * 1.4f
+                    ).apply {
+                        duration = baseDuration
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay + 500 // Hafif gecikme ekleyerek asenkron hareket
+                    }
+                    
+                    val alphaAnim = AlphaAnimation(1.0f, 0.2f).apply {
+                        duration = baseDuration - 500
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    // Önce yatay hareketi başlat
+                    bubble.startAnimation(horizontalAnim)
+                    
+                    // 500ms sonra dikey ve alpha animasyonlarını başlat
+                    val secondSet = AnimationSet(false).apply {
+                        addAnimation(verticalAnim)
+                        addAnimation(alphaAnim)
+                    }
+                    
+                    bubble.postDelayed({
+                        if (isAdded && bubble.isAttachedToWindow) {  // Fragment halen aktifse
+                            bubble.startAnimation(secondSet)
+                        }
+                    }, 500)
+                }
+                else -> {
+                    // Büyüyüp küçülen, dönen ve hareket eden animasyon
+                    val pulseAnim = ScaleAnimation(
+                        1f, 1.7f, 1f, 1.7f, // Daha büyük ölçek değişimi
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF, 0.5f
+                    ).apply {
+                        duration = baseDuration
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val moveAnim = TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, baseDistance * 0.9f * (if (index % 2 == 0) 1 else -1),
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, -baseDistance * 1.1f
+                    ).apply {
+                        duration = baseDuration + 500
+                        repeatCount = Animation.INFINITE
+                        repeatMode = Animation.REVERSE
+                        startOffset = startDelay
+                    }
+                    
+                    val animSet = AnimationSet(false).apply {
+                        addAnimation(pulseAnim)
+                        addAnimation(moveAnim)
+                    }
+                    
+                    bubble.startAnimation(animSet)
+                }
+            }
+        }
+    }
+    
+    // Mevcut dil ayarına göre butonları göster/gizle
+    private fun setupLanguageButtons(view: View) {
+        // Mevcut dil ayarını al
+        val sharedPreferences = requireActivity().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val currentLanguage = sharedPreferences.getString("language", "en") ?: "en"
+        
+        // Dil Türkçe ise İngilizce butonunu göster, Türkçe butonunu gizle
+        if (currentLanguage == "tr") {
+            binding.btnTurkceDevamEt.visibility = View.GONE
+            binding.btnContinueInEnglish.visibility = View.VISIBLE
+        } else {
+            // Dil İngilizce ise Türkçe butonunu göster, İngilizce butonunu gizle
+            binding.btnTurkceDevamEt.visibility = View.VISIBLE
+            binding.btnContinueInEnglish.visibility = View.GONE
+        }
+    }
+    
+    private fun setupClickListeners() {
         // Get Started butonuna tıklama olayını ayarla
-        view.findViewById<CardView>(R.id.btnGetStarted).setOnClickListener {
+        binding.btnGetStarted.setOnClickListener {
             // Kullanıcı giriş yapmışsa doğrudan HomePage'e yönlendir
             if (authRepository.isLoggedIn()) {
                 findNavController().navigate(R.id.action_firstPageFragment_to_homePageFragment)
@@ -68,7 +350,7 @@ class FirstPageFragment : Fragment() {
         }
         
         // Türkçe devam et butonuna tıklama olayını ayarla
-        view.findViewById<CardView>(R.id.btnTurkceDevamEt).setOnClickListener {
+        binding.btnTurkceDevamEt.setOnClickListener {
             // Dili Türkçe'ye çevir
             setLocale("tr")
             
@@ -85,7 +367,7 @@ class FirstPageFragment : Fragment() {
         }
         
         // İngilizce devam et butonuna tıklama olayını ayarla
-        view.findViewById<CardView>(R.id.btnContinueInEnglish).setOnClickListener {
+        binding.btnContinueInEnglish.setOnClickListener {
             // Dili İngilizce'ye çevir
             setLocale("en")
             
@@ -99,23 +381,6 @@ class FirstPageFragment : Fragment() {
                 // Kullanıcı giriş yapmamışsa normal akışa devam et
                 findNavController().navigate(R.id.action_firstPageFragment_to_step1Fragment)
             }
-        }
-    }
-    
-    // Mevcut dil ayarına göre butonları göster/gizle
-    private fun setupLanguageButtons(view: View) {
-        // Mevcut dil ayarını al
-        val sharedPreferences = requireActivity().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
-        val currentLanguage = sharedPreferences.getString("language", "en") ?: "en"
-        
-        // Dil Türkçe ise İngilizce butonunu göster, Türkçe butonunu gizle
-        if (currentLanguage == "tr") {
-            view.findViewById<CardView>(R.id.btnTurkceDevamEt).visibility = View.GONE
-            view.findViewById<CardView>(R.id.btnContinueInEnglish).visibility = View.VISIBLE
-        } else {
-            // Dil İngilizce ise Türkçe butonunu göster, İngilizce butonunu gizle
-            view.findViewById<CardView>(R.id.btnTurkceDevamEt).visibility = View.VISIBLE
-            view.findViewById<CardView>(R.id.btnContinueInEnglish).visibility = View.GONE
         }
     }
     
@@ -134,6 +399,11 @@ class FirstPageFragment : Fragment() {
         // Kaynakları güncelle
         requireContext().resources.updateConfiguration(config, requireContext().resources.displayMetrics)
         requireActivity().recreate()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

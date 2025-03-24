@@ -5,77 +5,158 @@
     android:id="@+id/step2_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_bluee"
+    android:background="@drawable/background_gradient"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:paddingStart="0dp"
     android:paddingEnd="0dp"
     tools:context=".Step2Fragment">
 
-    <!-- Top-left large bubble -->
-
-    <!-- Middle-right medium bubble -->
-
-    <!-- Bottom-left large bubble -->
-
-    <View
-        android:layout_width="199dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="-80dp"
-        android:layout_marginTop="-80dp"
-        android:background="@drawable/circle_bubblee"
+    <!-- Floating Bubbles - First Page ile uyumlu -->
+    <ImageView
+        android:id="@+id/bubble1_step2"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp" />
 
-    <View
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_marginEnd="-90dp"
-        android:background="@drawable/circle_bubblee"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/bubble2_step2"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.451" />
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="150dp" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        android:layout_marginStart="-100dp"
-        android:layout_marginBottom="-120dp"
-        android:background="@drawable/circle_bubblee"
+    <ImageView
+        android:id="@+id/bubble3_step2"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="200dp" />
 
+    <ImageView
+        android:id="@+id/bubble4_step2"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="120dp" />
+
+    <ImageView
+        android:id="@+id/bubble5_step2"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="300dp" />
+
+    <ImageView
+        android:id="@+id/bubble6_step2"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="150dp"
+        android:layout_marginTop="250dp" />
+
+    <ImageView
+        android:id="@+id/bubble7_step2"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="180dp" />
+
+    <ImageView
+        android:id="@+id/bubble8_step2"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="280dp" />
+
+    <ImageView
+        android:id="@+id/bubble9_step2"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="180dp"
+        android:layout_marginBottom="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble10_step2"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="400dp" />
+
+    <!-- Header Başlık -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:fontFamily="@font/poppins_regular"
+        android:fontFamily="@font/poppins_bold"
         android:text="CVRaterAI"
-        android:textColor="@color/white"
-        android:textSize="32sp"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
         android:textStyle="bold"
+        android:elevation="16dp"
+        android:shadowColor="#BB000000"
+        android:shadowDx="0"
+        android:shadowDy="8"
+        android:shadowRadius="12"
+        android:letterSpacing="0.02"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardProfile"
-        android:layout_width="268dp"
-        android:layout_height="320dp"
+        android:layout_width="280dp"
+        android:layout_height="330dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="148dp"
-        android:layout_marginBottom="62dp"
-        android:elevation="8dp"
-        app:cardBackgroundColor="@color/box_blue"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
+        android:layout_marginTop="100dp"
+        android:elevation="12dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="10dp"
         app:cardMaxElevation="12dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
@@ -83,45 +164,54 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/button_gradient"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp">
 
             <TextView
-                android:layout_width="166dp"
-                android:layout_height="47dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center"
+                android:shadowColor="#40000000"
+                android:shadowDx="0"
+                android:shadowDy="3"
+                android:shadowRadius="4"
                 android:text="@string/step2_title"
                 android:textColor="@color/white"
                 android:textSize="34sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="213dp"
-                android:layout_height="85dp"
-                android:layout_marginBottom="3dp"
-                android:fontFamily="@font/poppins_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
                 android:text="@string/step2_description"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="109dp"
-                android:layout_height="97dp"
-                android:layout_marginBottom="2dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginBottom="15dp"
+                android:elevation="8dp"
                 android:src="@drawable/ai" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
+    <!-- Swipe Animasyonu ve Metin -->
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="40dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

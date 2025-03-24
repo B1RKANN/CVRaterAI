@@ -6,10 +6,10 @@
     
     <!-- FirstPageFragment -->
     <string name="app_title">CVRaterAI</string>
-    <string name="app_subtitle">Yapay Zeka Destekli\nÖzgeçmiş Analiz Platformu</string>
+    <string name="app_subtitle">Yapay Zeka Destekli\nCV Analiz Platformu</string>
     <string name="app_description">Doğru adayı daha hızlı bulun!\nÖzgeçmişleri yapay zeka ile analiz edin ve\nişe alım sürecinizi optimize edin.</string>
     <string name="get_started">Başla</string>
-    <string name="continue_in_turkish">Türkçe devam et</string>
+    <string name="continue_in_turkish">Türkçe Devam Et</string>
     <string name="continue_in_english">Continue in English</string>
     
     <!-- Step Fragments -->
