@@ -4,21 +4,133 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
+    android:background="@drawable/background_gradient"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".HomePageFragment">
 
-    <!-- Background Elements -->
+    <!-- Floating Bubbles -->
+    <ImageView
+        android:id="@+id/bubble1_home"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp" />
+
+    <ImageView
+        android:id="@+id/bubble2_home"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble3_home"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="200dp" />
+
+    <ImageView
+        android:id="@+id/bubble4_home"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="120dp" />
+
+    <ImageView
+        android:id="@+id/bubble5_home"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="300dp" />
+
+    <ImageView
+        android:id="@+id/bubble6_home"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="150dp"
+        android:layout_marginTop="250dp" />
+
+    <ImageView
+        android:id="@+id/bubble7_home"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="180dp" />
+
+    <ImageView
+        android:id="@+id/bubble8_home"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="280dp" />
+
+    <ImageView
+        android:id="@+id/bubble9_home"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="180dp"
+        android:layout_marginBottom="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble10_home"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="400dp" />
 
     <!-- Header Section -->
     <androidx.cardview.widget.CardView
         android:id="@+id/headerCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="18dp"
         android:layout_marginTop="50dp"
-        app:cardBackgroundColor="@color/box_blue"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
+        android:translationZ="20dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,21 +138,22 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/button_gradient"
             android:padding="16dp">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:elevation="6dp"
+                android:elevation="10dp"
                 android:fontFamily="@font/poppins_bold"
-                android:shadowColor="#40000000"
+                android:shadowColor="#BB000000"
                 android:shadowDx="0"
-                android:shadowDy="4"
-                android:shadowRadius="6"
+                android:shadowDy="6"
+                android:shadowRadius="12"
                 android:text="@string/app_title"
                 android:textColor="@color/white"
-                android:textSize="32sp"
+                android:textSize="36sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +165,11 @@
                 android:fontFamily="@font/poppins_regular"
                 android:text="@string/welcome"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:shadowColor="#40000000"
+                android:shadowDx="0"
+                android:shadowDy="3"
+                android:shadowRadius="4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
@@ -62,6 +179,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/logout"
+                android:elevation="8dp"
                 android:src="@drawable/ic_logout"
                 android:tint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,204 +188,244 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Explore Section -->
-    <TextView
-        android:id="@+id/tvExplore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="@string/explore"
-        android:textColor="@color/text_dark"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerCard" />
-
-    <!-- Cards Container -->
-    <androidx.core.widget.NestedScrollView
+    <!-- Main Content Card -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="24dp"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvExplore">
+        app:layout_constraintTop_toBottomOf="@id/headerCard">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingTop="16dp"
             android:paddingBottom="24dp">
 
-            <!-- Profile Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardProfile"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/box_blue"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="true">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvProfileTitle"
-                        android:layout_width="333dp"
-                        android:layout_height="33dp"
-                        android:layout_marginLeft="20dp"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:text="@string/profile_card_title"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toStartOf="@id/ivProfileArrow"
-                        app:layout_constraintHorizontal_bias="0.186"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/ivProfileIcon"
-                        android:layout_width="55dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
-                        android:src="@drawable/ic_person"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvProfileTitle"
-                        app:tint="@color/white" />
-
-                    <ImageView
-                        android:id="@+id/ivProfileArrow"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/white" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Upload CV Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardUploadCV"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/box_blue"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="true">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvUploadTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:text="@string/upload_card_title"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toStartOf="@id/ivUploadArrow"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/ivUploadIcon"
-                        android:layout_width="58dp"
-                        android:layout_height="53dp"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/download"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvUploadTitle"
-                        app:tint="@color/white" />
-
-                    <ImageView
-                        android:id="@+id/ivUploadArrow"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/white" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Recent Analyses Section -->
-            <TextView
-                android:id="@+id/tvRecentAnalyses"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="@string/recent_analyses"
-                android:textColor="@color/text_dark"
-                android:textSize="20sp" />
-
-            <!-- Empty State Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardEmptyState"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/box_blue"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="true">
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp">
 
-                <LinearLayout
+                <!-- Explore Section -->
+                <TextView
+                    android:id="@+id/tvExplore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="@string/explore"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="0"
+                    android:shadowDy="4"
+                    android:shadowRadius="6" />
+
+                <!-- Profile Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="10dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/button_gradient"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/tvProfileTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:text="@string/profile_card_title"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:shadowColor="#40000000"
+                            android:shadowDx="0"
+                            android:shadowDy="3"
+                            android:shadowRadius="4"
+                            app:layout_constraintEnd_toStartOf="@id/ivProfileArrow"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/ivProfileIcon"
+                            android:layout_width="62dp"
+                            android:layout_height="51dp"
+                            android:elevation="8dp"
+                            android:src="@drawable/ic_person"
+                            app:layout_constraintStart_toStartOf="@id/tvProfileTitle"
+                            app:layout_constraintTop_toBottomOf="@id/tvProfileTitle"
+                            app:tint="@color/white" />
+
+                        <ImageView
+                            android:id="@+id/ivProfileArrow"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:elevation="8dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/white" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Upload CV Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardUploadCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="10dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/button_gradient"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/tvUploadTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:text="@string/upload_card_title"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:shadowColor="#40000000"
+                            android:shadowDx="0"
+                            android:shadowDy="3"
+                            android:shadowRadius="4"
+                            app:layout_constraintEnd_toStartOf="@id/ivUploadArrow"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/ivUploadIcon"
+                            android:layout_width="66dp"
+                            android:layout_height="47dp"
+                            android:elevation="8dp"
+                            android:src="@drawable/download"
+                            app:layout_constraintStart_toStartOf="@id/tvUploadTitle"
+                            app:layout_constraintTop_toBottomOf="@id/tvUploadTitle"
+                            app:tint="@color/white" />
+
+                        <ImageView
+                            android:id="@+id/ivUploadArrow"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:elevation="8dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/white" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Recent Analyses Section -->
+                <TextView
+                    android:id="@+id/tvRecentAnalyses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="@string/recent_analyses"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="0"
+                    android:shadowDy="4"
+                    android:shadowRadius="6" />
+
+                <!-- Empty State Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardEmptyState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="10dp"
+                    app:cardUseCompatPadding="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:text="@string/analysis_history_title"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:layout_marginBottom="16dp" />
+                        android:background="@drawable/button_gradient"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="24dp">
 
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/analysis"
-                        app:tint="#FFFFFF" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:text="@string/analysis_history_title"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:shadowColor="#40000000"
+                            android:shadowDx="0"
+                            android:shadowDy="3"
+                            android:shadowRadius="4" />
 
-                    <Button
-                        android:id="@+id/btnViewHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:backgroundTint="@color/white"
-                        android:fontFamily="@font/poppins_medium"
-                        android:text="@string/view_history"
-                        android:textColor="@color/box_blue"
-                        android:textAllCaps="false" />
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:elevation="8dp"
+                            android:src="@drawable/analysis"
+                            app:tint="#FFFFFF" />
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:cardCornerRadius="28dp"
+                            app:cardElevation="8dp">
 
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+                            <Button
+                                android:id="@+id/btnViewHistory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:fontFamily="@font/poppins_medium"
+                                android:paddingHorizontal="24dp"
+                                android:text="@string/view_history"
+                                android:textAllCaps="false"
+                                android:textColor="@color/box_blue"
+                                android:textSize="16sp" />
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
