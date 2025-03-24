@@ -251,9 +251,9 @@ class FirstPageFragment : Fragment() {
                     }
                     
                     val verticalAnim = TranslateAnimation(
-                        Animation.RELATIVE_TO_SELF, 0f,
-                        Animation.RELATIVE_TO_SELF, 0f,
-                        Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
                         Animation.RELATIVE_TO_SELF, -baseDistance * 1.4f
                     ).apply {
                         duration = baseDuration
@@ -290,10 +290,10 @@ class FirstPageFragment : Fragment() {
                         1f, 1.7f, 1f, 1.7f, // Daha büyük ölçek değişimi
                         Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f
-                    ).apply {
+            ).apply {
                         duration = baseDuration
-                        repeatCount = Animation.INFINITE
-                        repeatMode = Animation.REVERSE
+                repeatCount = Animation.INFINITE
+                repeatMode = Animation.REVERSE
                         startOffset = startDelay
                     }
                     
@@ -304,17 +304,17 @@ class FirstPageFragment : Fragment() {
                         Animation.RELATIVE_TO_SELF, -baseDistance * 1.1f
                     ).apply {
                         duration = baseDuration + 500
-                        repeatCount = Animation.INFINITE
-                        repeatMode = Animation.REVERSE
+                repeatCount = Animation.INFINITE
+                repeatMode = Animation.REVERSE
                         startOffset = startDelay
                     }
                     
                     val animSet = AnimationSet(false).apply {
                         addAnimation(pulseAnim)
                         addAnimation(moveAnim)
-                    }
-                    
-                    bubble.startAnimation(animSet)
+            }
+
+            bubble.startAnimation(animSet)
                 }
             }
         }
