@@ -4,50 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="10dp"
+    android:layout_marginVertical="4dp"
+    android:background="@drawable/circular_progress"
     android:paddingHorizontal="8dp"
-    android:layout_marginVertical="4dp">
+    android:paddingVertical="10dp">
 
     <TextView
         android:id="@+id/tvSkillName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_medium"
+        android:layout_marginEnd="16dp"
         android:ellipsize="end"
+        android:fontFamily="@font/poppins_medium"
+        android:gravity="start"
         android:maxLines="2"
         android:text="Programming Language"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:gravity="start"
+        app:layout_constraintEnd_toStartOf="@id/tvRatingPercentage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvRatingPercentage"
-        android:layout_marginEnd="16dp"
         tools:text="Programming Language" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/progressContainer"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal"
         android:background="@drawable/rounded_white_bg"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSkillName">
 
         <View
             android:id="@+id/progressFilled"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="75"
             android:background="@drawable/rounded_progress_bg" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="25" />
-    </LinearLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvRatingPercentage"
@@ -58,8 +53,8 @@
         android:text="%75"
         android:textColor="@color/white"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/tvSkillName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvSkillName"
-        app:layout_constraintBottom_toBottomOf="@id/tvSkillName" />
+        app:layout_constraintTop_toTopOf="@id/tvSkillName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout> 

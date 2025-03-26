@@ -2,4 +2,5 @@
 <resources>
     <!-- Kaydırıcı konumu için boyut değeri -->
     <dimen name="thumb_position">180dp</dimen>
+    <dimen name="progress_corner_radius">10dp</dimen>
 </resources> 

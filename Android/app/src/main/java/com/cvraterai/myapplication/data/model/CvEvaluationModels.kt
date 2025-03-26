@@ -3,13 +3,11 @@ package com.cvraterai.myapplication.data.model
 import com.google.gson.annotations.SerializedName
 import java.io.File
 import java.util.Date
+import com.cvraterai.myapplication.model.SkillRating
 
 data class CvEvaluationRequest(
-    val userId: Long,
-    val fileName: String,
-    val fileType: String,
-    val githubUrl: String? = null,
-    val jobRequirements: String? = null
+    val cvText: String,
+    val jobDescription: String
 )
 
 data class CvEvaluationResponse(
@@ -23,7 +21,8 @@ data class CvEvaluationResponse(
     @SerializedName("evaluationResult") val evaluationResult: String,
     @SerializedName("evaluationDate") val evaluationDate: String,
     @SerializedName("fullName") val fullName: String,
-    @SerializedName("date") val date: String
+    @SerializedName("date") val date: String,
+    @SerializedName("skillRatings") val skillRatings: List<SkillRating>
 ) {
     // Değerlendirme sonucunu JSON'dan alınan veri olarak işlememizi sağlayan metod
     fun getEvaluationResultJson(): String {
@@ -67,11 +66,6 @@ data class UserInformation(
     @SerializedName("email") val email: String,
     @SerializedName("phone") val phone: String?,
     @SerializedName("skills") val skills: String
-)
-
-data class SkillRating(
-    @SerializedName("language") val language: String,
-    @SerializedName("percentage") val percentage: Int
 )
 
 enum class FileType {
