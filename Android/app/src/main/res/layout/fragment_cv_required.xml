@@ -17,25 +17,58 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tvAppName"
-                android:layout_width="wrap_content"
+            <!-- Header Section -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/headerCard"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/app_name"
-                android:textColor="@color/primary_blue"
-                android:textSize="32sp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="45dp"
+                android:translationZ="20dp"
+                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardCornerRadius="30dp"
+                app:cardElevation="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_gradient"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvAppName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:elevation="12dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/poppins_bold"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:shadowColor="#80000000"
+                        android:shadowDx="0"
+                        android:shadowDy="6"
+                        android:shadowRadius="12"
+                        android:text="@string/app_name"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tvSelectedFile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
                 android:text="Seçili Dosya"
@@ -43,7 +76,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAppName" />
+                app:layout_constraintTop_toBottomOf="@id/headerCard" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardRequiredFeatures"
@@ -73,26 +106,27 @@
                         android:textSize="20sp" />
 
                     <ScrollView
+                        android:id="@+id/req"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_margin="16dp"
                         android:background="@drawable/rounded_edit_text_bg"
-                        android:scrollbars="vertical"
-                        android:fadeScrollbars="false">
+                        android:fadeScrollbars="false"
+                        android:scrollbars="vertical">
 
                         <EditText
                             android:id="@+id/etRequiredFeatures"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:fontFamily="@font/poppins_light"
                             android:gravity="top|start"
-                            android:padding="16dp"
-                            android:inputType="textMultiLine"
                             android:hint="@string/required_features_hint"
+                            android:inputType="textMultiLine"
+                            android:padding="16dp"
                             android:textColor="@color/white"
                             android:textColorHint="#80FFFFFF"
-                            android:textSize="16sp"
-                            android:background="@null" />
+                            android:textSize="16sp" />
                     </ScrollView>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -149,22 +183,28 @@
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="6dp"
-                app:cardBackgroundColor="@color/primary_blue"
+                app:cardBackgroundColor="#26FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardGithubLink"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <TextView
-                    android:id="@+id/btnAnalyze"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:gravity="center"
-                    android:paddingVertical="14dp"
-                    android:text="@string/analyze_cv"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:background="@drawable/button_gradient">
+
+                    <TextView
+                        android:id="@+id/btnAnalyze"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:gravity="center"
+                        android:paddingVertical="14dp"
+                        android:text="@string/analyze_cv"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </FrameLayout>
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

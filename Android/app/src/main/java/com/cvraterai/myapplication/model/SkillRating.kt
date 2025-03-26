@@ -1,6 +1,8 @@
 package com.cvraterai.myapplication.model
 
+import com.google.gson.annotations.SerializedName
+
 data class SkillRating(
-    val name: String,
-    val rating: Int
+    @SerializedName("language") val name: String,
+    @SerializedName("percentage") val percentage: Int
 ) 

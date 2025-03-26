@@ -12,9 +12,9 @@
     android:paddingEnd="0dp"
     tools:context=".Step2Fragment">
 
-    <!-- Floating Bubbles - First Page ile uyumlu -->
+    <!-- Floating Bubbles -->
     <ImageView
-        android:id="@+id/bubble1_step2"
+        android:id="@+id/bubble1Step2"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:src="@drawable/bubble_background"
@@ -25,7 +25,7 @@
         android:layout_marginTop="100dp" />
 
     <ImageView
-        android:id="@+id/bubble2_step2"
+        android:id="@+id/bubble2Step2"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:src="@drawable/bubble_background"
@@ -36,7 +36,7 @@
         android:layout_marginTop="150dp" />
 
     <ImageView
-        android:id="@+id/bubble3_step2"
+        android:id="@+id/bubble3Step2"
         android:layout_width="6dp"
         android:layout_height="6dp"
         android:src="@drawable/bubble_background"
@@ -47,7 +47,7 @@
         android:layout_marginBottom="200dp" />
 
     <ImageView
-        android:id="@+id/bubble4_step2"
+        android:id="@+id/bubble4Step2"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:src="@drawable/bubble_background"
@@ -58,7 +58,7 @@
         android:layout_marginBottom="120dp" />
 
     <ImageView
-        android:id="@+id/bubble5_step2"
+        android:id="@+id/bubble5Step2"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:src="@drawable/bubble_background"
@@ -69,7 +69,7 @@
         android:layout_marginTop="300dp" />
 
     <ImageView
-        android:id="@+id/bubble6_step2"
+        android:id="@+id/bubble6Step2"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:src="@drawable/bubble_background"
@@ -80,7 +80,7 @@
         android:layout_marginTop="250dp" />
 
     <ImageView
-        android:id="@+id/bubble7_step2"
+        android:id="@+id/bubble7Step2"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:src="@drawable/bubble_background"
@@ -91,7 +91,7 @@
         android:layout_marginTop="180dp" />
 
     <ImageView
-        android:id="@+id/bubble8_step2"
+        android:id="@+id/bubble8Step2"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:src="@drawable/bubble_background"
@@ -102,7 +102,7 @@
         android:layout_marginBottom="280dp" />
 
     <ImageView
-        android:id="@+id/bubble9_step2"
+        android:id="@+id/bubble9Step2"
         android:layout_width="7dp"
         android:layout_height="7dp"
         android:src="@drawable/bubble_background"
@@ -113,7 +113,7 @@
         android:layout_marginBottom="150dp" />
 
     <ImageView
-        android:id="@+id/bubble10_step2"
+        android:id="@+id/bubble10Step2"
         android:layout_width="9dp"
         android:layout_height="9dp"
         android:src="@drawable/bubble_background"
@@ -122,6 +122,61 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="400dp" />
+
+    <ImageView
+        android:id="@+id/bubble11Step2"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="70dp"
+        android:layout_marginBottom="350dp" />
+
+    <ImageView
+        android:id="@+id/bubble12Step2"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.55"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="50dp" />
+
+    <ImageView
+        android:id="@+id/bubble13Step2"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="30dp" />
+
+    <ImageView
+        android:id="@+id/bubble14Step2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="80dp" />
+
+    <ImageView
+        android:id="@+id/bubble15Step2"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="220dp"
+        android:layout_marginTop="320dp" />
 
     <!-- Header Başlık -->
     <TextView

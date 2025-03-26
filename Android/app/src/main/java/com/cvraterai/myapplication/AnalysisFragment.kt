@@ -22,6 +22,9 @@ import com.google.gson.reflect.TypeToken
 import android.widget.ProgressBar
 import android.animation.ValueAnimator
 import android.view.animation.DecelerateInterpolator
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.animation.ArgbEvaluator
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +44,8 @@ class AnalysisFragment : Fragment() {
     private var evaluationResultJson: String? = null
     private var evaluationId: Long = -1L
     private val skillRatings = mutableListOf<SkillRating>()
+    
+    private lateinit var skillRatingAdapter: SkillRatingAdapter
     
     // Animasyonlar için static kontrol
     companion object {
@@ -93,8 +98,12 @@ class AnalysisFragment : Fragment() {
             android.util.Log.d("AnalysisFragment", "Animasyonlar ilk kez oynatılacak")
         }
         
-        // RecyclerView'ı ayarla
-        setupRecyclerView()
+        // SkillRatingAdapter'ı başlat
+        skillRatingAdapter = SkillRatingAdapter(skillRatings)
+        binding.recyclerViewSkills.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = skillRatingAdapter
+        }
         
         // Verileri yükle
         loadSkillRatingsFromJson()
@@ -200,95 +209,6 @@ class AnalysisFragment : Fragment() {
         findNavController().navigate(R.id.action_analysisFragment_to_aiNoteFragment, bundle)
     }
     
-    private fun setupRecyclerView() {
-        try {
-            binding.recyclerViewSkills.layoutManager = LinearLayoutManager(requireContext())
-            binding.recyclerViewSkills.adapter = SkillRatingAdapter(skillRatings).apply {
-                // Eğer animasyonlar daha önce oynatıldıysa, adapter'da da animasyonları kapat
-                if (animationsPlayed) {
-                    android.util.Log.d("AnalysisFragment", "setupRecyclerView: Animasyonlar devre dışı bırakılıyor")
-                    disableAnimations()
-                } else {
-                    android.util.Log.d("AnalysisFragment", "setupRecyclerView: Animasyonlar etkin")
-                }
-            }
-            
-            // RecyclerView için daha hassas swipe algılama
-            binding.recyclerViewSkills.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-                private val SWIPE_THRESHOLD = 50
-                private var startX = 0f
-                private var startY = 0f
-                private var isSwiping = false
-                
-                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                    when (e.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            startX = e.x
-                            startY = e.y
-                            isSwiping = false
-                            return false
-                        }
-                        MotionEvent.ACTION_MOVE -> {
-                            val diffX = e.x - startX
-                            val diffY = e.y - startY
-                            
-                            // Eğer yatay kaydırma belirginse ve henüz işlenmemişse
-                            if (!isSwiping && Math.abs(diffX) > Math.abs(diffY) * 1.5 && Math.abs(diffX) > SWIPE_THRESHOLD) {
-                                isSwiping = true
-                                
-                                if (diffX > 0) {
-                                    // Sağa kaydırma - önceki sayfaya git
-                                    android.util.Log.d("AnalysisFragment", "⭐ RecyclerView sağa kaydırma algılandı")
-                                    findNavController().navigateUp()
-                                } else {
-                                    // Sola kaydırma - sonraki sayfaya git
-                                    android.util.Log.d("AnalysisFragment", "⭐ RecyclerView sola kaydırma algılandı")
-                                    navigateToAiNote()
-                                }
-                                
-                                return true
-                            }
-                            
-                            return false
-                        }
-                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                            isSwiping = false
-                            return false
-                        }
-                    }
-                    return false
-                }
-                
-                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-                    // Touch event'i işlemek istemiyoruz
-                }
-                
-                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-                    // Parent view'ın intercept etmesini engellemiyoruz
-                }
-            })
-            
-            // Click olaylarını etkinleştir
-            binding.recyclerViewSkills.isClickable = true
-            binding.recyclerViewSkills.setOnClickListener {
-                android.util.Log.d("AnalysisFragment", "RecyclerView tıklandı")
-            }
-            
-            // Kaydırma sırasında item tekrar çizildiğinde animasyonlar oynatılmasın
-            binding.recyclerViewSkills.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    // Herhangi bir kaydırma olduğunda, animasyonları devre dışı bırak
-                    if (newState != RecyclerView.SCROLL_STATE_IDLE) {
-                        (recyclerView.adapter as? SkillRatingAdapter)?.disableAnimations()
-                    }
-                }
-            })
-        } catch (e: Exception) {
-            android.util.Log.e("AnalysisFragment", "RecyclerView ayarlanırken hata: ${e.message}")
-        }
-    }
-    
     private fun loadSkillRatingsFromJson() {
         try {
             // API'dan gelen veriler boş değilse devam et
@@ -349,7 +269,7 @@ class AnalysisFragment : Fragment() {
             android.util.Log.d("AnalysisFragment", "💥 Skill ratings yüklendi, eleman sayısı: ${skillRatings.size}")
             
             // Adapter'ı güncelle
-            binding.recyclerViewSkills.adapter?.notifyDataSetChanged()
+            skillRatingAdapter.updateSkills(skillRatings)
 
             // İlk kez açıldığında animasyonları oynat, daha önce oynatıldıysa devre dışı bırak
             if (!animationsPlayed) {
@@ -362,8 +282,23 @@ class AnalysisFragment : Fragment() {
                 android.util.Log.d("AnalysisFragment", "💥 Animasyonlar daha önce oynatıldı")
                 
                 // Adapter'a animasyonları devre dışı bırak komutu ver
-                (binding.recyclerViewSkills.adapter as? SkillRatingAdapter)?.disableAnimations()
+                skillRatingAdapter.disableAnimations()
             }
+
+            // Uyumluluk yüzdesini güncelle
+            var compatibilityScore = 75 // Varsayılan değer
+            try {
+                if (evaluationResponse != null) {
+                    val evalResponseObj = JSONObject(evaluationResponse!!)
+                    if (evalResponseObj.has("evaluationScore")) {
+                        compatibilityScore = evalResponseObj.getInt("evaluationScore")
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("AnalysisFragment", "Score değeri alınamadı: ${e.message}")
+            }
+            updateCompatibilityProgress(compatibilityScore)
+
         } catch (e: Exception) {
             android.util.Log.e("AnalysisFragment", "Veri yüklenirken hata: ${e.message}")
             e.printStackTrace()
@@ -692,8 +627,101 @@ class AnalysisFragment : Fragment() {
         }
     }
 
+    private fun updateSkillRatings(skills: List<SkillRating>) {
+        skillRatingAdapter.updateSkills(skills)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateCompatibilityProgress(percentage: Int) {
+        try {
+            // Renk sabitleri
+            val colorRed = Color.parseColor("#FF4B4B")
+            val colorOrange = Color.parseColor("#FFA726")
+            val colorGreen = Color.parseColor("#4CAF50")
+
+            // Progress bar genişliğini ayarla
+            val statusBar = binding.compatibilityStatusBar
+            val container = statusBar.parent as View
+            val containerWidth = container.width
+
+            // Animasyon için ValueAnimator oluştur
+            val animator = ValueAnimator.ofFloat(0f, percentage.toFloat())
+            animator.duration = 1500 // 1.5 saniye
+            animator.interpolator = DecelerateInterpolator()
+
+            animator.addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Float
+                val currentPercentage = animatedValue.toInt()
+
+                // Genişliği güncelle
+                val params = statusBar.layoutParams
+                params.width = (containerWidth * (currentPercentage / 100f)).toInt()
+                statusBar.layoutParams = params
+
+                // Yüzde metnini güncelle
+                binding.tvProgressPercent.text = "%$currentPercentage"
+                binding.tvScorePercent.text = "%$currentPercentage"
+
+                // Renk geçişi için GradientDrawable oluştur
+                val drawable = GradientDrawable()
+                drawable.cornerRadius = resources.getDimension(R.dimen.progress_corner_radius)
+
+                // Yüzdeye göre renk geçişi
+                val currentColor = when {
+                    currentPercentage < 25 -> colorRed
+                    currentPercentage < 50 -> interpolateColor(colorRed, colorOrange, (currentPercentage - 25) / 25f)
+                    currentPercentage < 70 -> interpolateColor(colorOrange, colorGreen, (currentPercentage - 50) / 20f)
+                    else -> colorGreen
+                }
+
+                drawable.setColor(currentColor)
+                statusBar.background = drawable
+
+                // Yüzde göstergesinin rengini güncelle
+                binding.tvProgressPercent.setTextColor(currentColor)
+                binding.tvProgressPercent.alpha = 1f
+
+                // Yüzde göstergesinin konumunu güncelle
+                binding.tvProgressPercent.post {
+                    try {
+                        val progressWidth = (containerWidth * (currentPercentage / 100f)).toInt()
+                        val indicatorWidth = binding.tvProgressPercent.width
+                        
+                        // Göstergenin konumunu hesapla
+                        val newX = when {
+                            // Progress bar çok küçükse, göstergeyi en başta tut
+                            progressWidth <= indicatorWidth -> 0f
+                            
+                            // Progress bar yeterince genişse, göstergeyi progress bar'ın sonuna yerleştir
+                            else -> {
+                                val position = progressWidth - indicatorWidth
+                                position.coerceIn(0, containerWidth - indicatorWidth).toFloat()
+                            }
+                        }
+                        
+                        binding.tvProgressPercent.translationX = newX
+                    } catch (e: Exception) {
+                        android.util.Log.e("AnalysisFragment", "Gösterge konumu hesaplanırken hata: ${e.message}")
+                    }
+                }
+
+                // Score yüzdesinin rengini de güncelle
+                binding.tvScorePercent.setTextColor(currentColor)
+            }
+
+            // Animasyonu başlat
+            animator.start()
+
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "Progress güncellenirken hata: ${e.message}")
+        }
+    }
+
+    private fun interpolateColor(startColor: Int, endColor: Int, fraction: Float): Int {
+        return ArgbEvaluator().evaluate(fraction, startColor, endColor) as Int
     }
 }

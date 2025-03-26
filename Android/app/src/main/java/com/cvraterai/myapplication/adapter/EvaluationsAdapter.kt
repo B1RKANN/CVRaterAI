@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.cvraterai.myapplication.R
@@ -212,4 +213,23 @@ class EvaluationsAdapter(private val onItemClick: (evaluation: CvEvaluationRespo
     
     // Tarih kategorisi için veri sınıfı
     data class DateHeader(val titleResId: Int)
+
+    private fun updateProgressBar(progressFilled: View, percentage: Int) {
+        val params = progressFilled.layoutParams as LinearLayout.LayoutParams
+        params.weight = percentage.toFloat()
+        progressFilled.layoutParams = params
+
+        // Yüzdeye göre renk değişimi
+        when {
+            percentage < 50 -> {
+                progressFilled.setBackgroundResource(R.drawable.rounded_progress_red)
+            }
+            percentage < 70 -> {
+                progressFilled.setBackgroundResource(R.drawable.rounded_progress_orange)
+            }
+            else -> {
+                progressFilled.setBackgroundResource(R.drawable.rounded_progress_green)
+            }
+        }
+    }
 } 
