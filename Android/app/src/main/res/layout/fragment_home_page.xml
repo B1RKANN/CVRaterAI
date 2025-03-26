@@ -243,13 +243,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/button_gradient"
-                        android:padding="16dp">
+                        android:padding="20dp">
 
                         <TextView
                             android:id="@+id/tvProfileTitle"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="8dp"
                             android:fontFamily="@font/poppins_semibold"
                             android:text="@string/profile_card_title"
                             android:textColor="@color/white"
@@ -264,18 +264,18 @@
 
                         <ImageView
                             android:id="@+id/ivProfileIcon"
-                            android:layout_width="62dp"
-                            android:layout_height="51dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:elevation="8dp"
                             android:src="@drawable/ic_person"
-                            app:layout_constraintStart_toStartOf="@id/tvProfileTitle"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvProfileTitle"
                             app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/ivProfileArrow"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:elevation="8dp"
                             android:src="@drawable/ic_arrow_right"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -328,9 +328,9 @@
                             android:layout_height="47dp"
                             android:elevation="8dp"
                             android:src="@drawable/download"
-                            app:layout_constraintStart_toStartOf="@id/tvUploadTitle"
                             app:layout_constraintTop_toBottomOf="@id/tvUploadTitle"
-                            app:tint="@color/white" />
+                            app:tint="@color/white"
+                            tools:layout_editor_absoluteX="-3dp" />
 
                         <ImageView
                             android:id="@+id/ivUploadArrow"

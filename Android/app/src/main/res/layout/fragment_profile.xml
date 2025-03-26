@@ -4,208 +4,363 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
+    android:background="@drawable/background_gradient"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".ProfileFragment">
 
-    <TextView
-        android:id="@+id/tvAppName"
-        android:layout_width="wrap_content"
+    <!-- Floating Bubbles with more variety -->
+    <ImageView
+        android:id="@+id/bubble1_profile"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp" />
+
+    <ImageView
+        android:id="@+id/bubble2_profile"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble3_profile"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="200dp" />
+
+    <ImageView
+        android:id="@+id/bubble4_profile"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="120dp" />
+
+    <ImageView
+        android:id="@+id/bubble5_profile"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="300dp" />
+
+    <!-- Header Card with enhanced design -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/headerCard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:elevation="4dp"
-        android:fontFamily="@font/poppins_bold"
-        android:shadowColor="#40000000"
-        android:shadowDx="0"
-        android:shadowDy="4"
-        android:shadowRadius="4"
-        android:text="@string/app_title"
-        android:textColor="@color/primary_blue"
-        android:textSize="36sp"
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginTop="50dp"
+        android:translationZ="20dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardUserDetails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        app:cardCornerRadius="21dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tvAppName">
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_gradient"
             android:padding="20dp">
 
             <TextView
-                android:id="@+id/tvUserDetailsTitle"
+                android:id="@+id/tvAppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:elevation="12dp"
                 android:fontFamily="@font/poppins_bold"
-                android:text="@string/user_details"
-                android:textColor="@color/primary_blue"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"/>
+                android:shadowColor="#BB000000"
+                android:shadowDx="0"
+                android:shadowDy="8"
+                android:shadowRadius="16"
+                android:text="@string/app_title"
+                android:textColor="@color/white"
+                android:textSize="42sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/primary_blue">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:text="@string/profile_name"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/tvUserName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/poppins_medium"
-                            android:text="Birkan Boz"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-                    </FrameLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/primary_blue">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:text="@string/email"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/tvUserEmail"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/poppins_medium"
-                        android:text="birkanboz3301@gmail.com"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Main Content Card with enhanced shadows -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardCreditContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
+        android:layout_height="0dp"
         android:layout_marginTop="24dp"
-        app:cardCornerRadius="21dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/cardUserDetails">
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerCard">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingTop="16dp"
+            android:paddingBottom="32dp">
 
-            <TextView
-                android:id="@+id/tvCreditTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/credit"
-                android:textColor="@color/primary_blue"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"/>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardCredit"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="21dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/primary_blue">
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <!-- User Details Card with glass effect -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardUserDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="20dp">
+                    android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
 
-                    <TextView
-                        android:id="@+id/tvPlanType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="@string/free"
-                        android:textColor="@color/background_light"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvCreditsCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:text="8/20"
-                        android:textColor="@color/background_light"
-                        android:textSize="16sp"
-                        android:layout_marginTop="4dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvPlanType" />
-
-                    <ProgressBar
-                        android:id="@+id/progressCredits"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:layout_marginTop="12dp"
-                        android:progress="40"
-                        android:progressDrawable="@drawable/custom_progress_bar"
-                        app:layout_constraintTop_toBottomOf="@id/tvCreditsCount" />
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_gradient"
+                        android:orientation="vertical"
+                        android:padding="28dp">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/tvUserDetailsTitle"
+                            android:layout_width="262dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="28dp"
+                            android:fontFamily="@font/poppins_bold"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="0"
+                            android:shadowDy="6"
+                            android:shadowRadius="8"
+                            android:text="@string/user_details"
+                            android:textColor="@color/white"
+                            android:textSize="32sp" />
+
+                        <!-- Name Container -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/profile_name"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/poppins_medium"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginBottom="10dp"/>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="#26FFFFFF">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:padding="18dp">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_person"
+                                        android:tint="#FFFFFF"
+                                        android:alpha="0.9"/>
+
+                                    <TextView
+                                        android:id="@+id/tvUserName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="16dp"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Birkan Boz"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="16sp"/>
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </LinearLayout>
+
+                        <!-- Email Container -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/email"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/poppins_medium"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginBottom="10dp"/>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="#26FFFFFF">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:padding="18dp">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_email"
+                                        android:tint="#FFFFFF"
+                                        android:alpha="0.9"/>
+
+                                    <TextView
+                                        android:id="@+id/tvUserEmail"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="16dp"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="birkanboz3301@gmail.com"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="16sp"/>
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Credit Card with enhanced design -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardCreditContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_gradient"
+                        android:orientation="vertical"
+                        android:padding="28dp">
+
+                        <TextView
+                            android:id="@+id/tvCreditTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="@string/credit"
+                            android:textColor="@color/white"
+                            android:textSize="32sp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="0"
+                            android:shadowDy="6"
+                            android:shadowRadius="8"
+                            android:layout_marginBottom="24dp"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardCredit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#26FFFFFF">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="24dp">
+
+                                <TextView
+                                    android:id="@+id/tvPlanType"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_bold"
+                                    android:text="@string/free"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="26sp"
+                                    android:shadowColor="#40000000"
+                                    android:shadowDx="0"
+                                    android:shadowDy="4"
+                                    android:shadowRadius="6"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/tvCreditsCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text="8/20"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp"
+                                    android:layout_marginTop="8dp"
+                                    android:shadowColor="#40000000"
+                                    android:shadowDx="0"
+                                    android:shadowDy="2"
+                                    android:shadowRadius="4"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/tvPlanType" />
+
+                                <ProgressBar
+                                    android:id="@+id/progressCredits"
+                                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="28dp"
+                                    android:layout_marginTop="20dp"
+                                    android:progress="40"
+                                    android:progressDrawable="@drawable/custom_progress_bar"
+                                    app:layout_constraintTop_toBottomOf="@id/tvCreditsCount" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

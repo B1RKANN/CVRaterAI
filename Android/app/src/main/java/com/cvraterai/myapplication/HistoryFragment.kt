@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,7 +39,7 @@ class HistoryFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var emptyStateView: LinearLayout
+    private lateinit var emptyStateView: CardView
     private lateinit var progressBar: ProgressBar
     private lateinit var adapter: EvaluationsAdapter
     

@@ -3,8 +3,8 @@ package com.cvraterai.myapplication.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.cvraterai.myapplication.R
 import com.cvraterai.myapplication.data.model.CvEvaluationResponse
@@ -177,7 +177,7 @@ class EvaluationsAdapter(private val onItemClick: (evaluation: CvEvaluationRespo
         RecyclerView.ViewHolder(itemView) {
         private val tvFullName: TextView = itemView.findViewById(R.id.tvFullName)
         private val tvDate: TextView = itemView.findViewById(R.id.tvDate)
-        private val btnViewDetails: Button = itemView.findViewById(R.id.btnViewDetails)
+        private val btnViewDetails: CardView = itemView.findViewById(R.id.btnViewDetails)
         
         fun bind(evaluation: CvEvaluationResponse) {
             // Full name veya file name gösterimi
@@ -203,6 +203,7 @@ class EvaluationsAdapter(private val onItemClick: (evaluation: CvEvaluationRespo
                 tvDate.text = evaluation.date ?: ""
             }
 
+            // Tıklama olayını CardView'a ekle
             btnViewDetails.setOnClickListener {
                 onItemClick(evaluation)
             }
