@@ -4,10 +4,70 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
+// Navigasyon bağlantısı bileşeni
+interface NavLinkProps {
+  href: string;
+  onClick?: (e: React.MouseEvent) => void;
+  children: React.ReactNode;
+  className?: string;
+}
+
+const NavLink = ({ href, onClick, children, className = "" }: NavLinkProps) => (
+  <a 
+    href={href} 
+    onClick={onClick}
+    className={`text-white/80 hover:text-white font-medium transition-colors relative group cursor-pointer ${className}`}
+  >
+    {children}
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-700 group-hover:w-full transition-all duration-300"></span>
+  </a>
+);
+
+// Ana menü bağlantısı tipleri
+interface NavigationLink {
+  name: string;
+  href: string;
+  sectionId: string | null;
+  isScrollable: boolean;
+}
+
+// Ana menü bağlantıları 
+const baseNavigationLinks: NavigationLink[] = [
+  { name: 'Home', href: '/#hero', sectionId: 'hero', isScrollable: true },
+  { name: 'Features', href: '/#features', sectionId: 'features', isScrollable: true },
+  { name: 'Pricing', href: '/#pricing', sectionId: 'pricing', isScrollable: true }
+];
+
+// Giriş yapılınca eklenecek navigasyon linki
+const authenticatedLinks: NavigationLink[] = [
+  { name: 'CV Analysis', href: '/cv-analysis', sectionId: null, isScrollable: false }
+];
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [navigationLinks, setNavigationLinks] = useState<NavigationLink[]>(baseNavigationLinks);
 
-  // Close menu when clicking outside
+  // Kullanıcının giriş durumunu kontrol et
+  useEffect(() => {
+    // Tokeni localStorage veya cookie'den kontrol et
+    const token = localStorage.getItem('token') || 
+                  document.cookie.split(';').find(cookie => 
+                    cookie.trim().startsWith('token='))?.split('=')[1];
+    
+    // Token varsa kullanıcı giriş yapmış demektir
+    const loggedIn = !!token;
+    setIsLoggedIn(loggedIn);
+    
+    // Kullanıcı giriş yapmışsa, CV Analysis linkini ekle
+    if (loggedIn) {
+      setNavigationLinks([...baseNavigationLinks, ...authenticatedLinks]);
+    } else {
+      setNavigationLinks(baseNavigationLinks);
+    }
+  }, []);
+
+  // Dışarı tıklandığında menüyü kapat
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
@@ -20,7 +80,7 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen]);
 
-  // Close mobile menu when resizing to desktop
+  // Masaüstü boyutuna geçildiğinde mobil menüyü kapat
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMenuOpen) {
@@ -32,33 +92,36 @@ export default function Header() {
     return () => window.removeEventListener('resize', handleResize);
   }, [isMenuOpen]);
 
-  // Function to handle smooth scrolling to sections
-  const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
+  // Bölümlere yumuşak kaydırma fonksiyonu
+  const scrollToSection = (e: React.MouseEvent, sectionId: string | null) => {
     e.preventDefault();
     
-    // Close mobile menu if open
+    // Mobil menü açıksa kapat
     if (isMenuOpen) {
       setIsMenuOpen(false);
     }
     
-    // Check if we're on the homepage
+    // SectionId yoksa işlem yapma
+    if (!sectionId) return;
+    
+    // Ana sayfada olup olmadığımızı kontrol et
     if (window.location.pathname === '/') {
-      // If on homepage, scroll to the section
+      // Ana sayfadaysak, bölüme kaydır
       const section = document.getElementById(sectionId);
       if (section) {
-        // Get the section's position
+        // Bölümün konumunu al
         const sectionTop = section.getBoundingClientRect().top;
-        // Account for the fixed header (80px height)
+        // Sabit başlığı hesaba kat (80px yükseklik)
         const offsetPosition = sectionTop + window.pageYOffset - 80;
         
-        // Scroll to the section with the offset
+        // Belirtilen offsetle bölüme kaydır
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         });
       }
     } else {
-      // If not on homepage, navigate to homepage and then scroll to section
+      // Ana sayfada değilsek, ana sayfaya git ve bölüme kaydır
       window.location.href = `/#${sectionId}`;
     }
   };
@@ -72,38 +135,47 @@ export default function Header() {
       </Link>
       
       <div className="flex items-center space-x-4 md:space-x-6">
-        {/* Desktop Navigation */}
+        {/* Masaüstü Navigasyonu */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-white/80 hover:text-white font-medium transition-colors relative group">
-            Home
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-700 group-hover:w-full transition-all duration-300"></span>
-          </Link>
-          <a 
-            href="/#features" 
-            onClick={(e) => scrollToSection(e, 'features')}
-            className="text-white/80 hover:text-white font-medium transition-colors relative group cursor-pointer"
-          >
-            Features
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-700 group-hover:w-full transition-all duration-300"></span>
-          </a>
-          <a 
-            href="/#pricing" 
-            onClick={(e) => scrollToSection(e, 'pricing')}
-            className="text-white/80 hover:text-white font-medium transition-colors relative group cursor-pointer"
-          >
-            Pricing
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-700 group-hover:w-full transition-all duration-300"></span>
-          </a>
+          {navigationLinks.map((link) => (
+            link.isScrollable ? (
+              <NavLink 
+                key={link.name}
+                href={link.href} 
+                onClick={(e) => scrollToSection(e, link.sectionId!)}
+              >
+                {link.name}
+              </NavLink>
+            ) : (
+              <Link 
+                key={link.name}
+                href={link.href} 
+                className="text-white/80 hover:text-white font-medium transition-colors relative group"
+              >
+                {link.name}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-700 group-hover:w-full transition-all duration-300"></span>
+              </Link>
+            )
+          ))}
         </nav>
         
-        {/* Desktop Buttons */}
+        {/* Masaüstü Butonları */}
         <div className="hidden md:flex items-center space-x-4">
-          <Link 
-            href="/signin" 
-            className="text-white/90 hover:text-white border border-blue-600 px-5 py-2 rounded-full font-medium transition-all hover:bg-blue-600/20"
-          >
-            Sign In
-          </Link>
+          {isLoggedIn ? (
+            <Link 
+              href="/profile" 
+              className="text-white/90 hover:text-white border border-blue-600 px-5 py-2 rounded-full font-medium transition-all hover:bg-blue-600/20"
+            >
+              Profile
+            </Link>
+          ) : (
+            <Link 
+              href="/signin" 
+              className="text-white/90 hover:text-white border border-blue-600 px-5 py-2 rounded-full font-medium transition-all hover:bg-blue-600/20"
+            >
+              Sign In
+            </Link>
+          )}
           <Link 
             href="/download" 
             className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-5 py-2 rounded-full font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all"
@@ -112,7 +184,7 @@ export default function Header() {
           </Link>
         </div>
         
-        {/* Hamburger Menu Button */}
+        {/* Hamburger Menü Butonu */}
         <button 
           id="menu-button"
           className="md:hidden flex items-center justify-center w-10 h-10 text-white focus:outline-none"
@@ -136,7 +208,7 @@ export default function Header() {
         </button>
       </div>
       
-      {/* Mobile Navigation Menu - With Animation */}
+      {/* Mobil Navigasyon Menüsü - Animasyonlu */}
       <div 
         id="mobile-menu"
         className={`md:hidden fixed inset-0 top-20 bg-[#051029] z-40 flex flex-col transition-all duration-500 ease-in-out ${
@@ -151,37 +223,47 @@ export default function Header() {
           </div>
           
           <nav className="flex flex-col items-center space-y-6 w-full">
-            <Link 
-              href="/" 
-              className="text-white text-xl font-medium py-2 transform transition-transform duration-300 hover:scale-105"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <a 
-              href="/#features" 
-              className="text-white text-xl font-medium py-2 transform transition-transform duration-300 hover:scale-105"
-              onClick={(e) => scrollToSection(e, 'features')}
-            >
-              Features
-            </a>
-            <a 
-              href="/#pricing" 
-              className="text-white text-xl font-medium py-2 transform transition-transform duration-300 hover:scale-105"
-              onClick={(e) => scrollToSection(e, 'pricing')}
-            >
-              Pricing
-            </a>
+            {navigationLinks.map((link) => (
+              link.isScrollable ? (
+                <a 
+                  key={link.name}
+                  href={link.href} 
+                  className="text-white text-xl font-medium py-2 transform transition-transform duration-300 hover:scale-105"
+                  onClick={(e) => scrollToSection(e, link.sectionId!)}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link 
+                  key={link.name}
+                  href={link.href} 
+                  className="text-white text-xl font-medium py-2 transform transition-transform duration-300 hover:scale-105"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              )
+            ))}
           </nav>
           
           <div className="mt-auto mb-10 w-full max-w-xs">
-            <Link 
-              href="/signin" 
-              className="block text-center w-full text-white border border-blue-600 py-3 px-6 rounded-full font-medium my-4 hover:bg-blue-600/20 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Sign In
-            </Link>
+            {isLoggedIn ? (
+              <Link 
+                href="/profile" 
+                className="block text-center w-full text-white border border-blue-600 py-3 px-6 rounded-full font-medium my-4 hover:bg-blue-600/20 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Profile
+              </Link>
+            ) : (
+              <Link 
+                href="/signin" 
+                className="block text-center w-full text-white border border-blue-600 py-3 px-6 rounded-full font-medium my-4 hover:bg-blue-600/20 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+            )}
             <Link 
               href="/download" 
               className="block text-center w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 px-6 rounded-full font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all"

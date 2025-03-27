@@ -15,33 +15,178 @@ const XMarkIcon = () => (
   </svg>
 );
 
+// Özellik listesi öğesi bileşeni
+const FeatureListItem = ({ text, included, disabled = false }: { text: string; included: boolean; disabled?: boolean }) => (
+  <li className={`flex items-start ${disabled ? 'opacity-50' : ''}`}>
+    {included ? <CheckIcon /> : <XMarkIcon />}
+    <span className="text-blue-100">{text}</span>
+  </li>
+);
+
+// Arkaplan gradyanları bileşeni
+const BackgroundGradients = () => (
+  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    {/* Sol taraf gradyan noktası */}
+    <div 
+      className="absolute bottom-0 left-1/4 w-[600px] h-[600px]" 
+      style={{
+        background: 'radial-gradient(circle, rgba(37, 99, 235, 0.6) 0%, rgba(59, 130, 246, 0.3) 30%, rgba(96, 165, 250, 0.1) 60%, transparent 80%)',
+        borderRadius: '50%',
+        filter: 'blur(70px)',
+        transform: 'translate(-30%, 30%)'
+      }}
+    />
+    
+    {/* Sağ taraf gradyan noktası */}
+    <div 
+      className="absolute top-0 right-1/4 w-[500px] h-[500px]" 
+      style={{
+        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, rgba(37, 99, 235, 0.2) 40%, rgba(96, 165, 250, 0.1) 70%, transparent 85%)',
+        borderRadius: '50%',
+        filter: 'blur(70px)',
+        transform: 'translate(20%, -30%)'
+      }}
+    />
+  </div>
+);
+
+// Fiyatlandırma kartı bileşeni
+interface PricingPlan {
+  tier: string;
+  price: string;
+  period: string;
+  description: string;
+  features: Array<{text: string; included: boolean}>;
+  buttonText: string;
+  buttonLink: string;
+  isPopular?: boolean;
+  isDisabled?: boolean;
+  cardClasses?: string;
+  buttonClasses?: string;
+  textColorClass?: string;
+}
+
+const PricingCard = ({
+  tier,
+  price,
+  period,
+  description,
+  features,
+  buttonText,
+  buttonLink,
+  isPopular = false,
+  isDisabled = false,
+  cardClasses = "bg-gradient-to-br from-blue-900/30 to-indigo-900/30 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-2xl border border-blue-800/50 hover:border-blue-600/50",
+  buttonClasses = "block w-full py-2.5 md:py-3 px-4 md:px-6 text-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors",
+  textColorClass = "text-blue-100"
+}: PricingPlan) => (
+  <div className={`${cardClasses} transition-all flex flex-col h-full ${isPopular ? 'relative md:transform md:scale-105 shadow-xl shadow-blue-500/20' : ''}`}>
+    {isPopular && (
+      <div className="absolute top-0 right-6 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 rounded-full text-xs font-semibold text-white">
+        Most Popular
+      </div>
+    )}
+    
+    <div className="mb-4 md:mb-6">
+      <span className="text-blue-400 font-semibold tracking-wider uppercase text-xs sm:text-sm">{tier}</span>
+      <div className="mt-2 flex items-baseline">
+        <span className="text-3xl sm:text-4xl font-bold text-white">{price}</span>
+        {period && <span className="text-base sm:text-lg text-blue-300 ml-1">{period}</span>}
+      </div>
+      <p className="text-sm sm:text-base text-blue-200 mt-2 sm:mt-3">{description}</p>
+    </div>
+    
+    <div className={`border-t ${isPopular ? 'border-blue-600/50' : 'border-blue-800/50'} py-4 md:py-6 mb-4 md:mb-6`}>
+      <ul className="space-y-3 md:space-y-4 text-sm sm:text-base">
+        {features.map((feature, index) => (
+          <FeatureListItem
+            key={`feature-${tier}-${index}`}
+            text={feature.text}
+            included={feature.included}
+            disabled={!feature.included && isDisabled}
+          />
+        ))}
+      </ul>
+    </div>
+    
+    <div className="mt-auto">
+      {isDisabled ? (
+        <button 
+          disabled
+          className="block w-full py-2.5 md:py-3 px-4 md:px-6 text-center bg-blue-900/70 text-blue-200 font-medium rounded-lg cursor-not-allowed"
+        >
+          {buttonText}
+        </button>
+      ) : (
+        <Link 
+          href={buttonLink} 
+          className={buttonClasses}
+        >
+          {buttonText}
+        </Link>
+      )}
+    </div>
+  </div>
+);
+
 export default function PricingSection() {
+  // Plan verileri
+  const pricingPlans: PricingPlan[] = [
+    {
+      tier: "Free",
+      price: "$0",
+      period: "/month",
+      description: "Perfect for getting started with CVRaterAI",
+      features: [
+        { text: "20 Credits per week", included: true },
+        { text: "Basic CV analysis", included: true },
+        { text: "Standard templates", included: true },
+        { text: "Premium features", included: false },
+        { text: "Priority support", included: false }
+      ],
+      buttonText: "Get Started",
+      buttonLink: "/register"
+    },
+    {
+      tier: "Pro",
+      price: "$9.99",
+      period: "/month",
+      description: "For professionals looking to maximize their potential",
+      features: [
+        { text: "Unlimited Credits", included: true },
+        { text: "Advanced CV analysis", included: true },
+        { text: "Premium templates", included: true },
+        { text: "Industry-specific suggestions", included: true },
+        { text: "Priority email support", included: true }
+      ],
+      buttonText: "Get Started",
+      buttonLink: "/register/pro",
+      isPopular: true,
+      cardClasses: "bg-gradient-to-br from-blue-700/40 to-indigo-700/40 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-2xl border border-blue-500/50 hover:border-blue-400/50",
+      buttonClasses: "block w-full py-2.5 md:py-3 px-4 md:px-6 text-center bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-medium rounded-lg transition-all hover:shadow-lg hover:shadow-blue-500/30",
+      textColorClass: "text-blue-50"
+    },
+    {
+      tier: "Business",
+      price: "Coming Soon",
+      period: "",
+      description: "Enterprise-grade solutions for your business",
+      features: [
+        { text: "Team member accounts", included: true },
+        { text: "Admin dashboard", included: true },
+        { text: "Custom branding", included: true },
+        { text: "API access", included: true },
+        { text: "Dedicated account manager", included: true }
+      ],
+      buttonText: "Notify Me",
+      buttonLink: "#",
+      isDisabled: true
+    }
+  ];
+
   return (
     <section id="pricing" className="w-full py-12 md:py-16 px-4 md:px-16 bg-transparent relative z-20 overflow-hidden">
-      {/* Background gradient spots */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Left side gradient spot */}
-        <div 
-          className="absolute bottom-0 left-1/4 w-[600px] h-[600px]" 
-          style={{
-            background: 'radial-gradient(circle, rgba(37, 99, 235, 0.6) 0%, rgba(59, 130, 246, 0.3) 30%, rgba(96, 165, 250, 0.1) 60%, transparent 80%)',
-            borderRadius: '50%',
-            filter: 'blur(70px)',
-            transform: 'translate(-30%, 30%)'
-          }}
-        />
-        
-        {/* Right side gradient spot */}
-        <div 
-          className="absolute top-0 right-1/4 w-[500px] h-[500px]" 
-          style={{
-            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, rgba(37, 99, 235, 0.2) 40%, rgba(96, 165, 250, 0.1) 70%, transparent 85%)',
-            borderRadius: '50%',
-            filter: 'blur(70px)',
-            transform: 'translate(20%, -30%)'
-          }}
-        />
-      </div>
+      <BackgroundGradients />
       
       <div className="max-w-7xl mx-auto relative">
         {/* Section title */}
@@ -54,149 +199,9 @@ export default function PricingSection() {
         
         {/* Pricing cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
-          
-          {/* FREE Tier */}
-          <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-2xl border border-blue-800/50 hover:border-blue-600/50 transition-all flex flex-col h-full">
-            <div className="mb-4 md:mb-6">
-              <span className="text-blue-400 font-semibold tracking-wider uppercase text-xs sm:text-sm">Free</span>
-              <div className="mt-2 flex items-baseline">
-                <span className="text-3xl sm:text-4xl font-bold text-white">$0</span>
-                <span className="text-base sm:text-lg text-blue-300 ml-1">/month</span>
-              </div>
-              <p className="text-sm sm:text-base text-blue-200 mt-2 sm:mt-3">Perfect for getting started with CVRaterAI</p>
-            </div>
-            
-            <div className="border-t border-blue-800/50 py-4 md:py-6 mb-4 md:mb-6">
-              <ul className="space-y-3 md:space-y-4 text-sm sm:text-base">
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">20 Credits per week</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">Basic CV analysis</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">Standard templates</span>
-                </li>
-                <li className="flex items-start opacity-50">
-                  <XMarkIcon />
-                  <span className="text-blue-100">Premium features</span>
-                </li>
-                <li className="flex items-start opacity-50">
-                  <XMarkIcon />
-                  <span className="text-blue-100">Priority support</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="mt-auto">
-              <Link 
-                href="/register" 
-                className="block w-full py-2.5 md:py-3 px-4 md:px-6 text-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-          
-          {/* PRO Tier */}
-          <div className="bg-gradient-to-br from-blue-700/40 to-indigo-700/40 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-2xl border border-blue-500/50 hover:border-blue-400/50 transition-all flex flex-col h-full relative md:transform md:scale-105 shadow-xl shadow-blue-500/20">
-            {/* Popular badge */}
-            <div className="absolute top-0 right-6 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 rounded-full text-xs font-semibold text-white">
-              Most Popular
-            </div>
-            
-            <div className="mb-4 md:mb-6">
-              <span className="text-blue-300 font-semibold tracking-wider uppercase text-xs sm:text-sm">Pro</span>
-              <div className="mt-2 flex items-baseline">
-                <span className="text-3xl sm:text-4xl font-bold text-white">$9.99</span>
-                <span className="text-base sm:text-lg text-blue-300 ml-1">/month</span>
-              </div>
-              <p className="text-sm sm:text-base text-blue-100 mt-2 sm:mt-3">For professionals looking to maximize their potential</p>
-            </div>
-            
-            <div className="border-t border-blue-600/50 py-4 md:py-6 mb-4 md:mb-6">
-              <ul className="space-y-3 md:space-y-4 text-sm sm:text-base">
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-50">Unlimited Credits</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-50">Advanced CV analysis</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-50">Premium templates</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-50">Industry-specific suggestions</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-50">Priority email support</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="mt-auto">
-              <Link 
-                href="/register/pro" 
-                className="block w-full py-2.5 md:py-3 px-4 md:px-6 text-center bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-medium rounded-lg transition-all hover:shadow-lg hover:shadow-blue-500/30"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-          
-          {/* BUSINESS Tier */}
-          <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-2xl border border-blue-800/50 hover:border-blue-600/50 transition-all flex flex-col h-full">
-            <div className="mb-4 md:mb-6">
-              <span className="text-blue-400 font-semibold tracking-wider uppercase text-xs sm:text-sm">Business</span>
-              <div className="mt-2 flex items-baseline">
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Coming Soon</span>
-              </div>
-              <p className="text-sm sm:text-base text-blue-200 mt-2 sm:mt-3">Enterprise-grade solutions for your business</p>
-            </div>
-            
-            <div className="border-t border-blue-800/50 py-4 md:py-6 mb-4 md:mb-6">
-              <ul className="space-y-3 md:space-y-4 text-sm sm:text-base">
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">Team member accounts</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">Admin dashboard</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">Custom branding</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">API access</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckIcon />
-                  <span className="text-blue-100">Dedicated account manager</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="mt-auto">
-              <button 
-                disabled
-                className="block w-full py-2.5 md:py-3 px-4 md:px-6 text-center bg-blue-900/70 text-blue-200 font-medium rounded-lg cursor-not-allowed"
-              >
-                Notify Me
-              </button>
-            </div>
-          </div>
-          
+          {pricingPlans.map((plan, index) => (
+            <PricingCard key={`pricing-plan-${index}`} {...plan} />
+          ))}
         </div>
         
         {/* Testimonial or additional info */}
