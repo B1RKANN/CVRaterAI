@@ -126,7 +126,7 @@ export default function Profile() {
         console.log(`Kullanıcı ID: ${userId}, ID Tipi: ${typeof userId}`);
         
         // URL'de email değil, sayısal ID kullanmalıyız
-        const response = await fetch(`/api/v1/profile/${userId}`, {
+        const response = await fetch(`http://69.62.120.202:8080/api/v1/profile/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
