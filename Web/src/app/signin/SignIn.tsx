@@ -23,7 +23,7 @@ export default function SignIn() {
     
     try {
       // API isteği gönder
-      const response = await fetch('/auth/v2/authenticate-with-cookie', {
+      const response = await fetch('http://69.62.120.202:8080/auth/v2/authenticate-with-cookie', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
