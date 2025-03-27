@@ -36,7 +36,7 @@ export default function FeaturesSection() {
         <div className="text-center mb-2">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-1">Features</h2>
           <p className="text-base sm:text-lg text-blue-200 max-w-3xl mx-auto">
-            Discover how our AI-powered tools can help you create the perfect CV and land your dream job
+          Analyze CVs with AI and optimize your hiring process.
           </p>
         </div>
         
@@ -119,32 +119,32 @@ export default function FeaturesSection() {
           
           {/* Personalized Recommendations - Left top */}
           <div className="absolute left-0 top-[25%] md:top-[30%] transform -translate-y-1/2 z-20 bg-white text-gray-800 py-3 px-6 rounded-full shadow-lg cursor-pointer transition-all hover:bg-blue-600 hover:text-white hover:scale-105">
-            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Personalized Recommendations</p>
+            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Detailed Feedback</p>
           </div>
           
           {/* Smart Search Filters - Left middle */}
           <div className="absolute left-[5%] md:left-[10%] top-1/2 transform -translate-y-1/2 z-20 bg-white text-gray-800 py-3 px-6 rounded-full shadow-lg cursor-pointer transition-all hover:bg-blue-600 hover:text-white hover:scale-105">
-            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Smart Search Filters</p>
+            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Smart CV Evaluation</p>
           </div>
           
           {/* Real-Time Availability Updates - Left bottom */}
           <div className="absolute left-0 bottom-[25%] md:bottom-[30%] transform translate-y-1/2 z-20 bg-white text-gray-800 py-3 px-6 rounded-full shadow-lg cursor-pointer transition-all hover:bg-blue-600 hover:text-white hover:scale-105">
-            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Real-Time Availability Updates</p>
+            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Fast And Effective Result</p>
           </div>
           
           {/* Predictive Pricing Insights - Right top */}
           <div className="absolute right-0 top-[25%] md:top-[30%] transform -translate-y-1/2 z-20 bg-white text-gray-800 py-3 px-6 rounded-full shadow-lg cursor-pointer transition-all hover:bg-blue-600 hover:text-white hover:scale-105">
-            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Predictive Pricing Insights</p>
+            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Suitability Score</p>
           </div>
           
           {/* Virtual Property Tours - Right middle */}
           <div className="absolute right-[5%] md:right-[10%] top-1/2 transform -translate-y-1/2 z-20 bg-white text-gray-800 py-3 px-6 rounded-full shadow-lg cursor-pointer transition-all hover:bg-blue-600 hover:text-white hover:scale-105">
-            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Virtual Property Tours</p>
+            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Position Specific Analysis</p>
           </div>
           
           {/* Efficient Leasing Process - Right bottom */}
           <div className="absolute right-0 bottom-[25%] md:bottom-[30%] transform translate-y-1/2 z-20 bg-white text-gray-800 py-3 px-6 rounded-full shadow-lg cursor-pointer transition-all hover:bg-blue-600 hover:text-white hover:scale-105">
-            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Efficient Leasing Process</p>
+            <p className="font-semibold text-sm md:text-base whitespace-nowrap">Easy Usability</p>
           </div>
         </div>
       </div>

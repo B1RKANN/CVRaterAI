@@ -43,17 +43,17 @@ export default function HeroSection() {
           CV Rater AI
         </h1>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium mb-4 md:mb-6">
-          The Ultimate AI Tools
+        AI-Powered CV Analysis Platform
         </h2>
         <p className="text-base md:text-lg mb-6 md:mb-8">
           Analyze your CV with artificial intelligence, 
-          <span className="hidden md:inline"><br /></span> discover your strengths and make better choices!
+          <span className="hidden md:inline"><br /></span> learn your job suitability
         </p>
         <Link 
           href="#"
           className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium rounded-full hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] relative overflow-hidden group"
         >
-          <span className="relative z-10">Generative AI</span>
+          <span className="relative z-10">CV Analysis</span>
         </Link>
       </div>
     </section>
