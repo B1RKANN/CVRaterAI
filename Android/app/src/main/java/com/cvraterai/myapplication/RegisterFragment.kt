@@ -17,6 +17,9 @@ import com.cvraterai.myapplication.ui.auth.RegisterState
 import com.cvraterai.myapplication.ui.auth.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.android.material.snackbar.Snackbar
+import android.text.method.PasswordTransformationMethod
+import android.text.method.HideReturnsTransformationMethod
+import android.widget.ImageView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +41,13 @@ class RegisterFragment : Fragment() {
     private lateinit var etSurname: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
+    private lateinit var etConfirmPassword: EditText
     private lateinit var cardSignUp: CardView
     private lateinit var progressBar: ProgressBar
+    private lateinit var ivTogglePassword: ImageView
+    private lateinit var ivToggleConfirmPassword: ImageView
+    private var passwordVisible = false
+    private var confirmPasswordVisible = false
     
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
@@ -71,22 +79,32 @@ class RegisterFragment : Fragment() {
         etSurname = binding.etSurname
         etEmail = binding.etEmail
         etPassword = binding.etPassword
+        etConfirmPassword = binding.etConfirmPassword
         cardSignUp = binding.cardSignUp
         progressBar = binding.progressBar
+        ivTogglePassword = binding.ivTogglePassword
+        ivToggleConfirmPassword = binding.ivToggleConfirmPassword
         
         // Kayıt Ol butonuna tıklama olayını ayarla
         cardSignUp.setOnClickListener {
             validateAndRegister()
         }
         
-        // Google ile kayıt
-        binding.flGoogle.setOnClickListener {
-            // TODO: Google ile kayıt işlemleri
-        }
-        
         // Giriş Yap butonuna tıklama olayını ayarla
         binding.tvLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+        
+        // Şifre görünürlüğü toggle işlevi
+        ivTogglePassword.setOnClickListener {
+            passwordVisible = !passwordVisible
+            togglePasswordVisibility(passwordVisible, etPassword, ivTogglePassword)
+        }
+        
+        // Şifre onay görünürlüğü toggle işlevi
+        ivToggleConfirmPassword.setOnClickListener {
+            confirmPasswordVisible = !confirmPasswordVisible
+            togglePasswordVisibility(confirmPasswordVisible, etConfirmPassword, ivToggleConfirmPassword)
         }
         
         // RegisterViewModel'i dinle
@@ -116,12 +134,14 @@ class RegisterFragment : Fragment() {
         val surname = etSurname.text.toString().trim()
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
+        val confirmPassword = etConfirmPassword.text.toString().trim()
         
         // Reset error states
         etName.isActivated = false
         etSurname.isActivated = false
         etEmail.isActivated = false
         etPassword.isActivated = false
+        etConfirmPassword.isActivated = false
         binding.tvNameError.visibility = View.GONE
         binding.tvSurnameError.visibility = View.GONE
         binding.tvEmailError.visibility = View.GONE
@@ -157,6 +177,13 @@ class RegisterFragment : Fragment() {
             isValid = false
         }
         
+        // Validate confirm password
+        if (confirmPassword.isEmpty() || confirmPassword != password) {
+            etConfirmPassword.isActivated = true
+            binding.tvConfirmPasswordError.visibility = View.VISIBLE
+            isValid = false
+        }
+        
         if (isValid) {
             // Show loading indicator
             progressBar.visibility = View.VISIBLE
@@ -175,8 +202,10 @@ class RegisterFragment : Fragment() {
         // Reset previous errors
         etEmail.isActivated = false
         etPassword.isActivated = false
+        etConfirmPassword.isActivated = false
         binding.tvEmailError.visibility = View.GONE
         binding.tvPasswordError.visibility = View.GONE
+        binding.tvConfirmPasswordError.visibility = View.GONE
         
         // Show appropriate error based on the error message
         when {
@@ -187,6 +216,10 @@ class RegisterFragment : Fragment() {
             errorMessage.contains("password", ignoreCase = true) -> {
                 etPassword.isActivated = true
                 binding.tvPasswordError.visibility = View.VISIBLE
+            }
+            errorMessage.contains("confirm password", ignoreCase = true) -> {
+                etConfirmPassword.isActivated = true
+                binding.tvConfirmPasswordError.visibility = View.VISIBLE
             }
             errorMessage.contains("network", ignoreCase = true) || 
             errorMessage.contains("connection", ignoreCase = true) -> {
@@ -214,6 +247,20 @@ class RegisterFragment : Fragment() {
         // @ işareti zorunlu ve sonunda .com olmalı
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.com$"
         return email.matches(emailPattern.toRegex())
+    }
+
+    private fun togglePasswordVisibility(isVisible: Boolean, editText: EditText, toggleIcon: ImageView) {
+        if (isVisible) {
+            // Şifreyi göster
+            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            toggleIcon.setImageResource(R.drawable.ic_visibility_off)
+        } else {
+            // Şifreyi gizle
+            editText.transformationMethod = PasswordTransformationMethod.getInstance()
+            toggleIcon.setImageResource(R.drawable.ic_visibility)
+        }
+        // İmleci metnin sonuna getir
+        editText.setSelection(editText.text.length)
     }
 
     companion object {
