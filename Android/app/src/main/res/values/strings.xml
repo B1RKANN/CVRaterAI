@@ -31,10 +31,13 @@
     <string name="login_button">Login</string>
     <string name="register_prompt">Don\'t have an account?</string>
     <string name="register_action">Register</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="or_continue_with">or continue with</string>
     <string name="email_error">Please enter a valid email address</string>
     <string name="email_required">Email is required</string>
     <string name="password_error">Password must be at least 6 characters</string>
     <string name="password_required">Password is required</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="login_success">Login successful!</string>
     <string name="wrong_credentials_error">Invalid email or password</string>
     <string name="account_not_found_error">Email not registered</string>
@@ -52,6 +55,16 @@
     <string name="name_error">Please enter your name</string>
     <string name="surname_error">Please enter your surname</string>
     <string name="register_success">Registration successful! You can now login.</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="passwords_must_match">Passwords must match</string>
+    <string name="i_agree_to_the">I agree to the</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="and">and</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="name_hint">John</string>
+    <string name="surname_hint">Doe</string>
+    <string name="email_example">your.email@example.com</string>
+    <string name="password_dots">••••••••</string>
 
     <!-- InformationFragment -->
     <string name="user_information">User Information</string>
@@ -100,7 +113,7 @@
     <string name="process_canceled_tr">İşlem iptal edildi</string>
     <string name="cancel_analysis">Cancel Analysis</string>
     <string name="cancel_analysis_tr">İşlemi İptal Et</string>
-    <string name="required_features_hint">Job requirements (optional)</string>
+    <string name="required_features_hint">Job requirements</string>
     <string name="github_link_hint">GitHub link (optional)</string>
 
     <!-- AnalysisFragment -->

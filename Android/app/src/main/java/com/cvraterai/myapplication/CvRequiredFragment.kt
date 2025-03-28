@@ -206,7 +206,6 @@ class CvRequiredFragment : Fragment() {
     private fun simulateProgress() {
         currentProgress = 0
         binding.tvProgressPercentInner.text = "0%"
-        binding.circularProgress.progress = 0
         
         progressHandler = Handler(Looper.getMainLooper())
         
@@ -216,7 +215,6 @@ class CvRequiredFragment : Fragment() {
                 if (currentProgress < 95) {
                     currentProgress += 5
                     binding.tvProgressPercentInner.text = "$currentProgress%"
-                    binding.circularProgress.progress = currentProgress
                     // Her adımda farklı bir gecikme ile çağır (daha gerçekçi görünmesi için)
                     progressHandler?.postDelayed(this, (500..1500).random().toLong())
                 }
@@ -274,7 +272,6 @@ class CvRequiredFragment : Fragment() {
             }
         }
         binding.tvProgressPercentInner.text = "$currentProgress%"
-        binding.circularProgress.progress = currentProgress
     }
     
     private fun analyzeCv() {

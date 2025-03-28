@@ -1,118 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
+    android:background="@drawable/background_gradient"
     tools:context=".RegisterFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Floating Bubbles (adding just a few for visual effect) -->
+    <ImageView
+        android:id="@+id/bubble1"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp" />
+
+    <ImageView
+        android:id="@+id/bubble2"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="150dp" />
+
+    <ImageView
+        android:id="@+id/bubble3"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="200dp" />
+
+    <ImageView
+        android:id="@+id/bubble4"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="120dp" />
+
+    <ImageView
+        android:id="@+id/bubble5"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/bubble_background"
+        android:alpha="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="300dp" />
+
+    <!-- App Logo/Image -->
+    <ImageView
+        android:id="@+id/ivChatbot"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="40dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/security"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Scrollable Content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="24dp">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:overScrollMode="always"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivChatbot"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Register Card Container -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="#0D1A35"
+                app:cardElevation="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
         <TextView
-            android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:elevation="4dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="@string/app_name"
-            android:textColor="@color/primary_blue"
+                        android:text="@string/sign_up"
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
             android:textSize="32sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                        android:elevation="6dp"
+                        android:shadowColor="#40000000"
+                        android:shadowDx="0"
+                        android:shadowDy="4"
+                        android:shadowRadius="6" />
 
         <TextView
-            android:id="@+id/tvHello"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins_semibold"
+                        android:fontFamily="@font/poppins_regular"
             android:text="@string/register_hello"
-            android:textColor="@color/primary_blue"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAppName" />
+                        android:layout_gravity="center"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tvNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="@string/user_name"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="@string/user_name"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvHello" />
+                        android:background="@drawable/edit_text_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_person"
+                            app:tint="#80FFFFFF" />
 
         <EditText
             android:id="@+id/etName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_regular"
+                            android:inputType="textPersonName"
+                            android:hint="@string/name_hint"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#80FFFFFF"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvNameError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@drawable/edit_text_selector"
-            android:fontFamily="@font/poppins_light"
-            android:inputType="textPersonName"
-            android:padding="16dp"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvNameLabel" />
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/name_error"
+                        android:textColor="#FF3B30"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        android:drawablePadding="4dp"
+                        app:drawableStartCompat="@drawable/ic_error" />
 
         <TextView
-            android:id="@+id/tvSurnameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_medium"
+                        android:fontFamily="@font/poppins_regular"
             android:text="@string/surname"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etName" />
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edit_text_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_person"
+                            app:tint="#80FFFFFF" />
 
         <EditText
             android:id="@+id/etSurname"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_regular"
+                            android:inputType="textPersonName"
+                            android:hint="@string/surname_hint"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#80FFFFFF"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvSurnameError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@drawable/edit_text_selector"
-            android:fontFamily="@font/poppins_light"
-            android:inputType="textPersonName"
-            android:padding="16dp"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvSurnameLabel" />
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/surname_error"
+                        android:textColor="#FF3B30"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        android:drawablePadding="4dp"
+                        app:drawableStartCompat="@drawable/ic_error" />
 
         <TextView
-            android:id="@+id/tvEmailLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="@string/email"
-            android:textColor="@color/text_dark"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etSurname" />
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="@string/email_hint"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edit_text_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_email"
+                            app:tint="#80FFFFFF" />
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/edit_text_selector"
-            android:fontFamily="@font/poppins_light"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_regular"
             android:inputType="textEmailAddress"
-            android:padding="16dp"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvEmailLabel" />
+                            android:hint="@string/email_example"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#80FFFFFF"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
         <TextView
             android:id="@+id/tvEmailError"
@@ -125,34 +289,57 @@
             android:textSize="12sp"
             android:visibility="gone"
             android:drawablePadding="4dp"
-            app:drawableStartCompat="@drawable/ic_error"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etEmail" />
+                        app:drawableStartCompat="@drawable/ic_error" />
 
         <TextView
-            android:id="@+id/tvPasswordLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_medium"
+                        android:fontFamily="@font/poppins_regular"
             android:text="@string/password_hint"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvEmailError" />
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edit_text_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_lock"
+                            app:tint="#80FFFFFF" />
 
         <EditText
             android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/edit_text_selector"
-            android:fontFamily="@font/poppins_light"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_regular"
             android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel" />
+                            android:hint="@string/password_dots"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#80FFFFFF"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/ivTogglePassword"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_visibility"
+                            android:contentDescription="@string/toggle_password_visibility"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:tint="#80FFFFFF" />
+                    </LinearLayout>
 
         <TextView
             android:id="@+id/tvPasswordError"
@@ -165,69 +352,164 @@
             android:textSize="12sp"
             android:visibility="gone"
             android:drawablePadding="4dp"
-            app:drawableStartCompat="@drawable/ic_error"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPassword" />
+                        app:drawableStartCompat="@drawable/ic_error" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="@string/confirm_password"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edit_text_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_lock"
+                            app:tint="#80FFFFFF" />
+
+                        <EditText
+                            android:id="@+id/etConfirmPassword"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_regular"
+                            android:inputType="textPassword"
+                            android:hint="@string/password_dots"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#80FFFFFF"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/ivToggleConfirmPassword"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_visibility"
+                            android:contentDescription="@string/toggle_password_visibility"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:tint="#80FFFFFF" />
+                    </LinearLayout>
 
         <TextView
-            android:id="@+id/tvNameError"
+                        android:id="@+id/tvConfirmPasswordError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="@string/name_error"
+                        android:text="@string/passwords_must_match"
             android:textColor="#FF3B30"
             android:textSize="12sp"
             android:visibility="gone"
             android:drawablePadding="4dp"
-            app:drawableStartCompat="@drawable/ic_error"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etName" />
+                        app:drawableStartCompat="@drawable/ic_error" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <CheckBox
+                                android:id="@+id/cbTerms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="#4FC3F7" />
 
         <TextView
-            android:id="@+id/tvSurnameError"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="@string/i_agree_to_the"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="4dp">
+
+                            <TextView
+                                android:id="@+id/tvTermsOfService"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/terms_of_service"
+                                android:textColor="#4FC3F7"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="@string/and"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvPrivacyPolicy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="@string/surname_error"
-            android:textColor="#FF3B30"
-            android:textSize="12sp"
-            android:visibility="gone"
-            android:drawablePadding="4dp"
-            app:drawableStartCompat="@drawable/ic_error"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etSurname" />
+                                android:text="@string/privacy_policy"
+                                android:textColor="#4FC3F7"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/frameSignUp"
-            android:layout_width="0dp"
+                        android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            app:layout_constraintWidth_percent="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPassword">
+                        android:layout_marginTop="24dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/box_blue"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="8dp">
+                            app:cardBackgroundColor="@android:color/transparent"
+                            app:cardCornerRadius="28dp"
+                            app:cardElevation="0dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:background="@drawable/button_gradient">
 
                 <TextView
                     android:id="@+id/btnSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_semibold"
+                                    android:layout_centerInParent="true"
+                                    android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
-                    android:paddingVertical="12dp"
                     android:text="@string/sign_up"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
+                            </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
             <ProgressBar
@@ -238,54 +520,33 @@
                 android:visibility="gone" />
         </FrameLayout>
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="@string/have_account"
+                            android:textColor="#B3FFFFFF"
+                            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tvLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+                            android:layout_marginStart="4dp"
             android:fontFamily="@font/poppins_medium"
-            android:padding="8dp"
-            android:text="@string/have_account"
-            android:textColor="@color/primary_blue"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frameSignUp" />
-
-        <TextView
-            android:id="@+id/tvOr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_light"
-            android:text="@string/or"
-            android:textColor="@color/text_dark"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLogin" />
-
-        <FrameLayout
-            android:id="@+id/flGoogle"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_google_button"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvOr">
-
-            <ImageView
-                android:id="@+id/ivGoogle"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_google" />
-
-        </FrameLayout>
-
+                            android:text="@string/login_button"
+                            android:textColor="#4FC3F7"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>

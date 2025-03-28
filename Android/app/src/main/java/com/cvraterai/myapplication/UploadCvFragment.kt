@@ -90,6 +90,11 @@ class UploadCvFragment : Fragment() {
             openFilePicker()
         }
         
+        // Set click listener for the entire upload frame/card
+        binding.uploadFrame.setOnClickListener {
+            openFilePicker()
+        }
+        
         // Next button click listener
         binding.cardNext.setOnClickListener {
             navigateToCvRequired()

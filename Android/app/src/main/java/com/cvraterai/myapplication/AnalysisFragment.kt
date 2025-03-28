@@ -51,12 +51,29 @@ class AnalysisFragment : Fragment() {
     companion object {
         var animationsPlayed = false
         
+        // Son uyumluluk skoru için statik değişken
+        var lastCompatibilityScore = 70
+        
+        // Son container genişliği için statik değişken
+        var lastContainerWidth = 0
+        
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          */
         @JvmStatic
         fun newInstance() = AnalysisFragment()
+    }
+
+    // Devam eden animasyonları saklamak için bir liste ekleyelim
+    private val animations = mutableListOf<ValueAnimator>()
+    
+    // ValueAnimator oluşturan ve kayıt eden yardımcı fonksiyon
+    private fun createValueAnimator(start: Int, end: Int, duration: Long): ValueAnimator {
+        val animator = ValueAnimator.ofInt(start, end)
+        animator.duration = duration
+        animations.add(animator)
+        return animator
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +93,58 @@ class AnalysisFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAnalysisBinding.inflate(inflater, container, false)
+        
+        // Geri dönüş durumunda bar'ın değerini hemen ayarla
+        if (animationsPlayed) {
+            // Direkt XML'deki değil, inflate edilmiş View'lar üzerinden erişim
+            val compatibilityStatusBar = _binding?.compatibilityStatusBar
+            val tvScorePercent = _binding?.tvScorePercent
+            val tvProgressPercent = _binding?.tvProgressPercent
+            
+            // Text'leri ayarla
+            tvScorePercent?.text = "%$lastCompatibilityScore"
+            tvProgressPercent?.text = "%$lastCompatibilityScore"
+            tvProgressPercent?.alpha = 1f
+            
+            // Progress kartını görünür yap
+            _binding?.cardCompatibility?.alpha = 1f
+            _binding?.cardCompatibility?.translationY = 0f
+            
+            // Genişlik için önlem al
+            if (lastContainerWidth > 0) {
+                // Eğer önceden kaydedilmiş bir container genişliği varsa, bar'ı hemen ayarla
+                val params = compatibilityStatusBar?.layoutParams
+                params?.width = (lastContainerWidth * lastCompatibilityScore / 100)
+                compatibilityStatusBar?.layoutParams = params
+                android.util.Log.d("AnalysisFragment", "onCreateView - Bar genişliği ayarlandı: ${params?.width}px (container: $lastContainerWidth, percentage: $lastCompatibilityScore)")
+            }
+            
+            // Her koşulda bar genişliğini doğru ayarlamak için ViewTreeObserver ekle
+            val progressBar = _binding?.progressCompatibility
+            progressBar?.viewTreeObserver?.addOnGlobalLayoutListener(object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    progressBar.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    
+                    // Container genişliğini al
+                    val containerWidth = progressBar.width
+                    if (containerWidth > 0) {
+                        lastContainerWidth = containerWidth
+                        
+                        // Bar genişliğini ayarla
+                        val statusBar = _binding?.compatibilityStatusBar
+                        val params = statusBar?.layoutParams
+                        params?.width = (containerWidth * lastCompatibilityScore / 100)
+                        statusBar?.layoutParams = params
+                        statusBar?.requestLayout()
+                        
+                        android.util.Log.d("AnalysisFragment", "onCreateView - GlobalLayout - Bar genişliği ayarlandı: ${params?.width}px (container: $containerWidth)")
+                    }
+                }
+            })
+            
+            android.util.Log.d("AnalysisFragment", "onCreateView - Erken değer ataması yapıldı: $lastCompatibilityScore")
+        }
+        
         return binding.root
     }
 
@@ -88,28 +157,30 @@ class AnalysisFragment : Fragment() {
         android.util.Log.d("AnalysisFragment", "evaluationResultJson var mı: ${evaluationResultJson != null}")
         android.util.Log.d("AnalysisFragment", "evaluationId: $evaluationId")
         android.util.Log.d("AnalysisFragment", "Animasyonlar daha önce oynatıldı mı: $animationsPlayed")
+        android.util.Log.d("AnalysisFragment", "Son kaydedilen uyumluluk skoru: $lastCompatibilityScore")
         
         // NestedScrollView'ın dikey kaydırma davranışını ayarlayalım
         configureNestedScrollView()
-        
-        // Force animationsPlayed to false to ensure animations play at least once in this session
-        // This ensures animations will play when new fragment is opened
-        if (!animationsPlayed) {
-            android.util.Log.d("AnalysisFragment", "Animasyonlar ilk kez oynatılacak")
-        }
         
         // SkillRatingAdapter'ı başlat
         skillRatingAdapter = SkillRatingAdapter(skillRatings)
         binding.recyclerViewSkills.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = skillRatingAdapter
+            
+            // RecyclerView için özel touch listener ekle
+            var startX = 0f
+            var startY = 0f
+            
+            // RecyclerView'ın touch listener'ını kaldır
+            setOnTouchListener(null)
         }
         
         // Verileri yükle
         loadSkillRatingsFromJson()
         
-        // Uyumluluk çubuğunu API'den gelen verilere göre güncelle
-        updateCompatibilityStatus()
+        // Fragment'a geri dönüş durumunu yönet
+        setupFragmentState()
         
         // Dokunma olayı dinleyicilerini ayarla
         setupNavigationControls()
@@ -137,12 +208,12 @@ class AnalysisFragment : Fragment() {
                         
                         // Eğer yatay kaydırma dikey kaydırmadan belirgin şekilde fazlaysa
                         // (Bu durumda yatay kaydırmayı algılamak istiyoruz)
-                        if (Math.abs(diffX) > Math.abs(diffY) * 1.8 && Math.abs(diffX) > 50) {
+                        if (Math.abs(diffX) > Math.abs(diffY) * 1.5 && Math.abs(diffX) > 100) {
                             // Yatay kaydırma algılama olayını ebeveyn View'a geçirelim
                             v.parent.requestDisallowInterceptTouchEvent(false)
                         } 
                         // Eğer dikey kaydırma yatay kaydırmadan fazlaysa
-                        else if (Math.abs(diffY) > Math.abs(diffX) * 1.2 && Math.abs(diffY) > 30) {
+                        else {
                             // NestedScrollView dikey kaydırmayı kendi yönetsin
                             v.parent.requestDisallowInterceptTouchEvent(true)
                         }
@@ -165,6 +236,72 @@ class AnalysisFragment : Fragment() {
             })
         } catch (e: Exception) {
             android.util.Log.e("AnalysisFragment", "NestedScrollView yapılandırma hatası: ${e.message}")
+        }
+    }
+    
+    private fun setupFragmentState() {
+        try {
+            android.util.Log.d("AnalysisFragment", "setupFragmentState() - animationsPlayed=$animationsPlayed, lastScore=$lastCompatibilityScore")
+            
+            // Eğer fragment'a geri dönüşse ve animasyonlar daha önce oynatıldıysa
+            if (animationsPlayed) {
+                android.util.Log.d("AnalysisFragment", "Geri dönüş durumu - hemen bar güncelleniyor")
+                
+                // Kart görünürlüğünü hemen ayarla - her türlü yüzde 0'dan başlamasına engel ol
+                binding.cardCompatibility.alpha = 1f
+                binding.cardCompatibility.translationY = 0f
+                
+                // Yüzde değerlerini direkt güncelle - çubuğu 0 göstermeyi engelle
+                binding.tvScorePercent.text = "%$lastCompatibilityScore"
+                binding.tvProgressPercent.text = "%$lastCompatibilityScore"
+                binding.tvProgressPercent.alpha = 1f
+                
+                // UI ölçümleri tamamlandıktan sonra çalışacak olan kısım
+                val updateFunction = {
+                    // Çubuğu birden fazla kez güncelleyerek tutarlı olmasını sağla 
+                    updateProgressBarWithoutAnimation(lastCompatibilityScore)
+                    
+                    // 50ms ve 150ms sonra tekrar güncelle (bazı cihazlarda ilk güncelleme çalışmayabilir)
+                    binding.progressCompatibility.postDelayed({
+                        if (_binding == null || !isAdded) return@postDelayed
+                        updateProgressBarWithoutAnimation(lastCompatibilityScore)
+                    }, 50)
+                    
+                    binding.progressCompatibility.postDelayed({
+                        if (_binding == null || !isAdded) return@postDelayed
+                        updateProgressBarWithoutAnimation(lastCompatibilityScore)
+                    }, 150)
+                }
+                
+                // Önce direkt dene
+                updateFunction.invoke()
+                
+                // Ayrıca ViewTreeObserver ile layout ölçümlerini bekleyerek de dene
+                val viewTreeObserver = binding.progressCompatibility.viewTreeObserver
+                if (viewTreeObserver.isAlive) {
+                    viewTreeObserver.addOnGlobalLayoutListener(object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            // Listener'ı kaldır
+                            if (binding.progressCompatibility.viewTreeObserver.isAlive) {
+                                binding.progressCompatibility.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            }
+                            
+                            // İşlemi çalıştır
+                            if (_binding != null && isAdded) {
+                                updateFunction.invoke()
+                            }
+                        }
+                    })
+                }
+            } else {
+                android.util.Log.d("AnalysisFragment", "İlk gösterim - animasyonlu güncelleme")
+                // İlk kez gösteriliyorsa, normal akışı devam ettir
+                updateCompatibilityStatus()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "setupFragmentState hatası: ${e.message}")
+            // Hata durumunda her ihtimale karşı normal akışı başlat
+            updateCompatibilityStatus()
         }
     }
     
@@ -312,7 +449,7 @@ class AnalysisFragment : Fragment() {
             android.util.Log.d("AnalysisFragment", "Evaluation Result JSON: $evaluationResultJson")
             
             // Son skor değerini bulmak için en güncel değeri kullanalım
-            var finalScore = 75 // Varsayılan değer
+            var finalScore = lastCompatibilityScore // Önceki değeri varsayılan olarak kullan
             
             // Veri kaynaklarından skor değerini almaya çalış
             try {
@@ -327,6 +464,10 @@ class AnalysisFragment : Fragment() {
                         finalScore = evalResponseObj.getInt("evaluationScore")
                     }
                 }
+                
+                // Son değeri static değişkene kaydet
+                lastCompatibilityScore = finalScore
+                
             } catch (e: Exception) {
                 android.util.Log.e("AnalysisFragment", "Son skor değerini alma hatası: ${e.message}")
             }
@@ -347,6 +488,9 @@ class AnalysisFragment : Fragment() {
             val boundedScore = score.coerceIn(0, 100)
             android.util.Log.d("AnalysisFragment", "💥 updateCompatibilityCard yeni: score=$boundedScore")
             
+            // Son değeri static değişkene kaydet
+            lastCompatibilityScore = boundedScore
+            
             if (!animationsPlayed) {
                 android.util.Log.d("AnalysisFragment", "💥 Animasyonlar ilk kez oynatılacak")
                 
@@ -356,6 +500,11 @@ class AnalysisFragment : Fragment() {
                 
                 // ProgressBar'ı başlangıç durumuna getir - genişlik 0
                 binding.progressCompatibility.post {
+                    // Fragment destroy edilmiş olabilir, kontrol et
+                    if (_binding == null || !isAdded) {
+                        return@post
+                    }
+                    
                     // Genişliği reset et
                     val progressBar = binding.compatibilityStatusBar
                     val params = progressBar.layoutParams
@@ -378,6 +527,11 @@ class AnalysisFragment : Fragment() {
                         .setDuration(400) // 0.4 saniye
                         .setInterpolator(DecelerateInterpolator())
                         .withEndAction {
+                            // Fragment destroy edilmiş olabilir, kontrol et
+                            if (_binding == null || !isAdded) {
+                                return@withEndAction
+                            }
+                            
                             // Kart animasyonu tamamlandığında progress bar animasyonunu başlat
                             android.util.Log.d("AnalysisFragment", "💥 Kart animasyonu tamamlandı, bar animasyonu başlıyor")
                             updateProgressBarWithAnimation(boundedScore)
@@ -400,6 +554,11 @@ class AnalysisFragment : Fragment() {
     // Animasyonlu progress bar güncelleme - ilk kez gösterildiğinde kullanılır
     private fun updateProgressBarWithAnimation(score: Int) {
         try {
+            // Binding null kontrolü - fragment destroy edildiyse işlemi iptal et
+            if (_binding == null || !isAdded) {
+                return
+            }
+            
             android.util.Log.d("AnalysisFragment", "💥 updateProgressBarWithAnimation yeni: score=$score")
             val boundedScore = score.coerceIn(0, 100)
             
@@ -428,12 +587,22 @@ class AnalysisFragment : Fragment() {
             
             // Gecikme ile başlat (daha görünür animasyon için)
             progressBar.postDelayed({
-                // SkillRatingAdapter'daki gibi ValueAnimator kullan
-                val animator = ValueAnimator.ofInt(0, boundedScore)
-                animator.duration = 1000 // 1 saniye
+                // Fragment destroy edilmiş olabilir, kontrol et
+                if (_binding == null || !isAdded) {
+                    return@postDelayed
+                }
+                
+                // Animatör oluştur
+                val animator = createValueAnimator(0, boundedScore, 1000)
                 animator.interpolator = DecelerateInterpolator()
                 
                 animator.addUpdateListener { animation ->
+                    // Fragment destroy edilmiş olabilir, kontrol et
+                    if (_binding == null || !isAdded) {
+                        animation.cancel()
+                        return@addUpdateListener
+                    }
+                    
                     val animatedValue = animation.animatedValue as Int
                     
                     try {
@@ -474,6 +643,11 @@ class AnalysisFragment : Fragment() {
                 // Animasyon bittiğinde animationsPlayed'i true yap
                 animator.addListener(object : android.animation.AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: android.animation.Animator) {
+                        // Fragment destroy edilmiş olabilir, kontrol et
+                        if (_binding == null || !isAdded) {
+                            return
+                        }
+                        
                         animationsPlayed = true
                         android.util.Log.d("AnalysisFragment", "💥 Animasyon tamamlandı - animationsPlayed = true olarak işaretlendi")
                     }
@@ -492,34 +666,152 @@ class AnalysisFragment : Fragment() {
     // Animasyonsuz progress bar güncelleme - zaten animasyon oynatılmışsa kullanılır
     private fun updateProgressBarWithoutAnimation(score: Int) {
         try {
+            // Binding null kontrolü - fragment destroy edildiyse işlemi iptal et
+            if (_binding == null || !isAdded) {
+                return
+            }
+            
             android.util.Log.d("AnalysisFragment", "Animasyonsuz bar güncellemesi: score=$score")
             val boundedScore = score.coerceIn(0, 100)
-            binding.tvScorePercent.text = "%$boundedScore"
             
-            // Progress bar'ı güncelle
+            // Son değeri static değişkene kaydet
+            lastCompatibilityScore = boundedScore
+            
+            // Yüzde değerlerini hemen güncelle
+            binding.tvScorePercent.text = "%$boundedScore"
+            binding.tvProgressPercent.text = "%$boundedScore"
+            binding.tvProgressPercent.alpha = 1f
+            
+            // Doğrudan post yerine view hazır olunca çalışacak bir metod kullan
+            updateProgressBarDirectly(boundedScore)
+            
+            // View ölçümleri hazır oluncaya kadar bekle
             binding.progressCompatibility.post {
-                val progressBar = binding.compatibilityStatusBar
-                val containerWidth = binding.progressCompatibility.width
-                if (containerWidth > 0) {
-                    val layoutParams = progressBar.layoutParams
-                    layoutParams.width = (containerWidth * boundedScore) / 100
-                    progressBar.layoutParams = layoutParams
-                    progressBar.requestLayout()
-                    
-                    // Göstergeyi doğru konumlandır ve görünür yap
-                    if (_binding != null && binding.tvProgressPercent != null) {
-                        binding.tvProgressPercent.text = "%$boundedScore"
-                        binding.tvProgressPercent.alpha = 1f
-                        
-                        // Bar'ın genişliğine göre göstergeyi konumlandır
-                        val finalWidth = (containerWidth * boundedScore) / 100
-                        val position = Math.max(finalWidth - binding.tvProgressPercent.width, 0)
-                        binding.tvProgressPercent.translationX = position.toFloat()
-                    }
+                // Fragment destroy edilmiş olabilir, kontrol et
+                if (_binding == null || !isAdded) {
+                    return@post
                 }
+                
+                // Container genişliğini al
+                val containerWidth = binding.progressCompatibility.width
+                if (containerWidth <= 0) {
+                    android.util.Log.e("AnalysisFragment", "Container genişliği geçersiz: $containerWidth")
+                    // Bir sonraki frame'de tekrar dene
+                    binding.progressCompatibility.post {
+                        if (_binding == null || !isAdded) return@post
+                        updateProgressBarDirectly(boundedScore)
+                    }
+                    return@post
+                }
+                
+                // Container genişliğini kaydet
+                lastContainerWidth = containerWidth
+                
+                android.util.Log.d("AnalysisFragment", "Container genişliği: $containerWidth, skor: $boundedScore")
+                
+                // Renk değerlerini ayarla
+                updateBarColor(boundedScore)
+                
+                // Bar genişliğini güncelle
+                updateProgressBarDirectly(boundedScore)
             }
         } catch (e: Exception) {
             android.util.Log.e("AnalysisFragment", "Animasyonsuz bar hatası: ${e.message}")
+        }
+    }
+    
+    // Direkt progress bar'ı güncelleyen yardımcı metod
+    private fun updateProgressBarDirectly(score: Int) {
+        try {
+            // Binding null kontrolü
+            if (_binding == null || !isAdded) {
+                return
+            }
+            
+            // Containerın aktif genişliğini al
+            var containerWidth = binding.progressCompatibility.width
+            
+            // Eğer container genişliği henüz hesaplanmadıysa, son bilinen değeri kullan
+            if (containerWidth <= 0 && lastContainerWidth > 0) {
+                containerWidth = lastContainerWidth
+                android.util.Log.d("AnalysisFragment", "Kaydedilmiş container genişliği kullanılıyor: $containerWidth")
+            }
+            
+            // Container genişliği gelmezse çık
+            if (containerWidth <= 0) {
+                android.util.Log.e("AnalysisFragment", "Container genişliği sıfır, bar güncellenemedi")
+                return
+            }
+            
+            // Progress bar'ı güncelle
+            val progressBar = binding.compatibilityStatusBar
+            val layoutParams = progressBar.layoutParams
+            val newWidth = (containerWidth * score) / 100
+            
+            android.util.Log.d("AnalysisFragment", "updateProgressBarDirectly - Bar genişliği: $newWidth (container: $containerWidth, score: $score)")
+            
+            layoutParams.width = newWidth
+            progressBar.layoutParams = layoutParams
+            progressBar.requestLayout()
+            
+            // Göstergeyi doğru konumlandır
+            binding.tvProgressPercent.post {
+                if (_binding == null || !isAdded) return@post
+                
+                // Gösterge genişliğini al
+                val indicatorWidth = binding.tvProgressPercent.width
+                
+                // Bar'ın genişliğine göre göstergeyi konumlandır
+                val position = if (newWidth <= indicatorWidth) {
+                    0
+                } else {
+                    Math.max(newWidth - indicatorWidth, 0)
+                }
+                
+                binding.tvProgressPercent.translationX = position.toFloat()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "updateProgressBarDirectly hatası: ${e.message}")
+        }
+    }
+    
+    // Barın rengini yüzdeye göre ayarlamak için yardımcı metod
+    private fun updateBarColor(percentage: Int) {
+        try {
+            if (_binding == null || !isAdded) {
+                return
+            }
+            
+            // Renk sabitleri
+            val colorRed = Color.parseColor("#FF4B4B")
+            val colorOrange = Color.parseColor("#FFA726")
+            val colorGreen = Color.parseColor("#4CAF50")
+
+            // Progress bar
+            val statusBar = binding.compatibilityStatusBar
+            
+            // GradientDrawable oluştur
+            val drawable = GradientDrawable()
+            drawable.cornerRadius = resources.getDimension(R.dimen.progress_corner_radius)
+
+            // Yüzdeye göre renk geçişi
+            val currentColor = when {
+                percentage < 25 -> colorRed
+                percentage < 50 -> interpolateColor(colorRed, colorOrange, (percentage - 25) / 25f)
+                percentage < 70 -> interpolateColor(colorOrange, colorGreen, (percentage - 50) / 20f)
+                else -> colorGreen
+            }
+
+            drawable.setColor(currentColor)
+            statusBar.background = drawable
+
+            // Yüzde göstergesinin rengini güncelle
+            binding.tvProgressPercent.setTextColor(currentColor)
+            
+            // Score yüzdesinin rengini de güncelle
+            binding.tvScorePercent.setTextColor(currentColor)
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisFragment", "Renk güncelleme hatası: ${e.message}")
         }
     }
     
@@ -536,8 +828,8 @@ class AnalysisFragment : Fragment() {
         try {
             val gestureDetector = android.view.GestureDetector(requireContext(), object : android.view.GestureDetector.SimpleOnGestureListener() {
                 // Dikey kaydırmaya göre yatay kaydırmanın daha kolay algılanması için değerler
-                private val SWIPE_THRESHOLD = 80
-                private val SWIPE_VELOCITY_THRESHOLD = 80
+                private val SWIPE_THRESHOLD = 100
+                private val SWIPE_VELOCITY_THRESHOLD = 100
 
                 override fun onDown(e: MotionEvent): Boolean {
                     // onDown'da true döndürerek tüm hareketlerin algılanmasını sağla
@@ -550,7 +842,7 @@ class AnalysisFragment : Fragment() {
 
                     try {
                         // Yatay kaydırma önemli ölçüde dikey kaydırmadan fazlaysa
-                        if (Math.abs(diffX) > Math.abs(diffY) * 1.5 && 
+                        if (Math.abs(diffX) > Math.abs(diffY) * 2 && 
                             Math.abs(diffX) > SWIPE_THRESHOLD && 
                             Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                             
@@ -577,24 +869,62 @@ class AnalysisFragment : Fragment() {
             val rootView = binding.root
             rootView.setOnTouchListener { v, event ->
                 // Gesture detector'a olayları ilet
-                val consumed = gestureDetector.onTouchEvent(event)
-                
-                // Eğer dokunma olayı tüketilmediyse, normal davranışı devam ettir
-                if (!consumed) {
-                    v.performClick()
-                }
-                false
+                gestureDetector.onTouchEvent(event)
             }
             
-            // CardCompatibility özel kaydırma algılama kaldırıldı
-            
-            // Ayrıca doğrudan CardCompatibility için hassas kaydırma algılama kaldırıldı
-            
-            // Kart tıklaması kaldırıldı
-            
-            // Tüm alt view'lara da touch listenerleri ekle, ama özel durumları ele al
-            addSwipeDetectionToSpecificChildren()
-            
+            // RecyclerView için özel touch listener
+            binding.recyclerViewSkills.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                private var startX = 0f
+                private var startY = 0f
+                private var isScrollingHorizontally = false
+                
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    when (e.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            startX = e.x
+                            startY = e.y
+                            isScrollingHorizontally = false
+                            return false
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            val deltaX = e.x - startX
+                            val deltaY = e.y - startY
+                            
+                            // Yatay kaydırma dikey kaydırmadan belirgin şekilde büyükse
+                            if (!isScrollingHorizontally && Math.abs(deltaX) > Math.abs(deltaY) * 1.5 && Math.abs(deltaX) > 100) {
+                                isScrollingHorizontally = true
+                                
+                                // Ebeveyn view'ın olayı yakalamasına izin ver
+                                rv.parent.requestDisallowInterceptTouchEvent(false)
+                                
+                                // Olayı gesture detector'a ilet
+                                if (deltaX > 0) {
+                                    // Sağa kaydırma - önceki sayfaya git
+                                    findNavController().navigateUp()
+                                } else {
+                                    // Sola kaydırma - sonraki sayfaya git
+                                    navigateToAiNote()
+                                }
+                                return true
+                            }
+                            return false
+                        }
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            isScrollingHorizontally = false
+                            return false
+                        }
+                    }
+                    return false
+                }
+                
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+                    // Bu metodu boş bırakabiliriz, onInterceptTouchEvent'te gerekli işlemleri yapıyoruz
+                }
+                
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                    // Bu metodu boş bırakabiliriz
+                }
+            })
         } catch (e: Exception) {
             android.util.Log.e("AnalysisFragment", "setupNavigationControls hatası: ${e.message}")
         }
@@ -604,28 +934,6 @@ class AnalysisFragment : Fragment() {
     private fun addSwipeToCard() {
         // Bu fonksiyon artık kullanılmıyor
     }
-    
-    // RecyclerView ve CardCompatibility hariç diğer view'lara kaydırma algılama ekle
-    private fun addSwipeDetectionToSpecificChildren() {
-        try {
-            // ConstraintLayout gibi önemli gruplar için kaydırma algıla
-            val layoutGroups = listOf(
-                binding.root.findViewById<ViewGroup>(R.id.navigationButtons),
-                binding.pageIndicators
-            )
-            
-            // Her bir gruba kaydırma algılamayı ekle
-            layoutGroups.forEach { viewGroup ->
-                viewGroup?.setOnTouchListener { _, event ->
-                    // Olayı ana activite'ye ilet, ama tüketme
-                    activity?.dispatchTouchEvent(event)
-                    false
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("AnalysisFragment", "addSwipeDetectionToSpecificChildren hatası: ${e.message}")
-        }
-    }
 
     private fun updateSkillRatings(skills: List<SkillRating>) {
         skillRatingAdapter.updateSkills(skills)
@@ -633,11 +941,28 @@ class AnalysisFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        
+        // Tüm devam eden animasyonları iptal et
+        animations.forEach { animator ->
+            try {
+                animator.cancel()
+            } catch (e: Exception) {
+                android.util.Log.e("AnalysisFragment", "Animasyon iptal hatası: ${e.message}")
+            }
+        }
+        animations.clear()
+        
+        // Binding'i null yap
         _binding = null
     }
 
     private fun updateCompatibilityProgress(percentage: Int) {
         try {
+            // Eğer fragment destroy edildiyse veya view yok olduysa işlemi iptal et
+            if (_binding == null || !isAdded) {
+                return
+            }
+            
             // Renk sabitleri
             val colorRed = Color.parseColor("#FF4B4B")
             val colorOrange = Color.parseColor("#FFA726")
@@ -649,13 +974,18 @@ class AnalysisFragment : Fragment() {
             val containerWidth = container.width
 
             // Animasyon için ValueAnimator oluştur
-            val animator = ValueAnimator.ofFloat(0f, percentage.toFloat())
-            animator.duration = 1500 // 1.5 saniye
+            val animator = createValueAnimator(0, percentage, 1500)
             animator.interpolator = DecelerateInterpolator()
 
             animator.addUpdateListener { animation ->
-                val animatedValue = animation.animatedValue as Float
-                val currentPercentage = animatedValue.toInt()
+                // Binding null kontrolü - fragment destroy edildiyse animasyonu durdur
+                if (_binding == null || !isAdded) {
+                    animation.cancel()
+                    return@addUpdateListener
+                }
+                
+                val animatedValue = animation.animatedValue as Int
+                val currentPercentage = animatedValue
 
                 // Genişliği güncelle
                 val params = statusBar.layoutParams
@@ -688,6 +1018,11 @@ class AnalysisFragment : Fragment() {
                 // Yüzde göstergesinin konumunu güncelle
                 binding.tvProgressPercent.post {
                     try {
+                        // Binding null kontrolü - fragment destroy edildiyse işlemi iptal et
+                        if (_binding == null || !isAdded) {
+                            return@post
+                        }
+                        
                         val progressWidth = (containerWidth * (currentPercentage / 100f)).toInt()
                         val indicatorWidth = binding.tvProgressPercent.width
                         
@@ -712,6 +1047,15 @@ class AnalysisFragment : Fragment() {
                 // Score yüzdesinin rengini de güncelle
                 binding.tvScorePercent.setTextColor(currentColor)
             }
+            
+            // Animasyon bittiğinde binding null kontrolü
+            animator.addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    if (_binding == null || !isAdded) {
+                        return
+                    }
+                }
+            })
 
             // Animasyonu başlat
             animator.start()
@@ -723,5 +1067,83 @@ class AnalysisFragment : Fragment() {
 
     private fun interpolateColor(startColor: Int, endColor: Int, fraction: Float): Int {
         return ArgbEvaluator().evaluate(fraction, startColor, endColor) as Int
+    }
+
+    override fun onResume() {
+        super.onResume()
+        
+        // Sayfaya dönüş durumunda bar değerini güncelleme
+        if (animationsPlayed && _binding != null) {
+            // UI thread'inde çalıştırılacak güncelleme işlemi
+            binding.progressCompatibility.post {
+                if (_binding == null || !isAdded) {
+                    return@post
+                }
+                // Logla ve durumu yazdır
+                android.util.Log.d("AnalysisFragment", "onResume - Bar değeri güncelleniyor: $lastCompatibilityScore")
+                
+                // Yüzde değerini direkt olarak güncelle
+                binding.tvScorePercent.text = "%$lastCompatibilityScore"
+                binding.tvProgressPercent.text = "%$lastCompatibilityScore"
+                binding.tvProgressPercent.alpha = 1f
+                
+                // Container genişliğini al ve ilerleme çubuğunu güncelle
+                val containerWidth = binding.progressCompatibility.width
+                if (containerWidth > 0) {
+                    // Container genişliğini kaydet
+                    lastContainerWidth = containerWidth
+                    
+                    // Direkt güncellemeleri yap
+                    updateProgressBarDirectly(lastCompatibilityScore)
+                    updateBarColor(lastCompatibilityScore)
+                    
+                    android.util.Log.d("AnalysisFragment", "onResume - Bar genişliği güncellendi (containerWidth: $containerWidth)")
+                } else {
+                    // Genişlik hesaplanamadıysa bir daha dene
+                    android.util.Log.e("AnalysisFragment", "onResume - Container genişliği hesaplanamadı")
+                    
+                    // Yine de kayıtlı değerlerle güncellemeyi dene
+                    updateProgressBarDirectly(lastCompatibilityScore)
+                    
+                    // 50ms sonra tekrar dene
+                    binding.progressCompatibility.postDelayed({
+                        if (_binding == null || !isAdded) return@postDelayed
+                        updateProgressBarDirectly(lastCompatibilityScore)
+                        
+                        // 150ms sonra son bir defa daha dene
+                        binding.progressCompatibility.postDelayed({
+                            if (_binding == null || !isAdded) return@postDelayed
+                            updateProgressBarDirectly(lastCompatibilityScore)
+                        }, 100)
+                    }, 50)
+                }
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        
+        // Önemli değerleri kaydet
+        outState.putInt("lastCompatibilityScore", lastCompatibilityScore)
+        outState.putBoolean("animationsPlayed", animationsPlayed)
+        
+        android.util.Log.d("AnalysisFragment", "onSaveInstanceState - Değerler kaydedildi: score=$lastCompatibilityScore, animations=$animationsPlayed")
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        
+        // Kaydedilen değerleri geri yükle
+        if (savedInstanceState != null) {
+            val savedScore = savedInstanceState.getInt("lastCompatibilityScore", lastCompatibilityScore)
+            val savedAnimPlayed = savedInstanceState.getBoolean("animationsPlayed", animationsPlayed)
+            
+            // Değerleri static değişkenlere ata
+            lastCompatibilityScore = savedScore
+            animationsPlayed = savedAnimPlayed
+            
+            android.util.Log.d("AnalysisFragment", "onViewStateRestored - Değerler yüklendi: score=$lastCompatibilityScore, animations=$animationsPlayed")
+        }
     }
 }

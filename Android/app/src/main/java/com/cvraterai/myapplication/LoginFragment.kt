@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -17,6 +18,8 @@ import com.cvraterai.myapplication.ui.auth.LoginState
 import com.cvraterai.myapplication.ui.auth.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.android.material.snackbar.Snackbar
+import android.text.method.PasswordTransformationMethod
+import android.text.method.HideReturnsTransformationMethod
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +43,8 @@ class LoginFragment : Fragment() {
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: CardView
     private lateinit var progressBar: ProgressBar
+    private lateinit var ivTogglePassword: ImageView
+    private var passwordVisible = false
     
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -71,6 +76,13 @@ class LoginFragment : Fragment() {
         etPassword = binding.etPassword
         btnLogin = binding.btnLogin
         progressBar = binding.progressBar
+        ivTogglePassword = binding.ivTogglePassword
+        
+        // Şifre görünürlüğü toggle işlevi
+        ivTogglePassword.setOnClickListener {
+            passwordVisible = !passwordVisible
+            togglePasswordVisibility(passwordVisible)
+        }
         
         // Otomatik giriş kontrolü
         if (viewModel.isLoggedIn()) {
@@ -236,6 +248,20 @@ class LoginFragment : Fragment() {
         btnLogin.isEnabled = !isLoading
         etEmail.isEnabled = !isLoading
         etPassword.isEnabled = !isLoading
+    }
+
+    private fun togglePasswordVisibility(isVisible: Boolean) {
+        if (isVisible) {
+            // Şifreyi göster
+            etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            ivTogglePassword.setImageResource(R.drawable.ic_visibility_off)
+        } else {
+            // Şifreyi gizle
+            etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+            ivTogglePassword.setImageResource(R.drawable.ic_visibility)
+        }
+        // İmleci metnin sonuna getir
+        etPassword.setSelection(etPassword.text.length)
     }
 
     override fun onDestroyView() {
