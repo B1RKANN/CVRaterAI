@@ -134,8 +134,8 @@
 
                     <TextView
                         android:id="@+id/tvSelectedFile"
-                        android:layout_width="307dp"
-                        android:layout_height="36dp"
+                        android:layout_width="323dp"
+                        android:layout_height="69dp"
                         android:elevation="6dp"
                         android:fontFamily="@font/poppins_bold"
                         android:gravity="center"
@@ -291,18 +291,18 @@
         android:visibility="gone">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="320dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:cardCornerRadius="28dp"
-            app:cardElevation="16dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
             app:cardBackgroundColor="#0D1A35">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="32dp"
+                android:padding="24dp"
                 android:gravity="center">
 
                 <TextView
@@ -315,13 +315,13 @@
                     android:shadowDx="0"
                     android:shadowDy="4"
                     android:shadowRadius="6"
-                    android:textSize="28sp"
-                    android:layout_marginBottom="24dp" />
+                    android:textSize="24sp"
+                    android:layout_marginBottom="16dp" />
 
                 <!-- Modern Animasyon Bölümü -->
                 <FrameLayout
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
                     android:layout_gravity="center">
 
                     <!-- Yüzde göstergesi -->
@@ -333,9 +333,9 @@
                         android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
-                            android:layout_width="160dp"
-                            android:layout_height="160dp"
-                            app:cardCornerRadius="80dp"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            app:cardCornerRadius="70dp"
                             app:cardBackgroundColor="#1A4FC3F7"
                             app:cardElevation="0dp">
 
@@ -352,7 +352,7 @@
                                     android:fontFamily="@font/poppins_bold"
                                     android:text="0%"
                                     android:textColor="@color/white"
-                                    android:textSize="48sp"
+                                    android:textSize="42sp"
                                     android:shadowColor="#40000000"
                                     android:shadowDx="0"
                                     android:shadowDy="2"
@@ -365,7 +365,7 @@
                                     android:fontFamily="@font/poppins_medium"
                                     android:text="@string/completed_tr"
                                     android:textColor="#B3FFFFFF"
-                                    android:textSize="16sp" />
+                                    android:textSize="14sp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
@@ -374,11 +374,11 @@
                 <!-- Robot İkonu -->
                 <ImageView
                     android:id="@+id/ivRobot"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/roboo"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="10dp"
                     android:elevation="2dp" />
 
                 <!-- Lottie animasyonunu sakla ama silme, referans olabilir -->
@@ -394,9 +394,9 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="#0F4FC3F7">
                     
@@ -404,7 +404,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:padding="16dp">
                         
                         <TextView
                             android:id="@+id/tvLoadingText"
@@ -413,8 +413,8 @@
                             android:fontFamily="@font/poppins_semibold"
                             android:text="@string/loading_title"
                             android:textColor="@color/white"
-                            android:textSize="24sp"
-                            android:layout_marginBottom="8dp" />
+                            android:textSize="20sp"
+                            android:layout_marginBottom="4dp" />
 
                         <TextView
                             android:id="@+id/tvLoadingSubText"
@@ -423,7 +423,7 @@
                             android:fontFamily="@font/poppins_light"
                             android:text="@string/loading_subtitle"
                             android:textColor="#B3FFFFFF"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -432,11 +432,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:background="#0F4FC3F7"
-                    android:padding="20dp"
-                    android:layout_marginBottom="16dp"
-                    app:cornerRadius="16dp">
+                    android:padding="16dp"
+                    android:layout_marginBottom="10dp"
+                    app:cornerRadius="12dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -450,7 +450,7 @@
                             android:text="@string/progress_tr"
                             android:fontFamily="@font/poppins_medium"
                             android:textColor="#B3FFFFFF"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvProcessStep"
@@ -459,16 +459,16 @@
                             android:text="Dosya Yükleniyor"
                             android:fontFamily="@font/poppins_semibold"
                             android:textColor="#4FC3F7"
-                            android:layout_marginStart="8dp"
-                            android:textSize="16sp" />
+                            android:layout_marginStart="6dp"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <ProgressBar
                         android:id="@+id/progressLoading"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
                         android:progressDrawable="@drawable/custom_progress_bar"
                         android:indeterminateTint="#4FC3F7"
                         android:indeterminate="true" />
@@ -478,9 +478,9 @@
                     android:id="@+id/btnCancelAnalysis"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="8dp"
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
                     app:cardBackgroundColor="#1A4FC3F7"
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
@@ -491,15 +491,15 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:paddingVertical="16dp"
+                        android:paddingVertical="12dp"
                         android:paddingHorizontal="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@android:drawable/ic_menu_close_clear_cancel"
                             android:tint="#FFFFFF"
-                            android:layout_marginEnd="12dp" />
+                            android:layout_marginEnd="8dp" />
 
                         <TextView
                             android:id="@+id/tvCancelText"
@@ -508,7 +508,7 @@
                             android:text="İşlemi İptal Et"
                             android:textColor="#FFFFFF"
                             android:fontFamily="@font/poppins_semibold"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
