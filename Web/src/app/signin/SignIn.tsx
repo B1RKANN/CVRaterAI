@@ -7,9 +7,11 @@ import { useRouter } from 'next/navigation';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import Header from '../components/Header';
 import GradientSpots from '../components/GradientSpots';
+import { useAuth } from '../context/AuthContext';
 
 export default function SignIn() {
   const router = useRouter();
+  const { login, isLoading: authLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -22,51 +24,15 @@ export default function SignIn() {
     setError('');
     
     try {
-      // API isteği gönder
-      const response = await fetch('http://69.62.120.202:8080/auth/v2/authenticate-with-cookie', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password
-        }),
-        credentials: 'include', // Cookie'lerin gönderilmesi ve alınması için
-      });
+      // AuthContext içindeki login fonksiyonunu kullan
+      const success = await login(email, password);
       
-      if (!response.ok) {
-        // HTTP hata durumları
-        if (response.status === 401) {
-          throw new Error('Email veya şifre hatalı');
-        } else {
-          throw new Error(`Giriş yapılamadı: ${response.status}`);
-        }
+      if (success) {
+        // Login işlemi başarılı, kullanıcıyı profile sayfasına yönlendir
+        router.push('/profile');
+      } else {
+        throw new Error('Giriş yapılamadı. Email veya şifre hatalı olabilir.');
       }
-      
-      // Response'u JSON olarak parse et
-      const data = await response.json();
-      
-      // Token ve refreshToken'ı kontrol et
-      if (!data.token || !data.refreshToken) {
-        throw new Error('Geçersiz token bilgileri');
-      }
-      
-      // Token'ı hem cookie hem de localStorage'a kaydet (yedek olarak)
-      // Bazı tarayıcılar veya durumlar için cookie çalışmazsa localStorage yedek olacak
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      
-      // Eğer cookie'ler sunucu tarafından otomatik ayarlanmadıysa (CORS sorunlarından dolayı)
-      // Biz manuel olarak cookie ayarlayalım (tarayıcı içinde kullanım için)
-      document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
-      document.cookie = `refreshToken=${data.refreshToken}; path=/; max-age=604800; SameSite=Lax`;
-      
-      console.log('Token ve refreshToken kaydedildi:', data.token, data.refreshToken);
-      
-      // Giriş başarılı, Profile sayfasına yönlendir
-      router.push('/profile');
-      
     } catch (err: any) {
       console.error('Giriş hatası:', err);
       setError(err.message || 'Giriş sırasında bir hata oluştu');

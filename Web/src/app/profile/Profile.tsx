@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FaUser, FaEnvelope, FaEdit } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
 import Header from '../components/Header';
 import GradientSpots from '../components/GradientSpots';
 import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 
 export default function Profile() {
   const router = useRouter();
@@ -25,6 +26,20 @@ export default function Profile() {
 
   // Kredi yüzdesini hesapla
   const creditPercentage = (userProfile.credits / userProfile.maxCredits) * 100;
+
+  // Çıkış yapma fonksiyonu
+  const handleLogout = () => {
+    // Cookies'leri temizle
+    Cookies.remove('token');
+    Cookies.remove('refreshToken');
+    
+    // LocalStorage'i temizle
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    
+    // Ana sayfaya yönlendir
+    router.push('/');
+  };
 
   // JWT token'dan kullanıcı ID'sini çıkarma fonksiyonu
   const getUserIdFromToken = () => {
@@ -126,7 +141,7 @@ export default function Profile() {
         console.log(`Kullanıcı ID: ${userId}, ID Tipi: ${typeof userId}`);
         
         // URL'de email değil, sayısal ID kullanmalıyız
-        const response = await fetch(`http://69.62.120.202:8080/api/v1/profile/${userId}`, {
+        const response = await fetch(`/api/v1/profile/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -215,8 +230,12 @@ export default function Profile() {
               {/* Profil başlığı */}
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold text-white">Account Information</h2>
-                <button className="bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 p-2.5 rounded-full transition-colors">
-                  <FaEdit className="h-5 w-5" />
+                <button 
+                  className="bg-red-600/20 hover:bg-red-600/40 text-red-300 p-2.5 rounded-full transition-colors"
+                  onClick={handleLogout}
+                  title="Sign Out"
+                >
+                  <FaSignOutAlt className="h-5 w-5" />
                 </button>
               </div>
               
