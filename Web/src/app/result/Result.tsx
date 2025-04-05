@@ -38,10 +38,10 @@ interface EvaluationResult {
     skills: string;
   };
   explanation: string;
-  skillRatings: {
+  skillRatings?: {
     language: string;
     percentage: number;
-  }[];
+  }[] | null;
 }
 
 // Types for our component
@@ -441,10 +441,12 @@ export default function Result() {
         email: evaluationResult.userInformation.email,
         phoneNumber: evaluationResult.userInformation.phone,
         skills: skillsArray,
-        technicalSkills: evaluationResult.skillRatings.map(skill => ({
-          name: skill.language,
-          percentage: skill.percentage
-        })),
+        technicalSkills: evaluationResult.skillRatings 
+          ? evaluationResult.skillRatings.map(skill => ({
+              name: skill.language,
+              percentage: skill.percentage
+            }))
+          : [],
         compatibilityScore: evaluationResult.compatibilityStatus,
         aiNote: evaluationResult.explanation
       };

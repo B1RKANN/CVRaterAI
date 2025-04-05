@@ -49,14 +49,43 @@ export default function Register() {
     }
     
     setIsLoading(true);
+    setError('');
     
-    // Burada gerçek kayıt işlemi gerçekleştirilecek
-    // Örnek olarak simüle edilmiş bir gecikme
-    setTimeout(() => {
+    try {
+      // API'ye kayıt isteği gönder
+      const response = await fetch('/auth/v2/register-with-cookie', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          password: formData.password
+        }),
+        credentials: 'include' // Cookie'lerin saklanmasını sağlar
+      });
+      
+      // Yanıtı JSON olarak işle
+      const data = await response.json();
+      
+      if (!response.ok) {
+        // Hata durumunu işle
+        throw new Error(data.message || 'Kayıt sırasında bir hata oluştu');
+      }
+      
+      // Başarılı kayıt sonrası işlemler
+      console.log('Kayıt başarılı:', data);
+      
+      // Kullanıcıyı otomatik olarak giriş sayfasına yönlendir
+      window.location.href = '/signin';
+    } catch (err: any) {
+      // Hata mesajını göster
+      setError(err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+      console.error('Kayıt hatası:', err);
+    } finally {
       setIsLoading(false);
-      // Kayıt başarılı olduğunda yönlendirme yapılabilir
-      // window.location.href = '/signin';
-    }, 1500);
+    }
   };
 
   return (

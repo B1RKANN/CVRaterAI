@@ -140,7 +140,6 @@ export default function Profile() {
         // API'den kullanıcı bilgilerini çek (id integer olmalı)
         console.log(`Kullanıcı ID: ${userId}, ID Tipi: ${typeof userId}`);
         
-        // URL'de email değil, sayısal ID kullanmalıyız
         const response = await fetch(`/api/v1/profile/${userId}`, {
           method: 'GET',
           headers: {

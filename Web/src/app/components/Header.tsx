@@ -40,7 +40,8 @@ const baseNavigationLinks: NavigationLink[] = [
 
 // Giriş yapılınca eklenecek navigasyon linki
 const authenticatedLinks: NavigationLink[] = [
-  { name: 'CV Analysis', href: '/upload', sectionId: null, isScrollable: false }
+  { name: 'CV Analysis', href: '/upload', sectionId: null, isScrollable: false },
+  { name: 'My Analyses', href: '/my-analyses', sectionId: null, isScrollable: false }
 ];
 
 export default function Header() {

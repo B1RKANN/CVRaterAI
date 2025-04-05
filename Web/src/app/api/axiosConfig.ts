@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'ax
 import Cookies from 'js-cookie';
 
 // API temel URL
-const API_URL = 'http://69.62.120.202:8080';
+const API_URL = '';
 
 // Axios instance oluşturma
 const axiosInstance = axios.create({
