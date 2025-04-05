@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 
 // Robot animasyon stili bileşeni
 const RobotAnimationStyle = () => (
@@ -25,26 +27,39 @@ const RobotAnimationStyle = () => (
 );
 
 // Kahraman bölümü başlık bileşeni
-const HeroContent = () => (
-  <div className="flex-1 text-white max-w-2xl order-1 md:order-2 relative z-30 text-center md:text-left">
-    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 md:mb-4">
-      CV Rater AI
-    </h1>
-    <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium mb-4 md:mb-6">
-      The Ultimate AI Tools
-    </h2>
-    <p className="text-base md:text-lg mb-6 md:mb-8">
-      Analyze your CV with artificial intelligence, 
-      <span className="hidden md:inline"><br /></span> discover your strengths and make better choices!
-    </p>
-    <Link 
-      href="#"
-      className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium rounded-full hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] relative overflow-hidden group"
-    >
-      <span className="relative z-10">Generative AI</span>
-    </Link>
-  </div>
-);
+const HeroContent = () => {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  const handleGenerativeAIClick = () => {
+    if (isAuthenticated) {
+      router.push('/upload');
+    } else {
+      router.push('/signin');
+    }
+  };
+
+  return (
+    <div className="flex-1 text-white max-w-2xl order-1 md:order-2 relative z-30 text-center md:text-left">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 md:mb-4">
+        CV Rater AI
+      </h1>
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium mb-4 md:mb-6">
+        The Ultimate AI Tools
+      </h2>
+      <p className="text-base md:text-lg mb-6 md:mb-8">
+        Analyze your CV with artificial intelligence, 
+        <span className="hidden md:inline"><br /></span> discover your strengths and make better choices!
+      </p>
+      <button 
+        onClick={handleGenerativeAIClick}
+        className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium rounded-full hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] relative overflow-hidden group"
+      >
+        <span className="relative z-10">Generative AI</span>
+      </button>
+    </div>
+  );
+};
 
 // Robot görseli bileşeni
 const RobotImage = () => (
